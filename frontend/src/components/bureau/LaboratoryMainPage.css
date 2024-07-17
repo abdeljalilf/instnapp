@@ -1,0 +1,16 @@
+.main-page {
+    text-align: center;
+    padding: 50px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+button {
+    padding: 15px 30px;
+    font-size: 18px;
+    cursor: pointer;
+}
