@@ -16,8 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 // Récupérer toutes les demandes d'analyses
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $sql = "SELECT c.id as clientId, c.name, c.address, c.phone, c.email, 
-                   e.id as echantillonId, e.sampleType, e.samplingLocation, e.samplingDate, e.sampledBy, 
+    $sql = "SELECT c.id as clientId, c.name, c.address, c.phone, c.email, c.clientReference,
+                   e.id as echantillonId, e.sampleType, e.sampleReference, e.samplingLocation, e.samplingDate, e.sampledBy, 
                    a.id as analysisId, a.analysisType, a.parameter, a.technique, 
                    ed.id as elementId, ed.elementDinteret 
             FROM clients c 
@@ -29,6 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if ($result->num_rows > 0) {
         $demandes = array();
         while ($row = $result->fetch_assoc()) {
+            $clientReference = $row['clientReference'];
             $clientId = $row['clientId'];
             $echantillonId = $row['echantillonId'];
             $analysisId = $row['analysisId'];
@@ -36,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             if (!isset($demandes[$clientId])) {
                 $demandes[$clientId] = array(
                     'clientId' => $clientId,
+                    'clientReference' => $clientReference,
                     'name' => $row['name'],
                     'address' => $row['address'],
                     'phone' => $row['phone'],
@@ -48,6 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 $demandes[$clientId]['echantillons'][$echantillonId] = array(
                     'echantillonId' => $echantillonId,
                     'sampleType' => $row['sampleType'],
+                    'sampleReference' => $row['sampleReference'],
                     'samplingLocation' => $row['samplingLocation'],
                     'samplingDate' => $row['samplingDate'],
                     'sampledBy' => $row['sampledBy'],

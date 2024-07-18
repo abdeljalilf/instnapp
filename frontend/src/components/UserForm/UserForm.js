@@ -105,7 +105,7 @@ const UserForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await fetch('http://192.168.43.184/instn/backend/routes/userform.php', {
+        const response = await fetch('http://192.168.43.184/instnapp/backend/routes/userform.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -118,11 +118,22 @@ const UserForm = () => {
         
         const result = await response.json();
         
+        // Supposons que 'result' contient la réponse JSON de votre requête
         if (result.success) {
-            alert('Formulaire soumis avec succès!');
+            // Construire le message à afficher dans l'alerte
+            let message = 'Formulaire soumis avec succès!\n\n';
+            
+            // Ajouter la référence du client au message si elle est définie
+            if (result.clientReference) {
+                message += 'Référence du client : ' + result.clientReference + '\n';
+            }
+
+            // Afficher l'alerte avec le message complet
+            alert(message);
         } else {
             alert('Erreur lors de la soumission du formulaire.');
         }
+
         
         // Réinitialiser le formulaire après soumission
         setPersonalInfo({ name: '', address: '', phone: '', email: '' });

@@ -1,14 +1,12 @@
 import React from 'react';
-import UserForm from './components/UserForm';
-import './App.css';
+import UserForm from './components/UserForm/UserForm';
+import DemandesList from './components/DemandeList/DemandesList';
 
 function App() {
     return (
-        <div className="App">
-            <header className="App-header">
-                <h1>Formulaire de soumission d'échantillons</h1>
-            </header>
+        <div >
             <UserForm />
+            <DemandesList/>
         </div>
     );
 }
