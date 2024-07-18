@@ -28,6 +28,12 @@ CREATE TABLE analyses (
     technique VARCHAR(50) NOT NULL,
     FOREIGN KEY (echantillon_id) REFERENCES echantillons(id)
 );
+CREATE TABLE ElementInteret (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    AnalyseID INT,
+    ElementInt VARCHAR(255) NOT NULL,
+    FOREIGN KEY (AnalyseID) REFERENCES Analyses(id)
+);
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
@@ -35,4 +41,5 @@ CREATE TABLE users (
     role ENUM('reception', 'admin') NOT NULL
 );
 
-ALTER TABLE clients ADD validated BOOLEAN DEFAULT FALSE;
+ALTER TABLE clients ADD validated VARCHAR(50) DEFAULT 'notvalid';
+ALTER TABLE clients ADD delais_livraison TIME DEFAULT FALSE;

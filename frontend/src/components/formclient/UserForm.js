@@ -89,7 +89,7 @@ const UserForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        const response = await fetch('http://localhost:3000/backend/index.php', {
+        const response = await fetch('http://localhost:3000/backend/form/form.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

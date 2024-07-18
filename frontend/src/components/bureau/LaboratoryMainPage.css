@@ -1,6 +1,7 @@
-.main-page {
+/* LaboratoryMainPage.css */
+.main-page-container {
     text-align: center;
-    padding: 50px;
+    margin-top: 70px;
 }
 
 .button-container {
@@ -9,8 +10,17 @@
     gap: 20px;
 }
 
-button {
-    padding: 15px 30px;
-    font-size: 18px;
+.main-button {
+    padding: 20px 40px;
+    font-size: 19px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.main-button:hover {
+    background-color: #0056b3;
 }

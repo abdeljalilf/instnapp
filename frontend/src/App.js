@@ -5,26 +5,23 @@ import LaboratoryMainPage from './components/bureau/LaboratoryMainPage';
 import NewRequests from './components/bureau/NewRequests';
 import ProcessedRequests from './components/bureau/ProcessedRequests';
 import Dashboard from './components/bureau/Dashboard';
+import RequestDetails from './components/bureau/RequestDetails';
 
-import './App.css';
-
-function App() {
+const App = () => {
     return (
         <Router>
-            <div className="App">
-                <header className="App-header">
-                    <h1>INSTN</h1>
-                </header>
-                <Routes>
-                    <Route path="/" element={<UserForm />} />
-                    <Route path="/bureau" element={<LaboratoryMainPage />} />
-                    <Route path="/bureau/new-requests" element={<NewRequests />} />
-                    <Route path="/bureau/processed-requests" element={<ProcessedRequests />} />
-                    <Route path="/bureau/dashboard" element={<Dashboard />} />
-                </Routes>
-            </div>
+            <Routes>
+                <Route path="/" element={<UserForm />} />
+                <Route path="/bureau" element={<LaboratoryMainPage />}>
+                    <Route index element={<Dashboard />} /> {/* Route par défaut */}
+                    <Route path="new-requests" element={<NewRequests />} />
+                    <Route path="processed-requests" element={<ProcessedRequests />} />
+                    <Route path="dashboard" element={<Dashboard />} />
+                    <Route path="request/:id" element={<RequestDetails />} /> {/* Route pour les détails */}
+                </Route>
+            </Routes>
         </Router>
     );
-}
+};
 
 export default App;
