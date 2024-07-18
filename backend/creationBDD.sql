@@ -36,3 +36,6 @@ CREATE TABLE users (
 );
 
 ALTER TABLE clients ADD validated BOOLEAN DEFAULT FALSE;
+
+ALTER TABLE clients ADD COLUMN clientReference VARCHAR(50);
+ALTER TABLE echantillons ADD COLUMN sampleReference VARCHAR(50);

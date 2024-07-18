@@ -14,6 +14,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
+// Fonction pour générer la référence client
+function generateClientReference($clientId, $year) {
+    return sprintf("INSTN/DG/XRF/%s/%04d", $year, $clientId);
+}
+
+// Fonction pour générer la référence échantillon
+function generateSampleReference($year, $clientId, $sampleCount) {
+    return sprintf("%s%04dC%02d", $year, $clientId, $sampleCount);
+}
+
 // Vérifier si une requête POST a été envoyée depuis le formulaire React
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Récupérer les données JSON envoyées depuis le formulaire React
@@ -38,6 +48,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $clientId = $conn->insert_id;
 
+    // Générer et mettre à jour la référence client
+    $year = date('y');
+    $clientReference = generateClientReference($clientId, $year);
+    $sqlUpdateClientReference = "UPDATE clients SET clientReference='$clientReference' WHERE id='$clientId'";
+    if (!$conn->query($sqlUpdateClientReference)) {
+        http_response_code(500);
+        echo json_encode(array('success' => false, 'message' => 'Erreur lors de la mise à jour de la référence client.', 'error' => $conn->error));
+        exit;
+    }
+
+    // Compteur pour les échantillons du client
+    $sampleCount = 0;
+
     // Exemple d'insertion des données dans la base de données (à adapter selon votre structure de base de données)
     foreach ($samples as $sample) {
         $sampleType = $conn->real_escape_string($sample['sampleType']);
@@ -45,8 +68,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $samplingDate = $conn->real_escape_string($sample['samplingDate']);
         $sampledBy = $conn->real_escape_string($sample['sampledBy']);
 
+        // Incrémenter le compteur d'échantillons
+        $sampleCount++;
+
+        // Générer la référence échantillon
+        $sampleReference = generateSampleReference($year, $clientId, $sampleCount);
+
         // Insertion dans la table des échantillons (exemple)
-        $sqlInsertSample = "INSERT INTO echantillons (client_id, sampleType, samplingLocation, samplingDate, sampledBy) VALUES ('$clientId', '$sampleType', '$samplingLocation', '$samplingDate', '$sampledBy')";
+        $sqlInsertSample = "INSERT INTO echantillons (client_id, sampleType, samplingLocation, samplingDate, sampledBy, sampleReference) VALUES ('$clientId', '$sampleType', '$samplingLocation', '$samplingDate', '$sampledBy', '$sampleReference')";
         if (!$conn->query($sqlInsertSample)) {
             http_response_code(500);
             echo json_encode(array('success' => false, 'message' => 'Erreur lors de l\'insertion de l\'échantillon.', 'error' => $conn->error));
@@ -83,7 +112,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Réponse JSON pour confirmer la réussite de l'insertion (exemple)
-    $response = array('success' => true, 'message' => 'Demande d\'analyse enregistrée avec succès');
+    $response = array('success' => true, 'message' => 'Demande d\'analyse enregistrée avec succès','clientReference' => $clientReference,
+    'samplesReferences' => $sampleReference);
     header('Content-Type: application/json');
     echo json_encode($response);
 }
