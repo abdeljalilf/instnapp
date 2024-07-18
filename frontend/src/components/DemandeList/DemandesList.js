@@ -37,11 +37,12 @@ const DemandesList = () => {
 
     return (
         <div className="demandes-container">
-            <div className="toolbar">
-                <span className="breadcrumb">Liste des Demandes d'Analyses</span>
+            <div className="form-header">
+                <span>Liste des Demandes d'Analyses</span>
             </div>
-            <div className="toolbar"> {/* Nouveau div pour le champ de recherche */}
+            <div className="toolbar">
                 <label htmlFor="search" className="search-label">Rechercher :</label>
+                <br />
                 <input
                     type="text"
                     id="search"
