@@ -12,7 +12,7 @@ const DemandesList = () => {
     useEffect(() => {
         const fetchDemandes = async () => {
             try {
-                const response = await axios.get('http://192.168.56.1/instnapp/backend/routes/demandelist.php');
+                const response = await axios.get('http://localhost/instnapp/backend/routes/demandelist.php');
                 if (response.data.success) {
                     setDemandes(response.data.demandes);
                 } else {

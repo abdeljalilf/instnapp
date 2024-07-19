@@ -98,10 +98,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit();
             }
 
+            $analysisId = $conn->insert_id; // Récupérer l'ID de l'analyse insérée
+
             // Insertion des éléments d'intérêt pour cette analyse
             foreach ($elements as $element) {
                 $element = $conn->real_escape_string($element);
-                $sqlInsertElement = "INSERT INTO elementsDinteret (elementDinteret, echantillon_id) VALUES ('$element', '$sampleId')";
+                $sqlInsertElement = "INSERT INTO elementsDinteret (elementDinteret, analysis_id) VALUES ('$element', '$analysisId')";
                 if (!$conn->query($sqlInsertElement)) {
                     http_response_code(500);
                     echo json_encode(array('success' => false, 'message' => 'Erreur lors de l\'insertion des éléments d\'intérêt.', 'error' => $conn->error));

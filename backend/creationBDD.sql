@@ -39,3 +39,30 @@ ALTER TABLE clients ADD validated BOOLEAN DEFAULT FALSE;
 
 ALTER TABLE clients ADD COLUMN clientReference VARCHAR(50);
 ALTER TABLE echantillons ADD COLUMN sampleReference VARCHAR(50);
+
+
+
+-- 1. Renommer la colonne 'echantillon_id' en 'analysis_id'
+ALTER TABLE elementsdinteret CHANGE COLUMN echantillon_id analysis_id INT;
+
+-- 2. Si nécessaire, mettre à jour les valeurs de 'analysis_id' pour s'assurer qu'elles sont correctes
+-- Vous devrez peut-être ajuster cette partie selon vos besoins spécifiques
+-- Par exemple, si vous avez une logique pour mapper les anciens 'echantillon_id' aux nouveaux 'analysis_id'
+
+-- 3. Mettre à jour la contrainte de clé étrangère
+-- D'abord, il faut supprimer la contrainte existante (si elle existe)
+ALTER TABLE elementsdinteret DROP FOREIGN KEY IF EXISTS fk_elementsdinteret_echantillon;
+
+-- Ensuite, ajouter la nouvelle contrainte
+ALTER TABLE elementsdinteret 
+ADD CONSTRAINT fk_elementsdinteret_analysis
+FOREIGN KEY (analysis_id) REFERENCES analyses(id);
+
+DROP TABLE IF EXISTS elementsdinteret;
+
+CREATE TABLE elementsdinteret (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    elementDinteret VARCHAR(255) NOT NULL,
+    analysis_id INT NOT NULL,
+    FOREIGN KEY (analysis_id) REFERENCES analyses(id)
+);
