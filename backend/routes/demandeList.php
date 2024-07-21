@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             FROM clients c 
             JOIN echantillons e ON c.id = e.client_id 
             JOIN analyses a ON e.id = a.echantillon_id
-            LEFT JOIN elementsdinteret ed ON e.id = ed.echantillon_id";
+            LEFT JOIN elementsdinteret ed ON e.id = ed.analysis_id";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
