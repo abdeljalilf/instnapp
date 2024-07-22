@@ -28,11 +28,12 @@ CREATE TABLE analyses (
     technique VARCHAR(50) NOT NULL,
     FOREIGN KEY (echantillon_id) REFERENCES echantillons(id)
 );
-CREATE TABLE ElementInteret (
+
+CREATE TABLE elementsdinteret (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    AnalyseID INT,
-    ElementInt VARCHAR(255) NOT NULL,
-    FOREIGN KEY (AnalyseID) REFERENCES Analyses(id)
+    elementDinteret VARCHAR(255) NOT NULL,
+    analysis_id INT NOT NULL,
+    FOREIGN KEY (analysis_id) REFERENCES analyses(id)
 );
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -41,5 +42,9 @@ CREATE TABLE users (
     role ENUM('reception', 'admin') NOT NULL
 );
 
-ALTER TABLE clients ADD validated VARCHAR(50) DEFAULT 'notvalid';
-ALTER TABLE clients ADD delais_livraison TIME DEFAULT FALSE;
+ALTER TABLE clients ADD COLUMN delais_livraison DATE DEFAULT '2024-09-17';
+ALTER TABLE clients ADD COLUMN clientReference VARCHAR(50);
+ALTER TABLE echantillons ADD COLUMN sampleReference VARCHAR(50);
+ALTER TABLE analyses ADD departement VARCHAR(50) DEFAULT 'TFXE'
+
+ALTER TABLE analyses ADD validated VARCHAR(50) DEFAULT 'notvalid';

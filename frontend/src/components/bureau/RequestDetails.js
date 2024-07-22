@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import './RequestDetails.css'; // Assurez-vous d'avoir un fichier CSS pour le style
 
 const RequestDetails = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [requests, setRequests] = useState([]);
 
     useEffect(() => {
@@ -24,6 +25,21 @@ const RequestDetails = () => {
             });
     }, [id]);
 
+    const handleValidation = () => {
+        fetch(`http://localhost:3000/backend/bureau/validateRequest.php?id=${id}`, {
+            method: 'POST',
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                navigate('/bureau/new-requests');
+            })
+            .catch(error => {
+                console.error('Error validating request:', error);
+            });
+    };
+
     if (requests.length === 0) {
         return <div>Loading...</div>;
     }
@@ -41,6 +57,7 @@ const RequestDetails = () => {
             analysisType: curr.analysisType,
             parameter: curr.parameter,
             technique: curr.technique,
+            elementDinteret: curr.elementDinteret,
         });
         return acc;
     }, {});
@@ -71,12 +88,17 @@ const RequestDetails = () => {
                                         <th>Technique</th>
                                         <td>{analysis.technique}</td>
                                     </tr>
+                                    <tr>
+                                        <th>Élément d'intérêt</th>
+                                        <td>{analysis.elementDinteret !== null ? analysis.elementDinteret : 'N/A'}</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
                     ))}
                 </div>
             ))}
+            <button onClick={handleValidation} className="validate-button">Valider la demande</button>
         </div>
     );
 };

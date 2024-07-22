@@ -1,18 +1,17 @@
-/* frontend/src/userform.css */
-
+/* src/userform.css */
 body {
     margin: 0;
     padding: 0;
     font-family: 'Arial', sans-serif;
     background: #f0f4f8; /* Couleur de fond douce */
     /* background-image: url('C:\Users\Hp\Desktop\instn-form\public\INSTN-logo.png');  */
-    background-size: auto;
+    background-size:auto;
     background-position: center;
 }
 
 form {
     width: 90%;
-    max-width: 800px;
+    /* max-width: 800px; */
     margin: 50px auto;
     padding: 20px;
     border: 1px solid #ccc;
@@ -33,6 +32,15 @@ form {
 
 .form-group {
     margin-bottom: 25px; /* Augmenter la marge pour éviter le chevauchement */
+}
+
+.sample-group {
+    border: 2px solid #2e8b57; /* Bordure bleue */
+    border-radius: 15px; /* Angles arrondis */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre portée */
+    padding: 20px; /* Espace interne */
+    margin-bottom: 20px;
+    background-color: #f9f9f9; /* Couleur de fond */
 }
 
 label {
@@ -70,7 +78,6 @@ select:focus {
 button {
     background-color: #2e8b57; /* Vert */
     color: white;
-    padding: 10px 15px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -78,8 +85,14 @@ button {
     transition: background-color 0.3s ease;
     margin: 10px;
     margin-bottom: 25px;
+    margin-left: 40%;
+    margin-right:40%;
+    padding: 10px 15px;
 }
-
+.submit-button{
+    margin-left: 43%;
+    margin-right:43%;
+}
 button:hover {
     background-color: #183020; /* Vert plus foncé */
 }
@@ -113,4 +126,34 @@ select:focus {
         transform: translateY(0);
         opacity: 1;
     }
+}
+
+/* Ajoutez ce CSS dans votre fichier userform.css */
+
+.selected-elements {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    border: 2px solid #2e8b57; /* Bordure bleue */
+    border-radius: 15px; /* Angles arrondis */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre portée */
+    padding: 20px; /* Espace interne */
+    margin-bottom: 20px;
+    background-color: #f9f9f9; /* Couleur de fond */
+
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.checkbox-label input {
+    margin-right: 5px;
 }
