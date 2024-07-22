@@ -37,6 +37,8 @@ CREATE TABLE users (
 
 ALTER TABLE clients ADD validated BOOLEAN DEFAULT FALSE;
 
+ALTER TABLE clients DROP COLUMN validated;
+
 ALTER TABLE clients ADD COLUMN clientReference VARCHAR(50);
 ALTER TABLE echantillons ADD COLUMN sampleReference VARCHAR(50);
 
@@ -66,3 +68,14 @@ CREATE TABLE elementsdinteret (
     analysis_id INT NOT NULL,
     FOREIGN KEY (analysis_id) REFERENCES analyses(id)
 );
+
+ALTER TABLE clients ADD COLUMN delais_livraison DATE NOT NULL;
+
+-- Étape 1: Supprimer la colonne existante
+ALTER TABLE clients DROP COLUMN delais_livraison;
+
+-- Étape 2: Ajouter la colonne avec une valeur par défaut fixée à la date d'aujourd'hui
+-- Note : `DEFAULT '2024-07-22'` devrait être remplacé par la date actuelle
+
+ALTER TABLE clients 
+ADD COLUMN delais_livraison DATE DEFAULT '2024-07-22';

@@ -86,6 +86,15 @@ const UserForm = () => {
         setSamples(updatedSamples);
     };
 
+    const deleteAnalysis = (sampleIndex) => {
+        const updatedSamples = [...samples];
+        if (updatedSamples[sampleIndex].analysisDetails.length > 1) {
+            updatedSamples[sampleIndex].analysisDetails.pop();
+        }
+        setSamples(updatedSamples);
+    };
+
+    
     const addSample = () => {
         setSamples([...samples, {
             sampleType: '',
@@ -103,6 +112,14 @@ const UserForm = () => {
         }]);
     };
 
+    const deleteSample = () => {
+        const updatedSamples = [...samples];
+        if (updatedSamples.length > 1) {
+            updatedSamples.pop();
+        }
+        setSamples(updatedSamples);
+    };
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         const response = await fetch('http://localhost/instnapp/backend/routes/userform.php', {
@@ -115,7 +132,7 @@ const UserForm = () => {
                 samples
             })
         });
-        
+        console.log("personal: " + personalInfo+ " samples: "+ samples)
         const result = await response.json();
         
         // Supposons que 'result' contient la réponse JSON de votre requête
@@ -387,14 +404,24 @@ const UserForm = () => {
                             </div>
                         </div>
                     ))}
-                    <button type="button" onClick={() => addAnalysis(index)}>
+                    <div className='analysis-buttons'>
+                    <button type="button" onClick={() => addAnalysis(index)} className='button-add'>
                         Ajouter une analyse
                     </button>
+                    <button type="button" onClick={() => deleteAnalysis(index)} className='button-delete'>
+                        Supprimer une analyse
+                    </button>
+                    </div>
                 </div>
             ))}
-            <button type="button" onClick={addSample}>
+            <div className='analysis-buttons'>
+            <button type="button" onClick={addSample} className='button-add'>
                 Ajouter un échantillon
             </button>
+            <button type="button" onClick={deleteSample} className='button-delete'>
+                Supprimer un échantillon
+            </button>
+            </div>
             <button type="submit" className='submit-button'>Soumettre</button>
         </form>
     );

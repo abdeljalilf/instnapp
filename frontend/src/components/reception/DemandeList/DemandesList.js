@@ -1,5 +1,6 @@
 // src/components/DemandeList/DemandesList.js
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './DemandesList.css';
 
@@ -57,6 +58,7 @@ const DemandesList = () => {
                     <tr>
                         <th>Reference Client</th>
                         <th>Service</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -68,6 +70,11 @@ const DemandesList = () => {
                                     <td>
                                         Analyse {analyse.analysisType} de {analyse.parameter} par {analyse.technique} <br />
                                         Éléments d'intérêt: {analyse.elementsDinteret.map(e => e.elementDinteret).join(', ')}
+                                    </td>
+                                    <td>
+                                        <Link to={`/reception/requests-details/${demande.clientId}`}>
+                                            <button className="details-button">Voir les détails</button>
+                                        </Link>
                                     </td>
                                 </tr>
                             ))
