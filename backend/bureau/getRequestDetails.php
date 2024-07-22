@@ -12,7 +12,6 @@ $sql = "SELECT
             clients.address, 
             clients.phone, 
             clients.email, 
-            clients.validated,
             clients.delais_livraison,
             echantillons.id AS echantillon_id,
             echantillons.sampleType, 
