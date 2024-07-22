@@ -44,11 +44,14 @@ const DemandesDetails = () => {
 
     return (
         <div className="container">
-            <h2 className='form-header'>Détails de la Demande</h2>
+            <div className='form-header'>
+            <h2>Détails de la Demande : {generateClientReference(clientId)}</h2>
+            </div>
             {demandes && demandes.length > 0 ? (
                 demandes.map((demande, demandeIndex) => (
                     <div key={demandeIndex} className="form-group">
-                        <div>
+                        <div className='container-details'>
+                        <div className='form-header-details'>
                             <h2>Informations personnelles</h2>
                         </div>
                         <div className="form-group">
@@ -67,12 +70,14 @@ const DemandesDetails = () => {
                             <label>Email:</label>
                             <p>{demande.email}</p>
                         </div>
-
+                        </div>
+                        <div className='container-details'>
                         {demande.echantillons.map((echantillon, echantillonIndex) => (
                             <div key={echantillonIndex} className="sample-section">
-                                <div className="form-header">
-                                    <h2>Échantillon {echantillonIndex + 1}</h2>
+                                <div className="form-header-details">
+                                    <h2>Informations sur l'échantillon {echantillonIndex + 1}</h2>
                                 </div>
+                                <h2>Informations sur l'échantillon {echantillonIndex + 1}</h2>
                                 <div className="form-group">
                                     <label>Type d'échantillon:</label>
                                     <p>{echantillon.sampleType}</p>
@@ -92,8 +97,8 @@ const DemandesDetails = () => {
                                 
                                 {echantillon.analyses.map((analyse, analyseIndex) => (
                                     <div key={analyseIndex} className="analysis-section">
-                                        <div className="form-header">
-                                            <h3>Analyse {analyseIndex + 1}</h3>
+                                        <div>
+                                            <h3>Détails des analyses {analyseIndex + 1} sur l'échantillon {echantillonIndex + 1} </h3>
                                         </div>
                                         <div className="form-group">
                                             <label>Type d'analyse:</label>
@@ -115,6 +120,7 @@ const DemandesDetails = () => {
                                 ))}
                             </div>
                         ))}
+                    </div>
                     </div>
                 ))
             ) : (

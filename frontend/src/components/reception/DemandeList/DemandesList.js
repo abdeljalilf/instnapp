@@ -39,7 +39,7 @@ const DemandesList = () => {
     return (
         <div className="demandes-container">
             <div className="form-header">
-                <span>Liste des Demandes d'Analyses</span>
+                <h2>Liste des Demandes d'Analyses</h2>
             </div>
             <div className="toolbar">
                 <label htmlFor="search" className="search-label">Rechercher :</label>
