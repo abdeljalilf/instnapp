@@ -1,0 +1,106 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background: #f0f4f8; /* Couleur de fond douce */
+    background-size: auto;
+    background-position: center;
+}
+
+.labo-container {
+    width: 90%;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.8); /* Couleur de fond translucide */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1s ease-in-out;
+}
+
+.labo-header {
+    background-color: #2e8b57; /* Vert */
+    padding: 10px;
+    border-radius: 5px 5px 0 0;
+    color: white;
+    text-align: center;
+    margin: -20px -20px 20px -20px;
+}
+
+.labo-select-group {
+    margin-bottom: 25px; /* Augmenter la marge pour éviter le chevauchement */
+}
+
+.labo-select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #2e8b57; /* Vert */
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.labo-select:focus {
+    background-color: #e0f7fa; /* Couleur de fond au focus */
+    border-color: #238443; /* Bordure plus foncée au focus */
+}
+
+button {
+    background-color: #2e8b57; /* Vert */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    margin: 10px;
+    padding: 10px 15px;
+}
+
+button:hover {
+    background-color: #183020; /* Vert plus foncé */
+}
+
+button:active {
+    background-color: #1a5f32; /* Vert encore plus foncé */
+}
+
+input:focus,
+select:focus {
+    border-color: #238443; /* Vert plus foncé */
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 128, 0, 0.5); /* Ombre verte */
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.analyses-table {
+    margin-top: 20px;
+}
+
+.analyses-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.analyses-table th, .analyses-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+.analyses-table th {
+    background-color: #2e8b57;
+    color: white;
+}
+
+.analyses-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}

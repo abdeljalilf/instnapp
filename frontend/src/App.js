@@ -4,6 +4,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'; // Importez votre fichier CSS personnalisé
 import UserForm from './components/UserForm/UserForm';
 import DemandesList from './components/DemandeList/DemandesList';
+import Labo from './components/Labo/Labo';
+
 function App() {
   return (
     <Router>
@@ -22,6 +24,9 @@ function App() {
                 <li className="nav-item">
                   <NavLink className="nav-link" to="/demandes" activeClassName="active">DemandesList</NavLink>
                 </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/labo" activeClassName="active">Labo</NavLink>
+                </li>
               </ul>
             </div>
           </div>
@@ -29,6 +34,7 @@ function App() {
         <Routes>
           <Route path="/userform" element={<UserForm />} />
           <Route path="/demandes" element={<DemandesList />} />
+          <Route path="/labo" element={<Labo />} />
         </Routes>
       </div>
     </Router>
