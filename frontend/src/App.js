@@ -14,7 +14,7 @@ const App = () => {
                     <Route index element={<UserForm />} /> {/* Route par défaut */}
                     <Route path="requests-details" element={<DemandeList />} />
                     <Route path="requests-details/:clientId" element={<DemandesDetails />} />
-                    <Route path="requests-details/f/:clientId" element={<FicheTechnique />} />
+                    <Route path="requests-details/fiche-technique/:clientId" element={<FicheTechnique />} />
                 </Route>
             </Routes>
         </Router>

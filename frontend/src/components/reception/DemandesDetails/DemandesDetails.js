@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { AppBar, Toolbar, Typography, Button } from '@mui/material';
+import { useNavigate, Outlet } from 'react-router-dom';
 import axios from 'axios';
 import './DemandesDetails.css';
 
@@ -8,6 +10,7 @@ const DemandesDetails = () => {
     const [demandes, setDemandes] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (!clientId) {
@@ -46,6 +49,9 @@ const DemandesDetails = () => {
         <div className="container">
             <div className='form-header'>
             <h2>Détails de la Demande : {generateClientReference(clientId)}</h2>
+            <Button color="inherit" onClick={() => navigate(`/reception/requests-details/fiche-technique/${clientId}`)} className="main-button">
+                        Fiche technique
+            </Button>
             </div>
             {demandes && demandes.length > 0 ? (
                 demandes.map((demande, demandeIndex) => (
