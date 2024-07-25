@@ -136,16 +136,48 @@ const FicheTechnique = () => {
                                             <label>Prélevé par:</label>
                                             <p>{echantillon.sampledBy}</p>
                                         </div>
+                                        <div className="form-group-ft">
+                                            <label>Apporté par:</label>
+                                            <p>{echantillon.sampledBy}</p>
+                                        </div>
                                         {echantillon.analyses.map((analyse, analyseIndex) => (
                                             <div key={analyseIndex} className="analysis-section">
                                                 <div className="form-group-ft">
-                                                    <label>Details sur les analayses:</label>
-                                                    <p>Analyse {analyse.analysisType} de {analyse.parameter} par {analyse.technique} pour les elements : {analyse.elementsDinteret.map(e => e.elementDinteret).join(', ')} </p>
+                                                    <label>Details sur l'analayse {analyseIndex+1}:</label>
+                                                    <p>Analyse {analyse.analysisType} de {analyse.parameter} par {analyse.technique} pour les elements : {analyse.elementsDinteret.map(e => e.elementDinteret).join(', ')}</p>
                                                 </div>
                                             </div>
                                         ))}
+                                        <div className="form-group-ft">
+                                            <label>Apporté par:</label>
+                                            <p>{echantillon.sampledBy}</p>
+                                        </div>
+                                        <div className="form-group-ft">
+                                            <label>Quantite de l'echantillon:</label>
+                                            <p>1 L</p>
+                                        </div>
+                                        <div className="form-group-ft">
+                                            <label>Observations:</label>
+                                            <p>Bon etat</p>
+                                        </div>
                                     </div>
+                                    
                                 ))}
+                                <div className="form-header-ft">
+                                            <h2>Delais de livraison</h2>
+                                </div>
+                                <div className="form-group-ft">
+                                            <label>Date de livraison:</label>
+                                            <p>7/25/2024</p>
+                                </div>
+                                <div className="form-header-ft">
+                                            <h2>Signatures</h2>
+                                </div>
+                                <div className='signatures'>
+                                    <p>Réceptionnaire,</p>
+                                    <p>Visa de la Direction,</p>
+                                    <p>Signature du client,</p>
+                                </div>
                             </div>
                         </div>
                     ))

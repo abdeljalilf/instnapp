@@ -48,3 +48,20 @@
 .info-perso{
     justify-content: start;
 }
+
+.container-ft {
+    height: 3058px; /* Hauteur de la page */
+    /* overflow-y: auto; /* Barre de défilement verticale pour le contenu qui dépasse 
+    box-sizing: border-box; Inclure le padding dans la hauteur totale */
+}
+
+.signatures {
+    height: 200px;
+    display: flex;
+    justify-content: space-between; /* Espace égal entre les éléments */
+}
+
+.signatures p {
+    margin: 0; /* Supprimer la marge par défaut des paragraphes */
+    text-align: center; /* Centrer le texte */
+}
