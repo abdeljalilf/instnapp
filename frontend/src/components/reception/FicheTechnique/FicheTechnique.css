@@ -50,10 +50,15 @@
 }
 
 .container-ft {
-    height: 3058px; /* Hauteur de la page */
-    /* overflow-y: auto; /* Barre de défilement verticale pour le contenu qui dépasse 
-    box-sizing: border-box; Inclure le padding dans la hauteur totale */
+    width: 95%;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.8); /* Couleur de fond translucide */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
 
 .signatures {
     height: 200px;

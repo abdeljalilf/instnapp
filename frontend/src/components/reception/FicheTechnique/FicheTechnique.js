@@ -44,11 +44,11 @@ const FicheTechnique = () => {
 
     const generatePDF = () => {
         const input = ficheRef.current;
-        const scale = 3; // Augmentez cette valeur pour une meilleure qualité
+        const scale = 1.5; // Augmentez cette valeur pour une meilleure qualité
         html2canvas(input, { scale: scale })
             .then(canvas => {
                 const imgData = canvas.toDataURL('image/png');
-                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pdf = new jsPDF('p', 'mm', 'a3');
                 const imgProps = pdf.getImageProperties(imgData);
                 const pdfWidth = pdf.internal.pageSize.getWidth();
                 const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
@@ -63,16 +63,16 @@ const FicheTechnique = () => {
     if (error) return <div className="error">{error}</div>;
 
     return (
-        <div className="container-ft">
+        <div>
             <div ref={ficheRef}>
-                <div className='form-header'>
+                {/* <div className='form-header'>
                     <h2>Fiche technique de la demande numero : {clientId}</h2>
-                </div>
+                </div> */}
                 {demandes && demandes.length > 0 ? (
                     demandes.map((demande, demandeIndex) => (
                         <div key={demandeIndex} className="form-group">
                             
-                            <div className='container'>
+                            <div className='container-ft'>
                                 <div className='header-ft'>
                                     <h3>Ministère de l'Enseignement Supérieur et de la Recherche Scientifique</h3>
                                     <h3>INSTITUT NATIONAL DES SCIENCES ET TECHNIQUES NUCLEAIRES</h3>
