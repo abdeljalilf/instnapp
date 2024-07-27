@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Button } from '@mui/material';
-import { useNavigate, Outlet } from 'react-router-dom';
+import { Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './DemandesDetails.css';
 
@@ -76,6 +76,14 @@ const DemandesDetails = () => {
                             <label>Email:</label>
                             <p>{demande.email}</p>
                         </div>
+                        <div className="form-group">
+                            <label>Date de la demande:</label>
+                            <p>{demande.requestingDate}</p>
+                        </div>
+                        <div className="form-group">
+                            <label>Date de la livraison:</label>
+                            <p>{demande.dilevery_delay}</p>
+                        </div>
                         </div>
                         <div className='container-details'>
                         {demande.echantillons.map((echantillon, echantillonIndex) => (
@@ -100,7 +108,18 @@ const DemandesDetails = () => {
                                     <label>Prélevé par:</label>
                                     <p>{echantillon.sampledBy}</p>
                                 </div>
-                                
+                                <div className="form-group">
+                                    <label>Apporté par:</label>
+                                    <p>{echantillon.broughtBy}</p>
+                                </div>
+                                <div className="form-group">
+                                    <label>Quantite de l'echantillon:</label>
+                                    <p>{echantillon.sampleSize}</p>
+                                </div>
+                                <div className="form-group">
+                                    <label>Observations:</label>
+                                    <p>{echantillon.sampleObservations}</p>
+                                </div>
                                 {echantillon.analyses.map((analyse, analyseIndex) => (
                                     <div key={analyseIndex} className="analysis-section">
                                         <div>

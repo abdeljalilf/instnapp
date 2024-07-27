@@ -38,8 +38,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $address = $conn->real_escape_string($personalInfo['address']);
     $phone = $conn->real_escape_string($personalInfo['phone']);
     $email = $conn->real_escape_string($personalInfo['email']);
+    $requestingDate = $conn->real_escape_string($personalInfo['requestingDate']);
+    $dilevery_delay = $conn->real_escape_string($personalInfo['dilevery_delay']);
 
-    $sqlInsertClient = "INSERT INTO clients (name, address, phone, email) VALUES ('$name', '$address', '$phone', '$email')";
+    $sqlInsertClient = "INSERT INTO clients (name, address, phone, email, dilevery_delay, requestingDate) VALUES ('$name', '$address', '$phone', '$email', '$dilevery_delay', '$requestingDate')";
     if (!$conn->query($sqlInsertClient)) {
         http_response_code(500);
         echo json_encode(array('success' => false, 'message' => 'Erreur lors de l\'insertion du client.', 'error' => $conn->error));
@@ -67,6 +69,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $samplingLocation = $conn->real_escape_string($sample['samplingLocation']);
         $samplingDate = $conn->real_escape_string($sample['samplingDate']);
         $sampledBy = $conn->real_escape_string($sample['sampledBy']);
+        $broughtBy = $conn->real_escape_string($sample['broughtBy']);
+        $sampleSize = $conn->real_escape_string($sample['sampleSize']);
+        $sampleObservations = $conn->real_escape_string($sample['sampleObservations']);
 
         // Incrémenter le compteur d'échantillons
         $sampleCount++;
@@ -75,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sampleReference = generateSampleReference($year, $clientId, $sampleCount);
 
         // Insertion dans la table des échantillons (exemple)
-        $sqlInsertSample = "INSERT INTO echantillons (client_id, sampleType, samplingLocation, samplingDate, sampledBy, sampleReference) VALUES ('$clientId', '$sampleType', '$samplingLocation', '$samplingDate', '$sampledBy', '$sampleReference')";
+        $sqlInsertSample = "INSERT INTO echantillons (client_id, sampleType, samplingLocation, samplingDate, sampledBy, sampleReference, broughtBy, sampleSize, sampleObservations) VALUES ('$clientId', '$sampleType', '$samplingLocation', '$samplingDate', '$sampledBy', '$sampleReference', '$broughtBy', '$sampleSize', '$sampleObservations')";
         if (!$conn->query($sqlInsertSample)) {
             http_response_code(500);
             echo json_encode(array('success' => false, 'message' => 'Erreur lors de l\'insertion de l\'échantillon.', 'error' => $conn->error));

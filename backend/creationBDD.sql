@@ -37,13 +37,26 @@ CREATE TABLE users (
 
 ALTER TABLE clients ADD validated BOOLEAN DEFAULT FALSE;
 
-ALTER TABLE clients DROP COLUMN validated;
+ALTER TABLE analyses ADD COLUMN validated VARCHAR(50) DEFAULT 'reception_step_1';
+
+
+ALTER TABLE analyses DROP validated ;
+
+ALTER TABLE clients DROP COLUMN delais_livraison;
 
 ALTER TABLE clients ADD COLUMN clientReference VARCHAR(50);
 ALTER TABLE echantillons ADD COLUMN sampleReference VARCHAR(50);
 
+ALTER TABLE echantillons ADD COLUMN broughtBy VARCHAR(50);
+ALTER TABLE echantillons DROP COLUMN broughtdBy;
 
+ALTER TABLE echantillons ADD COLUMN sampleSize VARCHAR(50);
 
+ALTER TABLE echantillons ADD COLUMN sampleObservations VARCHAR(50);
+
+ALTER TABLE clients ADD COLUMN dilevery_delay DATE;
+
+ALTER TABLE clients ADD COLUMN requestingDate DATE;
 -- 1. Renommer la colonne 'echantillon_id' en 'analysis_id'
 ALTER TABLE elementsdinteret CHANGE COLUMN echantillon_id analysis_id INT;
 

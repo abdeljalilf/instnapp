@@ -4,6 +4,7 @@ import axios from 'axios';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import './FicheTechnique.css';
+import instnlogo from '../../../images/INSTN-logo.png';
 
 const FicheTechnique = () => {
     const { clientId } = useParams();
@@ -65,21 +66,23 @@ const FicheTechnique = () => {
     return (
         <div>
             <div ref={ficheRef}>
-                {/* <div className='form-header'>
-                    <h2>Fiche technique de la demande numero : {clientId}</h2>
-                </div> */}
                 {demandes && demandes.length > 0 ? (
                     demandes.map((demande, demandeIndex) => (
                         <div key={demandeIndex} className="form-group">
                             
                             <div className='container-ft'>
+                                <div className='header-ft-elements'>
                                 <div className='header-ft'>
+                                    <div className='instn-logo'>
+                                        <img src={instnlogo} alt="INSTN Logo" />
+                                    </div>
                                     <h3>Ministère de l'Enseignement Supérieur et de la Recherche Scientifique</h3>
                                     <h3>INSTITUT NATIONAL DES SCIENCES ET TECHNIQUES NUCLEAIRES</h3>
                                     <h3>(INSTN-Madagascar)</h3>
                                     <h3>B.P.3907</h3>
                                     <h3>Tél: 0321179224</h3>
                                     <h3>E-mail : instn@moov.mg</h3>
+                                </div>
                                 </div>
                                 <div className='title-ft'>
                                     <h1>FICHE TECHNIQUE DE SERVICE</h1>
@@ -107,6 +110,10 @@ const FicheTechnique = () => {
                                 <div className="form-group-ft">
                                     <label>Email:</label>
                                     <p>{demande.email}</p>
+                                </div>
+                                <div className="form-group-ft">
+                                    <label>Date de la demande:</label>
+                                    <p>{demande.requestingDate}</p>
                                 </div>
                                 </div>
                                 <div className="form-header-ft">
@@ -138,7 +145,15 @@ const FicheTechnique = () => {
                                         </div>
                                         <div className="form-group-ft">
                                             <label>Apporté par:</label>
-                                            <p>{echantillon.sampledBy}</p>
+                                            <p>{echantillon.broughtBy}</p>
+                                        </div>
+                                        <div className="form-group-ft">
+                                            <label>Quantite de l'echantillon:</label>
+                                            <p>{echantillon.sampleSize}</p>
+                                        </div>
+                                        <div className="form-group-ft">
+                                            <label>Observations:</label>
+                                            <p>{echantillon.sampleObservations}</p>
                                         </div>
                                         {echantillon.analyses.map((analyse, analyseIndex) => (
                                             <div key={analyseIndex} className="analysis-section">
@@ -148,18 +163,7 @@ const FicheTechnique = () => {
                                                 </div>
                                             </div>
                                         ))}
-                                        <div className="form-group-ft">
-                                            <label>Apporté par:</label>
-                                            <p>{echantillon.sampledBy}</p>
-                                        </div>
-                                        <div className="form-group-ft">
-                                            <label>Quantite de l'echantillon:</label>
-                                            <p>1 L</p>
-                                        </div>
-                                        <div className="form-group-ft">
-                                            <label>Observations:</label>
-                                            <p>Bon etat</p>
-                                        </div>
+
                                     </div>
                                     
                                 ))}

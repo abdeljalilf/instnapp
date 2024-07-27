@@ -11,7 +11,9 @@ const UserForm = () => {
         name: '',
         address: '',
         phone: '',
-        email: ''
+        email: '',
+        requestingDate:getCurrentDate(),
+        dilevery_delay:getCurrentDate()
     });
 
     const [samples, setSamples] = useState([
@@ -20,6 +22,9 @@ const UserForm = () => {
             samplingLocation: '',
             samplingDate: getCurrentDate(),
             sampledBy: '',
+            broughtBy:'',
+            sampleSize:'',
+            sampleObservations:'',
             analysisDetails: [
                 {
                     analysisType: '',
@@ -101,6 +106,9 @@ const UserForm = () => {
             samplingLocation: '',
             samplingDate: getCurrentDate(),
             sampledBy: '',
+            broughtBy:'',
+            sampleSize:'',
+            sampleObservations:'',
             analysisDetails: [
                 {
                     analysisType: '',
@@ -159,6 +167,9 @@ const UserForm = () => {
             samplingLocation: '',
             samplingDate: getCurrentDate(),
             sampledBy: '',
+            broughtBy:'',
+            sampleSize:'',
+            sampleObservations:'',
             analysisDetails: [
                 {
                     analysisType: '',
@@ -336,6 +347,36 @@ const UserForm = () => {
                             required
                         />
                     </div>
+                    <div className="form-group">
+                        <label>Apporté par:</label>
+                        <input
+                            type="text"
+                            name="broughtBy"
+                            value={sample.broughtBy}
+                            onChange={(e) => handleSamplesChange(index, e)}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Quantite de l'echantillon:</label>
+                        <input
+                            type="text"
+                            name="sampleSize"
+                            value={sample.sampleSize}
+                            onChange={(e) => handleSamplesChange(index, e)}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Observations:</label>
+                        <input
+                            type="text"
+                            name="sampleObservations"
+                            value={sample.sampleObservations}
+                            onChange={(e) => handleSamplesChange(index, e)}
+                            required
+                        />
+                    </div>
                     {sample.analysisDetails.map((analysis, analysisIndex) => (
                         <div key={analysisIndex} className="analysis-group">
                             <h3>Détails des analyses {analysisIndex + 1} sur l'échantillon {index + 1}</h3>
@@ -402,8 +443,19 @@ const UserForm = () => {
                                     ))}
                                 </select>
                             </div>
+                            
                         </div>
                     ))}
+                    <div className="form-group">
+                            <label>Delai de livraison:</label>
+                                <input
+                                    type="date"
+                                    name="dilevery_delay"
+                                    value={personalInfo.dilevery_delay}
+                                    onChange={(e) => handlePersonalInfoChange(e)}
+                                    required
+                                />
+                    </div>
                     <div className='analysis-buttons'>
                     <button type="button" onClick={() => addAnalysis(index)} className='button-add'>
                         Ajouter une analyse

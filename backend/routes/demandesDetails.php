@@ -19,8 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if (isset($_GET['referenceClient']) && !empty($_GET['referenceClient'])) {
         $referenceClient = $_GET['referenceClient'];
 
-        $sql = "SELECT c.id as clientId, c.name, c.address, c.phone, c.email, c.clientReference,
-                       e.id as echantillonId, e.sampleType, e.sampleReference, e.samplingLocation, e.samplingDate, e.sampledBy, 
+        $sql = "SELECT c.id as clientId, c.name, c.address, c.phone, c.email, c.clientReference, c.dilevery_delay, c.requestingDate,
+                       e.id as echantillonId, e.sampleType, e.sampleReference, e.samplingLocation, e.samplingDate, e.sampledBy, e.broughtBy, e.sampleSize, e.sampleObservations,
                        a.id as analysisId, a.analysisType, a.parameter, a.technique, 
                        ed.id as elementId, ed.elementDinteret 
                 FROM clients c 
@@ -49,6 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                         'address' => $row['address'],
                         'phone' => $row['phone'],
                         'email' => $row['email'],
+                        'dilevery_delay' => $row['dilevery_delay'],
+                        'requestingDate' => $row['requestingDate'],
                         'echantillons' => array()
                     );
                 }
@@ -61,6 +63,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                         'samplingLocation' => $row['samplingLocation'],
                         'samplingDate' => $row['samplingDate'],
                         'sampledBy' => $row['sampledBy'],
+                        'sampleSize' => $row['sampleSize'],
+                        'sampleObservations' => $row['sampleObservations'],
+                        'broughtBy' => $row['broughtBy'],
                         'analyses' => array()
                     );
                 }

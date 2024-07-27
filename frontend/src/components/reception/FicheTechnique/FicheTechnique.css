@@ -4,6 +4,12 @@
     align-items: center;
     padding-bottom: -35px;
 }
+.header-ft-elements {
+    display: flex;
+    flex-direction:column-reverse;
+    align-items: center;
+}
+
 
 .header-ft h3 {
     line-height: 1; /* Ajustez cette valeur selon vos besoins */
@@ -69,4 +75,16 @@
 .signatures p {
     margin: 0; /* Supprimer la marge par défaut des paragraphes */
     text-align: center; /* Centrer le texte */
+}
+
+.instn-logo {
+    display: flex;
+    align-items: start !important;
+}
+
+.instn-logo img {
+    width: 100px;
+    height: 100px;
+    position: relative;
+    margin-left: 0;
 }
