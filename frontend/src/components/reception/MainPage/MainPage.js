@@ -13,10 +13,13 @@ const MainPage = () => {
                     <Typography variant="h6" className="main-page-title">
                         Reception
                     </Typography>
-                    <Button color="inherit" onClick={() => navigate('/reception')} className="main-button">
+                    <Button color="inherit" onClick={() => navigate('/reception/Statistiques')} className="main-button">
+                        Statistiques
+                    </Button>
+                    <Button color="inherit" onClick={() => navigate('/reception/DemandesForm')} className="main-button">
                         Faire une nouvelle demande
                     </Button>
-                    <Button color="inherit" onClick={() => navigate('/reception/requests-details')} className="main-button">
+                    <Button color="inherit" onClick={() => navigate('/reception/DemandesList')} className="main-button">
                         Les détails sur les demandes
                     </Button>
                 </Toolbar>

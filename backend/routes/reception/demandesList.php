@@ -16,9 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 // Récupérer toutes les demandes d'analyses
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $sql = "SELECT c.id as clientId, c.name, c.address, c.phone, c.email, c.clientReference,
+    $sql = "SELECT c.id as clientId, c.name, c.address, c.phone, c.email, c.clientReference, c.requestingDate, c.dilevery_delay,
                    e.id as echantillonId, e.sampleType, e.sampleReference, e.samplingLocation, e.samplingDate, e.sampledBy, 
-                   a.id as analysisId, a.analysisType, a.parameter, a.technique, 
+                   a.id as analysisId, a.analysisType, a.parameter, a.technique, a.validated,
                    ed.id as elementId, ed.elementDinteret 
             FROM clients c 
             JOIN echantillons e ON c.id = e.client_id 
@@ -42,6 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     'address' => $row['address'],
                     'phone' => $row['phone'],
                     'email' => $row['email'],
+                    'requestingDate' => $row['requestingDate'],
+                    'dilevery_delay' => $row['dilevery_delay'],
                     'echantillons' => array()
                 );
             }
@@ -64,6 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     'analysisType' => $row['analysisType'],
                     'parameter' => $row['parameter'],
                     'technique' => $row['technique'],
+                    'validated' => $row['validated'],
                     'elementsDinteret' => array()
                 );
             }

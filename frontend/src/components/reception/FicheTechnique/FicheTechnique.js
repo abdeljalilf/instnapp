@@ -12,6 +12,7 @@ const FicheTechnique = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const ficheRef = useRef();
+    const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
     useEffect(() => {
         if (!clientId) {
@@ -22,7 +23,7 @@ const FicheTechnique = () => {
 
         const fetchDetails = async () => {
             try {
-                const response = await axios.get(`http://localhost/instnapp/backend/routes/reception/demandesDetails.php?referenceClient=${generateClientReference(clientId)}`);
+                const response = await axios.get(`${apiBaseUrl}/instnapp/backend/routes/reception/demandesDetails.php?referenceClient=${generateClientReference(clientId)}`);
                 if (response.data.success) {
                     setDemandes(response.data.demandes);
                 } else {
@@ -172,7 +173,7 @@ const FicheTechnique = () => {
                                 </div>
                                 <div className="form-group-ft">
                                             <label>Date de livraison:</label>
-                                            <p>7/25/2024</p>
+                                            <p>{demande.dilevery_delay}</p>
                                 </div>
                                 <div className="form-header-ft">
                                             <h2>Signatures</h2>

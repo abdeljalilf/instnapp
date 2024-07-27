@@ -9,11 +9,12 @@ const DemandesList = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [search, setSearch] = useState('');
+    const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
     useEffect(() => {
         const fetchDemandes = async () => {
             try {
-                const response = await axios.get('http://localhost/instnapp/backend/routes/reception/demandesList.php');
+                const response = await axios.get(`${apiBaseUrl}/instnapp/backend/routes/reception/demandesList.php`);
                 if (response.data.success) {
                     setDemandes(response.data.demandes);
                 } else {
@@ -72,7 +73,7 @@ const DemandesList = () => {
                                         Éléments d'intérêt: {analyse.elementsDinteret.map(e => e.elementDinteret).join(', ')}
                                     </td>
                                     <td>
-                                        <Link to={`/reception/requests-details/${demande.clientId}`}>
+                                        <Link to={`/reception/DemandesList/${demande.clientId}`}>
                                             <button className="details-button">Voir les détails</button>
                                         </Link>
                                     </td>

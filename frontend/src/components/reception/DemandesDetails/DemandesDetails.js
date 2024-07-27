@@ -11,6 +11,7 @@ const DemandesDetails = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
     useEffect(() => {
         if (!clientId) {
@@ -21,7 +22,7 @@ const DemandesDetails = () => {
 
         const fetchDetails = async () => {
             try {
-                const response = await axios.get(`http://localhost/instnapp/backend/routes/reception/demandesDetails.php?referenceClient=${generateClientReference(clientId)}`);
+                const response = await axios.get(`${apiBaseUrl}/instnapp/backend/routes/reception/demandesDetails.php?referenceClient=${generateClientReference(clientId)}`);
                 if (response.data.success) {
                     setDemandes(response.data.demandes);
                 } else {
@@ -49,7 +50,7 @@ const DemandesDetails = () => {
         <div className="container">
             <div className='form-header'>
             <h2>Détails de la Demande : {generateClientReference(clientId)}</h2>
-            <Button color="inherit" onClick={() => navigate(`/reception/requests-details/fiche-technique/${clientId}`)} className="main-button">
+            <Button color="inherit" onClick={() => navigate(`/reception/DemandesList/fiche-technique/${clientId}`)} className="main-button">
                         Fiche technique
             </Button>
             </div>

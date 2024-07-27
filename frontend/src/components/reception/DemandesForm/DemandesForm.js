@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import './userform.css';
+import './DemandesForm.css';
 
-const UserForm = () => {
+const DemandesForm = () => {
     const getCurrentDate = () => {
         const today = new Date();
         return today.toISOString().split('T')[0];
     };
+
+    const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
     const [personalInfo, setPersonalInfo] = useState({
         name: '',
@@ -130,7 +132,7 @@ const UserForm = () => {
     
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await fetch('http://localhost/instnapp/backend/routes/reception/demandesForm.php', {
+        const response = await fetch(`${apiBaseUrl}/instnapp/backend/routes/reception/demandesForm.php`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -479,4 +481,4 @@ const UserForm = () => {
     );
 };
 
-export default UserForm;
+export default DemandesForm;
