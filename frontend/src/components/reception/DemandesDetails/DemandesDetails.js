@@ -21,7 +21,7 @@ const DemandesDetails = () => {
 
         const fetchDetails = async () => {
             try {
-                const response = await axios.get(`http://localhost/instnapp/backend/routes/demandesDetails.php?referenceClient=${generateClientReference(clientId)}`);
+                const response = await axios.get(`http://localhost/instnapp/backend/routes/reception/demandesDetails.php?referenceClient=${generateClientReference(clientId)}`);
                 if (response.data.success) {
                     setDemandes(response.data.demandes);
                 } else {

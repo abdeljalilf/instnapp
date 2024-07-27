@@ -130,7 +130,7 @@ const UserForm = () => {
     
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await fetch('http://localhost/instnapp/backend/routes/userform.php', {
+        const response = await fetch('http://localhost/instnapp/backend/routes/reception/demandesForm.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

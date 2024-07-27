@@ -1,6 +1,6 @@
 <?php
 // Inclure le fichier de configuration pour la connexion à la base de données
-require_once '../config.php';
+require_once '../../database/config.php';
 
 // Set CORS headers
 header('Access-Control-Allow-Origin: *');
