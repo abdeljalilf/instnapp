@@ -6,24 +6,35 @@ body {
     padding: 0;
     font-family: 'Arial', sans-serif;
     background: #f0f4f8; /* Couleur de fond douce */
+    /* background-image: url('C:\Users\Hp\Desktop\instn-form\public\INSTN-logo.png');  */
+    background-size:auto;
+    background-position: center;
 }
 
+.form-header {
+    background-color: #2e8b57; /* Vert */
+    padding: 10px;
+    border-radius: 5px 5px 0 0;
+    color: white;
+    text-align: center;
+    margin: -20px -20px 20px -20px;
+    font-size:xx-large;
+}
 /* Conteneur principal */
 .demandes-container {
+    width: 90%;
+    margin: 50px auto;
     padding: 20px;
-    background-color: rgba(255, 255, 255, 0.8); /* Couleur de fond translucide */
     border: 1px solid #ccc;
     border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.8); /* Couleur de fond translucide */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     animation: fadeIn 1s ease-in-out;
-    margin: 50px auto;
-    width: 90%;
-    max-width: 800px;
 }
 
 /* Barre d'outils */
 .toolbar {
-    display: flex;
+    display: flex; 
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
@@ -35,29 +46,33 @@ body {
     font-weight: bold;
     color: #2e8b57; /* Vert */
 }
-
+.search-label{
+    font-size: large;
+    margin-left: 20px;
+}
 /* Champ de recherche */
 .search-input {
-    width: calc(100% - 40px); /* Largeur ajustée pour la loupe */
-    padding: 10px;
-    font-size: 1em;
-    border: 1px solid #2e8b57; /* Vert */
-    border-radius: 5px;
-    box-sizing: border-box;
-    transition: all 0.3s ease;
-    position: relative;
+    width: 80% !important;
+    padding: 10px !important;
+    font-size: 1em !important;
+    border: 0px solid #2e8b57 !important; 
+    border-bottom: 1px solid #2e8b57 !important;
+    border-radius: 5px !important;
+    box-sizing: border-box !important;
+    transition: all 0.3s ease !important;
+    position: relative !important;
 }
 
 /* Loupe à droite */
 .search-input::after {
-    content: '\1F50D'; /* Code unicode de l'icône loupe */
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    font-size: 1.2em;
-    color: #555; /* Couleur du texte gris */
-    cursor: pointer;
+    content: '\1F50D' !important; /* Code unicode de l'icône loupe */
+    position: absolute !important;
+    top: 50% !important;
+    right: 10px !important;
+    transform: translateY(-50%) !important;
+    font-size: 1.2em !important;
+    color: #555 !important; /* Couleur du texte gris */
+    cursor: pointer !important;
 }
 
 /* Tableau stylisé */
@@ -107,4 +122,25 @@ body {
     to {
         opacity: 1;
     }
+}
+
+.details-button {
+    display: inline-flex; /* Utilisez inline-flex pour ajuster la largeur en fonction du contenu */
+    padding: 10px 20px; /* Espace autour du texte (ajustez selon vos besoins) */
+    font-size: 16px; /* Taille du texte (ajustez selon vos besoins) */
+    border: none;
+    border-radius: 5px;
+    background-color: #2e8b57; /* Couleur de fond (ajustez selon vos besoins) */
+    color: white;
+    cursor: pointer;
+    text-align: center;
+    white-space: nowrap; /* Empêche le texte de se casser en plusieurs lignes */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Ombre portée (ajustez selon vos besoins) */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Effets de transition */
+    margin-left: -10%;
+}
+
+.details-button:hover {
+    background-color: #183020; /* Couleur de fond au survol (ajustez selon vos besoins) */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Ombre portée au survol (ajustez selon vos besoins) */
 }

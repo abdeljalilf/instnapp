@@ -11,7 +11,9 @@ const UserForm = () => {
         name: '',
         address: '',
         phone: '',
-        email: ''
+        email: '',
+        requestingDate:getCurrentDate(),
+        dilevery_delay:getCurrentDate()
     });
 
     const [samples, setSamples] = useState([
@@ -20,6 +22,9 @@ const UserForm = () => {
             samplingLocation: '',
             samplingDate: getCurrentDate(),
             sampledBy: '',
+            broughtBy:'',
+            sampleSize:'',
+            sampleObservations:'',
             analysisDetails: [
                 {
                     analysisType: '',
@@ -86,12 +91,24 @@ const UserForm = () => {
         setSamples(updatedSamples);
     };
 
+    const deleteAnalysis = (sampleIndex) => {
+        const updatedSamples = [...samples];
+        if (updatedSamples[sampleIndex].analysisDetails.length > 1) {
+            updatedSamples[sampleIndex].analysisDetails.pop();
+        }
+        setSamples(updatedSamples);
+    };
+
+    
     const addSample = () => {
         setSamples([...samples, {
             sampleType: '',
             samplingLocation: '',
             samplingDate: getCurrentDate(),
             sampledBy: '',
+            broughtBy:'',
+            sampleSize:'',
+            sampleObservations:'',
             analysisDetails: [
                 {
                     analysisType: '',
@@ -103,6 +120,14 @@ const UserForm = () => {
         }]);
     };
 
+    const deleteSample = () => {
+        const updatedSamples = [...samples];
+        if (updatedSamples.length > 1) {
+            updatedSamples.pop();
+        }
+        setSamples(updatedSamples);
+    };
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         const response = await fetch('http://localhost/instnapp/backend/routes/userform.php', {
@@ -115,7 +140,7 @@ const UserForm = () => {
                 samples
             })
         });
-        
+        console.log("personal: " + personalInfo+ " samples: "+ samples)
         const result = await response.json();
         
         // Supposons que 'result' contient la réponse JSON de votre requête
@@ -142,6 +167,9 @@ const UserForm = () => {
             samplingLocation: '',
             samplingDate: getCurrentDate(),
             sampledBy: '',
+            broughtBy:'',
+            sampleSize:'',
+            sampleObservations:'',
             analysisDetails: [
                 {
                     analysisType: '',
@@ -319,6 +347,36 @@ const UserForm = () => {
                             required
                         />
                     </div>
+                    <div className="form-group">
+                        <label>Apporté par:</label>
+                        <input
+                            type="text"
+                            name="broughtBy"
+                            value={sample.broughtBy}
+                            onChange={(e) => handleSamplesChange(index, e)}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Quantite de l'echantillon:</label>
+                        <input
+                            type="text"
+                            name="sampleSize"
+                            value={sample.sampleSize}
+                            onChange={(e) => handleSamplesChange(index, e)}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
+                        <label>Observations:</label>
+                        <input
+                            type="text"
+                            name="sampleObservations"
+                            value={sample.sampleObservations}
+                            onChange={(e) => handleSamplesChange(index, e)}
+                            required
+                        />
+                    </div>
                     {sample.analysisDetails.map((analysis, analysisIndex) => (
                         <div key={analysisIndex} className="analysis-group">
                             <h3>Détails des analyses {analysisIndex + 1} sur l'échantillon {index + 1}</h3>
@@ -385,16 +443,37 @@ const UserForm = () => {
                                     ))}
                                 </select>
                             </div>
+                            
                         </div>
                     ))}
-                    <button type="button" onClick={() => addAnalysis(index)}>
+                    <div className="form-group">
+                            <label>Delai de livraison:</label>
+                                <input
+                                    type="date"
+                                    name="dilevery_delay"
+                                    value={personalInfo.dilevery_delay}
+                                    onChange={(e) => handlePersonalInfoChange(e)}
+                                    required
+                                />
+                    </div>
+                    <div className='analysis-buttons'>
+                    <button type="button" onClick={() => addAnalysis(index)} className='button-add'>
                         Ajouter une analyse
                     </button>
+                    <button type="button" onClick={() => deleteAnalysis(index)} className='button-delete'>
+                        Supprimer une analyse
+                    </button>
+                    </div>
                 </div>
             ))}
-            <button type="button" onClick={addSample}>
+            <div className='analysis-buttons'>
+            <button type="button" onClick={addSample} className='button-add'>
                 Ajouter un échantillon
             </button>
+            <button type="button" onClick={deleteSample} className='button-delete'>
+                Supprimer un échantillon
+            </button>
+            </div>
             <button type="submit" className='submit-button'>Soumettre</button>
         </form>
     );

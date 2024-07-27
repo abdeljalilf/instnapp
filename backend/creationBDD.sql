@@ -1,3 +1,4 @@
+DROP DATABASE IF EXISTS laboratoire;
 CREATE DATABASE laboratoire;
 
 USE laboratoire;
@@ -37,5 +38,61 @@ CREATE TABLE users (
 
 ALTER TABLE clients ADD validated BOOLEAN DEFAULT FALSE;
 
+ALTER TABLE analyses ADD COLUMN validated VARCHAR(50) DEFAULT 'reception_step_1';
+
+
+ALTER TABLE analyses DROP validated ;
+
+ALTER TABLE clients DROP COLUMN delais_livraison;
+
 ALTER TABLE clients ADD COLUMN clientReference VARCHAR(50);
 ALTER TABLE echantillons ADD COLUMN sampleReference VARCHAR(50);
+
+ALTER TABLE echantillons ADD COLUMN broughtBy VARCHAR(50);
+
+
+ALTER TABLE echantillons ADD COLUMN sampleSize VARCHAR(50);
+
+ALTER TABLE echantillons ADD COLUMN sampleObservations VARCHAR(50);
+
+ALTER TABLE clients ADD COLUMN dilevery_delay DATE;
+
+ALTER TABLE clients ADD COLUMN requestingDate DATE;
+-- 1. Renommer la colonne 'echantillon_id' en 'analysis_id'
+ALTER TABLE elementsdinteret CHANGE COLUMN echantillon_id analysis_id INT;
+
+-- 2. Si nécessaire, mettre à jour les valeurs de 'analysis_id' pour s'assurer qu'elles sont correctes
+-- Vous devrez peut-être ajuster cette partie selon vos besoins spécifiques
+-- Par exemple, si vous avez une logique pour mapper les anciens 'echantillon_id' aux nouveaux 'analysis_id'
+
+-- 3. Mettre à jour la contrainte de clé étrangère
+-- D'abord, il faut supprimer la contrainte existante (si elle existe)
+ALTER TABLE elementsdinteret DROP FOREIGN KEY IF EXISTS fk_elementsdinteret_echantillon;
+
+-- Ensuite, ajouter la nouvelle contrainte
+ALTER TABLE elementsdinteret 
+ADD CONSTRAINT fk_elementsdinteret_analysis
+FOREIGN KEY (analysis_id) REFERENCES analyses(id);
+
+DROP TABLE IF EXISTS elementsdinteret;
+
+CREATE TABLE elementsdinteret (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    elementDinteret VARCHAR(255) NOT NULL,
+    analysis_id INT NOT NULL,
+    FOREIGN KEY (analysis_id) REFERENCES analyses(id)
+);
+
+ALTER TABLE clients ADD COLUMN delais_livraison DATE NOT NULL;
+
+-- Étape 1: Supprimer la colonne existante
+ALTER TABLE clients DROP COLUMN delais_livraison;
+
+-- Étape 2: Ajouter la colonne avec une valeur par défaut fixée à la date d'aujourd'hui
+-- Note : `DEFAULT '2024-07-22'` devrait être remplacé par la date actuelle
+
+ALTER TABLE clients 
+ADD COLUMN delais_livraison DATE DEFAULT '2024-07-22';
+ALTER TABLE analyses ADD departement VARCHAR(50) DEFAULT 'TFXE'
+
+ALTER TABLE analyses Drop sampleReference;

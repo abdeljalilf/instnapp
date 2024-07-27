@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 $demandes[$clientId]['echantillons'][$echantillonId] = array(
                     'echantillonId' => $echantillonId,
                     'sampleType' => $row['sampleType'],
-                    'sampleReference' => $row['sampleReference'],
+                    'sampleReference' => $row['sampleReference'], // Use sampleReference
                     'samplingLocation' => $row['samplingLocation'],
                     'samplingDate' => $row['samplingDate'],
                     'sampledBy' => $row['sampledBy'],

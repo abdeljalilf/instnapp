@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import './labo.css';
 
 const Labo = () => {
-  const labos = ['TFXE', 'ATN', 'HI']; // Hardcoded list of departments
+  const labos = ['TFXE', 'ATN', 'HI'];
   const [selectedLabo, setSelectedLabo] = useState('');
   const [analyses, setAnalyses] = useState([]);
 
   const handleLaboChange = (event) => {
     const labo = event.target.value;
     setSelectedLabo(labo);
-    // Fetch analyses for the selected labo
     fetch('http://localhost/instnapp/backend/routes/labo.php', {
       method: 'POST',
       headers: {
@@ -40,21 +40,26 @@ const Labo = () => {
           <table>
             <thead>
               <tr>
-                <th>Analysis ID</th>
-                <th>Echantillon ID</th>
-                <th>Analysis Type</th>
-                <th>Parameter</th>
-                <th>Technique</th>
+                <th>ID analyse</th>
+                <th>Référence échantillon</th>
+                <th>Opération demandé</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {analyses.map(analysis => (
-                <tr key={analysis.id}>
-                  <td>{analysis.id}</td>
-                  <td>{analysis.echantillon_id}</td>
-                  <td>{analysis.analysisType}</td>
-                  <td>{analysis.parameter}</td>
-                  <td>{analysis.technique}</td>
+                <tr key={analysis.analysisId}>
+                  <td>{analysis.analysisId}</td>
+                  <td>{analysis.sampleReference}</td>
+                  <td>
+                    Analyse {analysis.analysisType} de {analysis.parameter} par {analysis.technique} <br />
+                    Éléments d'intérêt: {analysis.elementDinteret}
+                  </td>
+                  <td>
+                    <Link to={`/analysis-details/${analysis.id}`}>
+                      <button className="result-button">Ajouter les resultats</button>
+                    </Link>
+                  </td>
                 </tr>
               ))}
             </tbody>

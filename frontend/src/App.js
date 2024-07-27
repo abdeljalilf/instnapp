@@ -5,6 +5,7 @@ import './App.css'; // Importez votre fichier CSS personnalisé
 import UserForm from './components/UserForm/UserForm';
 import DemandesList from './components/DemandeList/DemandesList';
 import Labo from './components/Labo/Labo';
+import AnalysisDetails from './components/AnalysisDetails/AnalysisDetails';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           <Route path="/userform" element={<UserForm />} />
           <Route path="/demandes" element={<DemandesList />} />
           <Route path="/labo" element={<Labo />} />
+          <Route path="/analysis-details/:id" element={<AnalysisDetails />} /> {/* New Route */}
         </Routes>
       </div>
     </Router>

@@ -38,6 +38,7 @@ body {
     border-radius: 5px;
     box-sizing: border-box;
     transition: all 0.3s ease;
+    background-color: white; /* Set the background color to white */
 }
 
 .labo-select:focus {
@@ -46,15 +47,19 @@ body {
 }
 
 button {
-    background-color: #2e8b57; /* Vert */
-    color: white;
+    display: inline-flex; /* Utilisez inline-flex pour ajuster la largeur en fonction du contenu */
+    padding: 10px 20px; /* Espace autour du texte (ajustez selon vos besoins) */
+    font-size: 16px; /* Taille du texte (ajustez selon vos besoins) */
     border: none;
     border-radius: 5px;
+    background-color: #2e8b57; /* Couleur de fond (ajustez selon vos besoins) */
+    color: white;
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-    margin: 10px;
-    padding: 10px 15px;
+    text-align: center;
+    white-space: nowrap; /* Empêche le texte de se casser en plusieurs lignes */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Ombre portée (ajustez selon vos besoins) */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Effets de transition */
+    margin-left: 5%;
 }
 
 button:hover {
@@ -92,7 +97,7 @@ select:focus {
 
 .analyses-table th, .analyses-table td {
     border: 1px solid #ccc;
-    padding: 8px;
+    padding: 20px;
     text-align: left;
 }
 

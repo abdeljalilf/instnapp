@@ -1,7 +1,8 @@
 // src/components/DemandeList/DemandesList.js
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
-import './DemandesList.css'; 
+import './DemandesList.css';
 
 const DemandesList = () => {
     const [demandes, setDemandes] = useState([]);
@@ -37,11 +38,12 @@ const DemandesList = () => {
 
     return (
         <div className="demandes-container">
-            <div className="toolbar">
-                <span className="breadcrumb">Liste des Demandes d'Analyses</span>
+            <div className="form-header">
+                <h2>Liste des Demandes d'Analyses</h2>
             </div>
-            <div className="toolbar"> {/* Nouveau div pour le champ de recherche */}
+            <div className="toolbar">
                 <label htmlFor="search" className="search-label">Rechercher :</label>
+                <br />
                 <input
                     type="text"
                     id="search"
@@ -56,6 +58,7 @@ const DemandesList = () => {
                     <tr>
                         <th>Reference Client</th>
                         <th>Service</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -67,6 +70,11 @@ const DemandesList = () => {
                                     <td>
                                         Analyse {analyse.analysisType} de {analyse.parameter} par {analyse.technique} <br />
                                         Éléments d'intérêt: {analyse.elementsDinteret.map(e => e.elementDinteret).join(', ')}
+                                    </td>
+                                    <td>
+                                        <Link to={`/reception/requests-details/${demande.clientId}`}>
+                                            <button className="details-button">Ajouter les résultats</button>
+                                        </Link>
                                     </td>
                                 </tr>
                             ))

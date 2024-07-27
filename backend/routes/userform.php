@@ -23,7 +23,16 @@ function generateClientReference($clientId, $year) {
 function generateSampleReference($year, $clientId, $sampleCount) {
     return sprintf("%s%04dC%02d", $year, $clientId, $sampleCount);
 }
-
+// Mapping des techniques aux départements
+$techniqueToDepartement = [
+    "Spectrometrie d'Absportion Atomic (SAA)" => 'TFXE',
+    'Analyseur Direct de Mercure (ADM)' => 'TFXE',
+    'Chromatographie Ionique (CI)' => 'HI',
+    'Spectrometre Gamma' => 'ATN',
+    'Spectrometre alpha' => 'ATN',
+    'Fluorescence X a Energie Dispersive (FXDE)' => 'TFXE',
+    'Gravimetrie' => 'TFXE'
+];
 // Vérifier si une requête POST a été envoyée depuis le formulaire React
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Récupérer les données JSON envoyées depuis le formulaire React
@@ -38,8 +47,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $address = $conn->real_escape_string($personalInfo['address']);
     $phone = $conn->real_escape_string($personalInfo['phone']);
     $email = $conn->real_escape_string($personalInfo['email']);
+    $requestingDate = $conn->real_escape_string($personalInfo['requestingDate']);
+    $dilevery_delay = $conn->real_escape_string($personalInfo['dilevery_delay']);
 
-    $sqlInsertClient = "INSERT INTO clients (name, address, phone, email) VALUES ('$name', '$address', '$phone', '$email')";
+    $sqlInsertClient = "INSERT INTO clients (name, address, phone, email, dilevery_delay, requestingDate) VALUES ('$name', '$address', '$phone', '$email', '$dilevery_delay', '$requestingDate')";
     if (!$conn->query($sqlInsertClient)) {
         http_response_code(500);
         echo json_encode(array('success' => false, 'message' => 'Erreur lors de l\'insertion du client.', 'error' => $conn->error));
@@ -67,6 +78,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $samplingLocation = $conn->real_escape_string($sample['samplingLocation']);
         $samplingDate = $conn->real_escape_string($sample['samplingDate']);
         $sampledBy = $conn->real_escape_string($sample['sampledBy']);
+        $broughtBy = $conn->real_escape_string($sample['broughtBy']);
+        $sampleSize = $conn->real_escape_string($sample['sampleSize']);
+        $sampleObservations = $conn->real_escape_string($sample['sampleObservations']);
 
         // Incrémenter le compteur d'échantillons
         $sampleCount++;
@@ -75,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sampleReference = generateSampleReference($year, $clientId, $sampleCount);
 
         // Insertion dans la table des échantillons (exemple)
-        $sqlInsertSample = "INSERT INTO echantillons (client_id, sampleType, samplingLocation, samplingDate, sampledBy, sampleReference) VALUES ('$clientId', '$sampleType', '$samplingLocation', '$samplingDate', '$sampledBy', '$sampleReference')";
+        $sqlInsertSample = "INSERT INTO echantillons (client_id, sampleType, samplingLocation, samplingDate, sampledBy, sampleReference, broughtBy, sampleSize, sampleObservations) VALUES ('$clientId', '$sampleType', '$samplingLocation', '$samplingDate', '$sampledBy', '$sampleReference', '$broughtBy', '$sampleSize', '$sampleObservations')";
         if (!$conn->query($sqlInsertSample)) {
             http_response_code(500);
             echo json_encode(array('success' => false, 'message' => 'Erreur lors de l\'insertion de l\'échantillon.', 'error' => $conn->error));
@@ -89,19 +103,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $analysisType = $conn->real_escape_string($analysis['analysisType']);
             $parameter = $conn->real_escape_string($analysis['parameter']);
             $technique = $conn->real_escape_string($analysis['technique']);
+            // Déterminer le département basé sur la technique
+            $departement = isset($techniqueToDepartement[$technique]) ? $techniqueToDepartement[$technique] : 'Unknown';
             $elements = $analysis['element'];
 
-            $sqlInsertAnalysis = "INSERT INTO analyses (echantillon_id, analysisType, parameter, technique) VALUES ('$sampleId', '$analysisType', '$parameter', '$technique')";
+            $sqlInsertAnalysis = "INSERT INTO analyses (echantillon_id, analysisType, parameter, technique,departement) VALUES ('$sampleId', '$analysisType', '$parameter', '$technique','$departement')";
             if (!$conn->query($sqlInsertAnalysis)) {
                 http_response_code(500);
                 echo json_encode(array('success' => false, 'message' => 'Erreur lors de l\'insertion des détails d\'analyse.', 'error' => $conn->error));
                 exit();
             }
 
+            $analysisId = $conn->insert_id; // Récupérer l'ID de l'analyse insérée
+
             // Insertion des éléments d'intérêt pour cette analyse
             foreach ($elements as $element) {
                 $element = $conn->real_escape_string($element);
-                $sqlInsertElement = "INSERT INTO elementsDinteret (elementDinteret, echantillon_id) VALUES ('$element', '$sampleId')";
+                $sqlInsertElement = "INSERT INTO elementsDinteret (elementDinteret, analysis_id) VALUES ('$element', '$analysisId')";
                 if (!$conn->query($sqlInsertElement)) {
                     http_response_code(500);
                     echo json_encode(array('success' => false, 'message' => 'Erreur lors de l\'insertion des éléments d\'intérêt.', 'error' => $conn->error));
