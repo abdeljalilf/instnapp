@@ -107,3 +107,4 @@ CREATE TABLE results (
     UNIQUE (analysis_id, element)
 );
 
+DELETE FROM results;

@@ -88,6 +88,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
             $stmt->execute();
         }
 
+        // Update the validated column in analyses table
+        $updateQuery = $conn->prepare("UPDATE analyses SET validated = 'laboratory' WHERE id = ?");
+        $updateQuery->bind_param("i", $analysisId);
+        $updateQuery->execute();
+
         // Return success message
         echo json_encode(['message' => 'Results saved successfully']);
     } else {
