@@ -96,3 +96,14 @@ ADD COLUMN delais_livraison DATE DEFAULT '2024-07-22';
 ALTER TABLE analyses ADD departement VARCHAR(50) DEFAULT 'TFXE'
 
 ALTER TABLE analyses Drop sampleReference;
+CREATE TABLE results (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    analysis_id INT NOT NULL,
+    element VARCHAR(255) NOT NULL,
+    concentration_moyenne FLOAT NOT NULL,
+    incertitude FLOAT NOT NULL,
+    unite VARCHAR(50) NOT NULL,
+    FOREIGN KEY (analysis_id) REFERENCES analyses(id),
+    UNIQUE (analysis_id, element)
+);
+

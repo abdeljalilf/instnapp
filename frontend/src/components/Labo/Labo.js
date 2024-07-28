@@ -56,7 +56,7 @@ const Labo = () => {
                     Éléments d'intérêt: {analysis.elementDinteret}
                   </td>
                   <td>
-                    <Link to={`/analysis-details/${analysis.id}`}>
+                    <Link to={`/analysis-details/${analysis.analysisId}`}>
                       <button className="result-button">Ajouter les resultats</button>
                     </Link>
                   </td>

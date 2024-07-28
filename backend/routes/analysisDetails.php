@@ -7,7 +7,7 @@ header('Access-Control-Allow-Headers: Content-Type, Authorization');
 // Include database connection
 include '../config.php';
 
-if (isset($_GET['id'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
     $id = $_GET['id'];
 
     // Query to fetch details from analyses
@@ -59,7 +59,44 @@ if (isset($_GET['id'])) {
     } else {
         echo json_encode(['error' => 'Analysis not found']);
     }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Get the data from the request
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    if ($data) {
+        $analysisId = $data['analysisId'];
+        $results = $data['results'];
+
+        // Prepare the SQL statement for inserting/updating results
+        $stmt = $conn->prepare("
+            INSERT INTO results (analysis_id, element, concentration_moyenne, incertitude, unite)
+            VALUES (?, ?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE
+            concentration_moyenne = VALUES(concentration_moyenne),
+            incertitude = VALUES(incertitude),
+            unite = VALUES(unite)
+        ");
+
+        foreach ($results as $result) {
+            $element = $result['element'];
+            $concentrationMoyenne = $result['concentrationMoyenne'];
+            $incertitude = $result['incertitude'];
+            $unite = $result['unite'];
+
+            // Bind the parameters
+            $stmt->bind_param("issss", $analysisId, $element, $concentrationMoyenne, $incertitude, $unite);
+            $stmt->execute();
+        }
+
+        // Return success message
+        echo json_encode(['message' => 'Results saved successfully']);
+    } else {
+        // Return error message
+        echo json_encode(['error' => 'Invalid input']);
+    }
 } else {
-    echo json_encode(['error' => 'No ID provided']);
+    echo json_encode(['error' => 'Invalid request method']);
 }
+
+$conn->close();
 ?>

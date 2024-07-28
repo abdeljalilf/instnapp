@@ -1,19 +1,15 @@
 <?php
-// Set CORS headers
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
-// Include database connection
 include '../config.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Fetch analyses for the selected department
     $input = json_decode(file_get_contents('php://input'), true);
     $selectedLabo = $input['labo'];
 
-    // Update the SQL query to join analyses, echantillons, and elementsdinteret tables
     $stmt = $conn->prepare("
         SELECT 
             a.id AS analysisId, 
