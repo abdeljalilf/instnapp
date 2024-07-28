@@ -6,7 +6,9 @@ import MainPage from './components/reception/MainPage/MainPage';
 import DemandesDetails from './components/reception/DemandesDetails/DemandesDetails';
 import FicheTechnique from './components/reception/FicheTechnique/FicheTechnique';
 import Statistiques from './components/reception/Statistiques/Statistiques';
-
+import FinanceDemandesList from './components/finance/FinanceDemandeList/FinanceDemandesList';
+import FinanceMainPage from './components/finance/FinanceMainPage/FinanceMainPage';
+import FinanceDemandesDetails from './components/finance/FinanceDemandesDetails/FinanceDemandesDetails';
 const App = () => {
     return (
         <Router>
@@ -20,7 +22,13 @@ const App = () => {
                     <Route path="reception/DemandesList/fiche-technique/:clientId" element={<FicheTechnique />} />
                     <Route path="reception" element={<Navigate to="reception/Statistiques" />} /> {/* Redirection pour reception */}
                 </Route>
-                <Route path="*" element={<Navigate to="/" />} /> {/* Redirection pour toutes les autres routes */}
+                <Route path="/finance" element={<FinanceMainPage />}>
+                <Route index element={<FinanceDemandesList />} />
+                    <Route path="/finance/NouvellesDemandes" element={<FinanceDemandesList />} />
+                    <Route path="/finance/DetailesDemandes/:clientId" element={<FinanceDemandesDetails />} />
+                </Route>
+                {/* <Route path="*" element={<Navigate to="/" />} />  */}
+                {/* Redirection pour toutes les autres routes */}
             </Routes>
         </Router>
     );

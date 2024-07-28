@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography, Button } from '@mui/material';
 import { useNavigate, Outlet } from 'react-router-dom';
-import "./MainPage.css";
+import "./FinanceMainPage.css";
 
 const MainPage = () => {
     const navigate = useNavigate();
@@ -13,11 +13,8 @@ const MainPage = () => {
                     <Typography variant="h6" className="main-page-title">
                         Finance
                     </Typography>
-                    <Button color="inherit" onClick={() => navigate('/reception')} className="main-button">
-                        Faire une nouvelle demande
-                    </Button>
-                    <Button color="inherit" onClick={() => navigate('/reception/requests-details')} className="main-button">
-                        Les détails sur les demandes
+                    <Button color="inherit" onClick={() => navigate('/finance/NouvellesDemandes')} className="main-button">
+                        Nouvelles demandes
                     </Button>
                 </Toolbar>
             </AppBar>

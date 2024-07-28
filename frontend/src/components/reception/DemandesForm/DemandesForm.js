@@ -142,7 +142,6 @@ const DemandesForm = () => {
                 samples
             })
         });
-        console.log("personal: " + personalInfo+ " samples: "+ samples)
         const result = await response.json();
         
         // Supposons que 'result' contient la réponse JSON de votre requête

@@ -144,3 +144,36 @@ body {
     background-color: #183020; /* Couleur de fond au survol (ajustez selon vos besoins) */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Ombre portée au survol (ajustez selon vos besoins) */
 }
+
+.validate-button{
+    display: inline-flex; /* Utilisez inline-flex pour ajuster la largeur en fonction du contenu */
+    padding: 10px 20px; /* Espace autour du texte (ajustez selon vos besoins) */
+    font-size: 16px; /* Taille du texte (ajustez selon vos besoins) */
+    border: none;
+    border-radius: 5px;
+    background-color: #2e8b57; /* Couleur de fond (ajustez selon vos besoins) */
+    color: white;
+    cursor: pointer;
+    text-align: center;
+    white-space: nowrap; /* Empêche le texte de se casser en plusieurs lignes */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Ombre portée (ajustez selon vos besoins) */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Effets de transition */
+    margin-left: -10%;
+    width: fit-content;
+}
+
+.analysis{
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 0.2px 1px  #2e8b57; /* Ombre portée (ajustez selon vos besoins) */
+    margin-bottom: 10px;
+    padding: 5px;
+}
+
+.container-finance{
+    display: flex;
+    align-content: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
