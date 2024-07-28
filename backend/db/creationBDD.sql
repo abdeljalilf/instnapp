@@ -42,9 +42,25 @@ CREATE TABLE users (
     role ENUM('reception', 'admin') NOT NULL
 );
 
+-- Create the table
+CREATE TABLE resultats (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    elementsdinteret_id INT NOT NULL,
+    Unite VARCHAR(50) NOT NULL,
+    Valeur_Moyenne VARCHAR(50) NOT NULL,
+    Valeur_Limite_OMS INT NOT NULL,
+    Limite_Detection INT NOT NULL,
+    Observation VARCHAR(200) NOT NULL,
+    FOREIGN KEY (elementsdinteret_id) REFERENCES elementsdinteret(id)
+);
+
+
 ALTER TABLE clients ADD COLUMN delais_livraison DATE DEFAULT '2024-09-17';
+ALTER TABLE clients ADD COLUMN date_arrive DATE DEFAULT '2024-09-10';
 ALTER TABLE clients ADD COLUMN clientReference VARCHAR(50);
 ALTER TABLE echantillons ADD COLUMN sampleReference VARCHAR(50);
 ALTER TABLE analyses ADD departement VARCHAR(50) DEFAULT 'TFXE'
 
 ALTER TABLE analyses ADD validated VARCHAR(50) DEFAULT 'notvalid';
+
+
