@@ -8,10 +8,11 @@ const FinanceDemandesList = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [search, setSearch] = useState('');
+    const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
     const fetchDemandes = async () => {
         try {
-            const response = await axios.get('http://localhost/instnapp/backend/routes/finance/financeDemandesList.php');
+            const response = await axios.get(`${apiBaseUrl}/instnapp/backend/routes/finance/financeDemandesList.php`);
             if (response.data.success) {
                 setDemandes(response.data.demandes);
             } else {

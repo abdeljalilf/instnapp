@@ -9,16 +9,19 @@ const MainPage = () => {
     return (
         <div>
             <AppBar position="static">
-                <Toolbar className="main-page-container">
-                    <Typography variant="h6" className="main-page-title">
+                <Toolbar className="main-page-container-finance">
+                    {/* <Typography variant="h6" className="main-page-title-finance">
                         Finance
-                    </Typography>
-                    <Button color="inherit" onClick={() => navigate('/finance/NouvellesDemandes')} className="main-button">
+                    </Typography> */}
+                    <Button color="inherit" variant="h6" className="main-page-title-reception" onClick={() => navigate('/')} className="main-button-reception">
+                        Finance
+                    </Button>
+                    <Button color="inherit" onClick={() => navigate('/finance/NouvellesDemandes')} className="main-button-finance">
                         Nouvelles demandes
                     </Button>
                 </Toolbar>
             </AppBar>
-            <div className="content">
+            <div>
                 <Outlet /> {/* Afficher les enfants des routes ici */}
             </div>
         </div>

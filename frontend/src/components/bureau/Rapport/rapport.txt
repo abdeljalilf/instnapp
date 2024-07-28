@@ -1,0 +1,104 @@
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import './Rapport.css';
+
+const Rapport = () => {
+    const { id } = useParams();
+    const [data, setData] = useState(null);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        if (id) {
+            fetch(`http://localhost:3000/backend/bureau/rapport.php?demande_id=${id}`)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch data');
+                    }
+                    return response.json();
+                })
+                .then((data) => {
+                    if (data.error) {
+                        setError(data.error);
+                    } else {
+                        setData(data[0]); // Assuming data is an array with a single element
+                    }
+                })
+                .catch((error) => {
+                    setError(error.message);
+                });
+        } else {
+            setError('Invalid demande_id provided');
+        }
+    }, [id]);
+
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
+
+    if (!data) {
+        return <div>Loading...</div>;
+    }
+
+    return (
+        <div className="rapport-container">
+            <div className="header">
+                <h1>Rapport d'Analyse</h1>
+                <p><strong>Demande ID:</strong> {data.demande_id}</p>
+                <p><strong>Date:</strong> {new Date().toLocaleDateString()}</p>
+            </div>
+
+            <div className="client-info">
+                <h2>Informations du Client</h2>
+                <p><strong>Nom:</strong> {data.client_name}</p>
+                <p><strong>Adresse:</strong> {data.client_address}</p>
+                <p><strong>Référence Client:</strong> {data.clientReference}</p>
+                <p><strong>Date d'Arrivée:</strong> {data.date_arrive}</p>
+                <p><strong>Délai de Livraison:</strong> {data.delais_livraison}</p>
+            </div>
+
+            {Object.entries(data.samples).map(([sampleType, samples], index) => (
+                <div className="sample-section" key={index}>
+                    <h3>Type d'Échantillon: {sampleType}</h3>
+                    {samples.length > 0 && (
+                        <div className="sample-details">
+                            <p><strong>Référence Échantillon:</strong> {samples[0].sampleReference}</p>
+                            <p><strong>Lieu de Prélèvement:</strong> {samples[0].samplingLocation}</p>
+                            <p><strong>Date de Prélèvement:</strong> {samples[0].samplingDate}</p>
+                            <p><strong>Prélevé par:</strong> {samples[0].sampledBy}</p>
+
+                            <table className="analysis-table">
+                                <thead>
+                                    <tr>
+                                        <th>Élément d'Intérêt</th>
+                                        <th>Unité</th>
+                                        <th>Valeur Moyenne</th>
+                                        <th>Valeur Limite OMS</th>
+                                        <th>Limite de Détection</th>
+                                        <th>Observation</th>
+                                        <th>Technique Utilisée</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {samples.map((sample, sampleIndex) => (
+                                        <tr key={sampleIndex}>
+                                            <td>{sample.elementDinteret}</td>
+                                            <td>{sample.Unite}</td>
+                                            <td>{sample.Valeur_Moyenne}</td>
+                                            <td>{sample.Valeur_Limite_OMS}</td>
+                                            <td>{sample.Limite_Detection}</td>
+                                            <td>{sample.Observation}</td>
+                                            <td>{sample.technique}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                            <hr />
+                        </div>
+                    )}
+                </div>
+            ))}
+        </div>
+    );
+};
+
+export default Rapport;
