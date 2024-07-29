@@ -1,4 +1,4 @@
-body {
+.labo body {
     margin: 0;
     padding: 0;
     font-family: 'Arial', sans-serif;
@@ -46,7 +46,7 @@ body {
     border-color: #238443; /* Bordure plus foncée au focus */
 }
 
-button {
+.labo button {
     display: inline-flex; /* Utilisez inline-flex pour ajuster la largeur en fonction du contenu */
     padding: 10px 20px; /* Espace autour du texte (ajustez selon vos besoins) */
     font-size: 16px; /* Taille du texte (ajustez selon vos besoins) */
@@ -62,15 +62,15 @@ button {
     margin-left: 5%;
 }
 
-button:hover {
+.labo  button:hover {
     background-color: #183020; /* Vert plus foncé */
 }
 
-button:active {
+.labo  button:active {
     background-color: #1a5f32; /* Vert encore plus foncé */
 }
 
-input:focus,
+.labo  input:focus,
 select:focus {
     border-color: #238443; /* Vert plus foncé */
     outline: none;

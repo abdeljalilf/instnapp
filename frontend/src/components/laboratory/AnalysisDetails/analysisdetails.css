@@ -1,4 +1,4 @@
-body {
+.labo-analaysis body {
     margin: 0;
     padding: 0;
     font-family: 'Arial', sans-serif;
@@ -18,18 +18,18 @@ body {
     animation: fadeIn 1s ease-in-out;
 }
 
-h1 {
+.labo-analaysis h1 {
     color: #2e8b57; /* Green */
     text-align: center;
 }
 
-table {
+.labo-analaysis table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
 }
 
-td, th {
+.labo-analaysis td, th {
     border: 1px solid #ccc;
     padding: 10px;
     text-align: left;
@@ -57,20 +57,20 @@ td, th {
     color: #2e8b57; /* Green */
 }
 
-aside {
+.labo-analaysis aside {
     margin-top: 10px;
 }
 
-aside h4 {
+.labo-analaysis aside h4 {
     color: #2e8b57; /* Green */
 }
 
-aside ul {
+.labo-analaysis aside ul {
     list-style: none;
     padding: 0;
 }
 
-aside li {
+.labo-analaysis aside li {
     background: #f2f2f2;
     padding: 5px;
     border-radius: 5px;

@@ -24,6 +24,7 @@ const Laboratoire = () => {
   };
 
   return (
+    <div className='labo'>
     <div className="labo-container">
       <div className="labo-header">
         <h1>Select Labo</h1>
@@ -67,6 +68,7 @@ const Laboratoire = () => {
           </table>
         </div>
       )}
+    </div>
     </div>
   );
 };

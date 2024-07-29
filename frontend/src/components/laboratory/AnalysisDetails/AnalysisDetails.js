@@ -72,6 +72,7 @@ const AnalysisDetails = () => {
   }
 
   return (
+    <div className='labo-analaysis'>
     <div className="details-container">
       <h1>Analysis Details</h1>
       <table>
@@ -182,6 +183,7 @@ const AnalysisDetails = () => {
         </table>
         <button onClick={handleSaveResults} className="valider-button">Valider</button>
       </section>
+    </div>
     </div>
   );
 };
