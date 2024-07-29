@@ -252,7 +252,7 @@ const DemandesForm = () => {
     return (
         <form onSubmit={handleSubmit}>
             <div className="form-header">
-                <h2>Informations personnelles du client</h2>
+                <h2>Informations personnelles du client </h2>
             </div>
             <div className="form-group">
                 <label>Nom du client:</label>
