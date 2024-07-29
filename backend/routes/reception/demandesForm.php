@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $personalInfo = $data['personalInfo'];
     $samples = $data['samples'];
 
-    // Insertion des informations personnelles dans la table clients
+    // Insertion des informations personnelles dans la table `clients`
     $name = $conn->real_escape_string($personalInfo['name']);
     $address = $conn->real_escape_string($personalInfo['address']);
     $phone = $conn->real_escape_string($personalInfo['phone']);

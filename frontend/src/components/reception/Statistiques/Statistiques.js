@@ -42,13 +42,13 @@ const Statistiques = () => {
 
             demande.echantillons.forEach(echantillon => {
                 echantillon.analyses.forEach(analysis => {
-                    if (analysis.validated !== 'reception_step_1') inProgressCount++;
+                    if (analysis.validated !== 'laboratory') inProgressCount++;
                 });
             });
 
             demande.echantillons.forEach(echantillon => {
                 echantillon.analyses.forEach(analysis => {
-                    if (analysis.validated === 'reception_step_1') validatedCount++;
+                    if (analysis.validated === 'laboratory') validatedCount++;
                 });
             });
 

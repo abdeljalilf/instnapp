@@ -42,7 +42,7 @@ const ProcessedRequests = () => {
                     {requests.map(request => (
                         <tr key={request.demande_id}>
                             <td>{request.demande_id}</td>
-                            <td>{request.delais_livraison}</td>
+                            <td>{request.dilevery_delay}</td>
                             <td>
                                 <div>
                                     {request.description.split('\n').slice(0, 1).join('\n')}

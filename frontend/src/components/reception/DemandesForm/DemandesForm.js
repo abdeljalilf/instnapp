@@ -242,7 +242,7 @@ const DemandesForm = () => {
             parameter === 'Elements nutritif' || parameter === 'Metaux lourds') {
             return ['Fluorescence X a Energie Dispersive (FXDE)'];
         } else if (parameter === 'PM') {
-            return ['Drafimetrie'];
+            return ['Gravimetrie'];
         } else if ((parameter === 'Metaux' || parameter === 'Randon') && sampleType === 'air') {
             return ['Fluorescence X a Energie Dispersive (FXDE)'];
         }
@@ -252,7 +252,7 @@ const DemandesForm = () => {
     return (
         <form onSubmit={handleSubmit}>
             <div className="form-header">
-                <h2>Informations personnelles du client </h2>
+                <h2>Informations personnelles du client</h2>
             </div>
             <div className="form-group">
                 <label>Nom du client:</label>

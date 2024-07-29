@@ -88,3 +88,9 @@
     position: relative;
     margin-left: 0;
 }
+
+/* .test{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+} */

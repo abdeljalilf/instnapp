@@ -18,6 +18,9 @@ import RequestDetails from './components/bureau/RequestDetails/RequestDetails';
 import Rapport from './components/bureau/Rapport/Rapport';
 import RapportFinal from './components/bureau/RapportFinal/RapportFinal'; 
 import WelcomePage from './components/welcomePage/WelcomePage';
+import AnalysisDetails from './components/laboratory/AnalysisDetails/AnalysisDetails';
+import Laboratoire from './components/laboratory/laboratoire/Laboratoire';
+import LaboMainPage from './components/laboratory/LaboMainPage/LaboMainPage';
 
 const App = () => {
     return (
@@ -46,6 +49,10 @@ const App = () => {
                     <Route path="request/:id" element={<RequestDetails />} /> {/* Route for request details */}
                     <Route path="rapport/:id" element={<Rapport />} /> {/* Route for report details */}
                     <Route path="rapportfinal/:id" element={<RapportFinal />} /> {/* New route for final report */}
+                </Route>
+                <Route path="/laboratoire" element={<LaboMainPage />}>
+                    <Route index element={<Laboratoire />} />
+                    <Route path="analysis-details/:id" element={<AnalysisDetails />} />
                 </Route>
             </Routes>
         </Router>
