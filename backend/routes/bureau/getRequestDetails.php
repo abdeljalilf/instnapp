@@ -1,5 +1,5 @@
 <?php
-include '../db/db_connection.php';
+include '../../database/db_connection.php';
 header("Access-Control-Allow-Origin: *");
 header('Content-Type: application/json');
 
@@ -12,7 +12,7 @@ $sql = "SELECT
             clients.address, 
             clients.phone, 
             clients.email, 
-            clients.delais_livraison,
+            clients.dilevery_delay,
             echantillons.id AS echantillon_id,
             echantillons.sampleType, 
             echantillons.samplingLocation, 

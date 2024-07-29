@@ -1,5 +1,5 @@
 <?php
-include '../db/db_connection.php';
+include '../../database/db_connection.php';
 
 header("Access-Control-Allow-Origin: *");
 header('Content-Type: application/json');
@@ -12,7 +12,7 @@ $sql = "
     UPDATE analyses
     JOIN echantillons ON analyses.echantillon_id = echantillons.id
     JOIN clients ON echantillons.client_id = clients.id
-    SET analyses.validated = 'valid'
+    SET analyses.validated = 'office_step_1'
     WHERE clients.id = ? AND analyses.departement = 'TFXE'
 ";
 

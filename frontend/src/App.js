@@ -1,21 +1,43 @@
-// App.js
-
+// src/App.js
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import UserForm from './components/formclient/UserForm';
-import LaboratoryMainPage from './components/bureau/LaboratoryMainPage';
-import NewRequests from './components/bureau/NewRequests';
-import ProcessedRequests from './components/bureau/ProcessedRequests';
-import Dashboard from './components/bureau/Dashboard';
-import RequestDetails from './components/bureau/RequestDetails';
-import Rapport from './components/bureau/Rapport';
-import RapportFinal from './components/bureau/RapportFinal'; // Import the new component
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import DemandesForm from './components/reception/DemandesForm/DemandesForm';
+import DemandeList from './components/reception/DemandesList/DemandesList';
+import MainPage from './components/reception/MainPage/MainPage';
+import DemandesDetails from './components/reception/DemandesDetails/DemandesDetails';
+import FicheTechnique from './components/reception/FicheTechnique/FicheTechnique';
+import Statistiques from './components/reception/Statistiques/Statistiques';
+import FinanceDemandesList from './components/finance/FinanceDemandeList/FinanceDemandesList';
+import FinanceMainPage from './components/finance/FinanceMainPage/FinanceMainPage';
+import FinanceDemandesDetails from './components/finance/FinanceDemandesDetails/FinanceDemandesDetails';
+import LaboratoryMainPage from './components/bureau/LaboratoryMainPage/LaboratoryMainPage';
+import NewRequests from './components/bureau/NewRequests/NewRequests';
+import ProcessedRequests from './components/bureau/ProcessedRequests/ProcessedRequests';
+import Dashboard from './components/bureau/Dashboard/Dashboard';
+import RequestDetails from './components/bureau/RequestDetails/RequestDetails';
+import Rapport from './components/bureau/Rapport/Rapport';
+import RapportFinal from './components/bureau/RapportFinal/RapportFinal'; 
+import WelcomePage from './components/welcomePage/WelcomePage';
 
 const App = () => {
     return (
         <Router>
             <Routes>
-                <Route path="/" element={<UserForm />} />
+                <Route path="/" element={<WelcomePage />} />
+                <Route path="/finance" element={<FinanceMainPage />}>
+                    <Route index element={<FinanceDemandesList />} />
+                    <Route path="/finance/NouvellesDemandes" element={<FinanceDemandesList />} />
+                    <Route path="/finance/DetailesDemandes/:clientId" element={<FinanceDemandesDetails />} />
+                </Route>
+                <Route path="/reception" element={<MainPage />}>
+                    <Route index element={<Statistiques />} /> {/* Route par défaut */}
+                    <Route path="Statistiques" element={<Statistiques />} />
+                    <Route path="DemandesForm" element={<DemandesForm />} />
+                    <Route path="DemandesList" element={<DemandeList />} />
+                    <Route path="DemandesList/:clientId" element={<DemandesDetails />} />
+                    <Route path="DemandesList/fiche-technique/:clientId" element={<FicheTechnique />} />
+                </Route>
+                
                 <Route path="/bureau" element={<LaboratoryMainPage />}>
                     <Route index element={<Dashboard />} /> {/* Default route */}
                     <Route path="new-requests" element={<NewRequests />} />

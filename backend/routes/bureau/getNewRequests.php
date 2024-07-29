@@ -2,13 +2,13 @@
 header("Access-Control-Allow-Origin: *");
 header('Content-Type: application/json');
 
-include '../db/db_connection.php';
+include '../../database/db_connection.php';
 
-$sql = "SELECT clients.id AS demande_id, clients.delais_livraison, echantillons.sampleType, analyses.analysisType 
+$sql = "SELECT clients.id AS demande_id, clients.dilevery_delay, echantillons.sampleType, analyses.analysisType 
         FROM clients 
         JOIN echantillons ON clients.id = echantillons.client_id 
         JOIN analyses ON echantillons.id = analyses.echantillon_id 
-        WHERE analyses.validated = 'notvalid' AND analyses.departement = 'TFXE'";
+        WHERE analyses.validated = 'finance' AND analyses.departement = 'TFXE'";
 
 $result = $conn->query($sql);
 $requests = array();
@@ -19,7 +19,7 @@ if ($result->num_rows > 0) {
         if (!isset($requests[$demande_id])) {
             $requests[$demande_id] = [
                 'demande_id' => $demande_id,
-                'delais_livraison' => $row['delais_livraison'],
+                'dilevery_delay' => $row['dilevery_delay'],
                 'samples' => []
             ];
         }

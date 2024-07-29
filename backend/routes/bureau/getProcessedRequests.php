@@ -2,14 +2,14 @@
 header("Access-Control-Allow-Origin: *");
 header('Content-Type: application/json');
 
-include '../db/db_connection.php';
+include '../../database/db_connection.php';
 
 $query = "
-    SELECT clients.id AS demande_id, clients.delais_livraison, echantillons.sampleType, analyses.analysisType 
+    SELECT clients.id AS demande_id, clients.dilevery_delay, echantillons.sampleType, analyses.analysisType 
     FROM clients 
     JOIN echantillons ON clients.id = echantillons.client_id 
     JOIN analyses ON echantillons.id = analyses.echantillon_id 
-    WHERE analyses.validated = 'analysed' AND analyses.departement = 'TFXE'
+    WHERE analyses.validated = 'laboratory' AND analyses.departement = 'TFXE' 
 ";
 
 $result = mysqli_query($conn, $query);
@@ -31,7 +31,7 @@ foreach ($data as $row) {
     if (!isset($groupedData[$demande_id])) {
         $groupedData[$demande_id] = [
             'demande_id' => $demande_id,
-            'delais_livraison' => $row['delais_livraison'],
+            'dilevery_delay' => $row['dilevery_delay'],
             'samples' => []
         ];
     }

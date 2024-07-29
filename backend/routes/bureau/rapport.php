@@ -2,7 +2,7 @@
 header("Access-Control-Allow-Origin: *");
 header('Content-Type: application/json');
 
-include '../db/db_connection.php';
+include '../../database/db_connection.php';
 
 // Verify if 'demande_id' is set and is an integer
 if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id'])) {
@@ -12,10 +12,10 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id'])) {
     $sql = "
         SELECT 
             clients.id AS demande_id, 
-            clients.delais_livraison, 
+            clients.dilevery_delay, 
             clients.name AS client_name, 
             clients.address AS client_address,
-            clients.date_arrive,
+            clients.requestingDate,
             clients.clientReference,
             echantillons.sampleType, 
             echantillons.sampleReference,
@@ -51,10 +51,10 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id'])) {
                 if (!isset($reports[$demande_id])) {
                     $reports[$demande_id] = [
                         'demande_id' => $demande_id,
-                        'delais_livraison' => $row['delais_livraison'],
+                        'dilevery_delay' => $row['dilevery_delay'],
                         'client_name' => $row['client_name'],
                         'client_address' => $row['client_address'],
-                        'date_arrive' => $row['date_arrive'],
+                        'requestingDate' => $row['requestingDate'],
                         'clientReference' => $row['clientReference'],
                         'samples' => []
                     ];
