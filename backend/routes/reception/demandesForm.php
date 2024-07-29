@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $personalInfo = $data['personalInfo'];
     $samples = $data['samples'];
 
-    // Insertion des informations personnelles dans la table `clients`
+    // Insertion des informations personnelles dans la table clients
     $name = $conn->real_escape_string($personalInfo['name']);
     $address = $conn->real_escape_string($personalInfo['address']);
     $phone = $conn->real_escape_string($personalInfo['phone']);
@@ -41,88 +41,99 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $requestingDate = $conn->real_escape_string($personalInfo['requestingDate']);
     $dilevery_delay = $conn->real_escape_string($personalInfo['dilevery_delay']);
 
-    $sqlInsertClient = "INSERT INTO clients (name, address, phone, email, dilevery_delay, requestingDate) VALUES ('$name', '$address', '$phone', '$email', '$dilevery_delay', '$requestingDate')";
-    if (!$conn->query($sqlInsertClient)) {
-        http_response_code(500);
-        echo json_encode(array('success' => false, 'message' => 'Erreur lors de l\'insertion du client.', 'error' => $conn->error));
-        exit;
-    }
+    // Commencer une transaction
+    $conn->begin_transaction();
 
-    $clientId = $conn->insert_id;
-
-    // Générer et mettre à jour la référence client
-    $year = date('y');
-    $clientReference = generateClientReference($clientId, $year);
-    $sqlUpdateClientReference = "UPDATE clients SET clientReference='$clientReference' WHERE id='$clientId'";
-    if (!$conn->query($sqlUpdateClientReference)) {
-        http_response_code(500);
-        echo json_encode(array('success' => false, 'message' => 'Erreur lors de la mise à jour de la référence client.', 'error' => $conn->error));
-        exit;
-    }
-
-    // Compteur pour les échantillons du client
-    $sampleCount = 0;
-
-    // Exemple d'insertion des données dans la base de données (à adapter selon votre structure de base de données)
-    foreach ($samples as $sample) {
-        $sampleType = $conn->real_escape_string($sample['sampleType']);
-        $samplingLocation = $conn->real_escape_string($sample['samplingLocation']);
-        $samplingDate = $conn->real_escape_string($sample['samplingDate']);
-        $sampledBy = $conn->real_escape_string($sample['sampledBy']);
-        $broughtBy = $conn->real_escape_string($sample['broughtBy']);
-        $sampleSize = $conn->real_escape_string($sample['sampleSize']);
-        $sampleObservations = $conn->real_escape_string($sample['sampleObservations']);
-
-        // Incrémenter le compteur d'échantillons
-        $sampleCount++;
-
-        // Générer la référence échantillon
-        $sampleReference = generateSampleReference($year, $clientId, $sampleCount);
-
-        // Insertion dans la table des échantillons (exemple)
-        $sqlInsertSample = "INSERT INTO echantillons (client_id, sampleType, samplingLocation, samplingDate, sampledBy, sampleReference, broughtBy, sampleSize, sampleObservations) VALUES ('$clientId', '$sampleType', '$samplingLocation', '$samplingDate', '$sampledBy', '$sampleReference', '$broughtBy', '$sampleSize', '$sampleObservations')";
-        if (!$conn->query($sqlInsertSample)) {
-            http_response_code(500);
-            echo json_encode(array('success' => false, 'message' => 'Erreur lors de l\'insertion de l\'échantillon.', 'error' => $conn->error));
-            exit();
+    try {
+        // Insérer le client sans la référence client pour obtenir l'ID du client
+        $sqlInsertClient = "INSERT INTO clients (name, address, phone, email, dilevery_delay, requestingDate) VALUES ('$name', '$address', '$phone', '$email', '$dilevery_delay', '$requestingDate')";
+        if (!$conn->query($sqlInsertClient)) {
+            throw new Exception('Erreur lors de l\'insertion du client: ' . $conn->error);
         }
 
-        $sampleId = $conn->insert_id;
+        $clientId = $conn->insert_id;
 
-        // Insertion dans la table des détails d'analyse pour cet échantillon (exemple)
-        foreach ($sample['analysisDetails'] as $analysis) {
-            $analysisType = $conn->real_escape_string($analysis['analysisType']);
-            $parameter = $conn->real_escape_string($analysis['parameter']);
-            $technique = $conn->real_escape_string($analysis['technique']);
-            $elements = $analysis['element'];
+        // Générer la référence client
+        $year = date('y');
+        $clientReference = generateClientReference($clientId, $year);
 
-            $sqlInsertAnalysis = "INSERT INTO analyses (echantillon_id, analysisType, parameter, technique) VALUES ('$sampleId', '$analysisType', '$parameter', '$technique')";
-            if (!$conn->query($sqlInsertAnalysis)) {
-                http_response_code(500);
-                echo json_encode(array('success' => false, 'message' => 'Erreur lors de l\'insertion des détails d\'analyse.', 'error' => $conn->error));
-                exit();
+        // Mettre à jour la référence client
+        $sqlUpdateClientReference = "UPDATE clients SET clientReference='$clientReference' WHERE id='$clientId'";
+        if (!$conn->query($sqlUpdateClientReference)) {
+            throw new Exception('Erreur lors de la mise à jour de la référence client: ' . $conn->error);
+        }
+
+        // Compteur pour les échantillons du client
+        $sampleCount = 0;
+
+        // Exemple d'insertion des données dans la base de données (à adapter selon votre structure de base de données)
+        foreach ($samples as $sample) {
+            $sampleType = $conn->real_escape_string($sample['sampleType']);
+            $samplingLocation = $conn->real_escape_string($sample['samplingLocation']);
+            $samplingDate = $conn->real_escape_string($sample['samplingDate']);
+            $sampledBy = $conn->real_escape_string($sample['sampledBy']);
+            $broughtBy = $conn->real_escape_string($sample['broughtBy']);
+            $sampleSize = $conn->real_escape_string($sample['sampleSize']);
+            $sampleObservations = $conn->real_escape_string($sample['sampleObservations']);
+
+            // Incrémenter le compteur d'échantillons
+            $sampleCount++;
+
+            // Générer la référence échantillon
+            $sampleReference = generateSampleReference($year, $clientId, $sampleCount);
+
+            // Insertion dans la table des échantillons (exemple)
+            $sqlInsertSample = "INSERT INTO echantillons (client_id, sampleType, samplingLocation, samplingDate, sampledBy, sampleReference, broughtBy, sampleSize, sampleObservations) VALUES ('$clientId', '$sampleType', '$samplingLocation', '$samplingDate', '$sampledBy', '$sampleReference', '$broughtBy', '$sampleSize', '$sampleObservations')";
+            if (!$conn->query($sqlInsertSample)) {
+                throw new Exception('Erreur lors de l\'insertion de l\'échantillon: ' . $conn->error);
             }
 
-            $analysisId = $conn->insert_id; // Récupérer l'ID de l'analyse insérée
+            $sampleId = $conn->insert_id;
 
-            // Insertion des éléments d'intérêt pour cette analyse
-            foreach ($elements as $element) {
-                $element = $conn->real_escape_string($element);
-                $sqlInsertElement = "INSERT INTO elementsDinteret (elementDinteret, analysis_id) VALUES ('$element', '$analysisId')";
-                if (!$conn->query($sqlInsertElement)) {
-                    http_response_code(500);
-                    echo json_encode(array('success' => false, 'message' => 'Erreur lors de l\'insertion des éléments d\'intérêt.', 'error' => $conn->error));
-                    exit();
+            // Insertion dans la table des détails d'analyse pour cet échantillon (exemple)
+            foreach ($sample['analysisDetails'] as $analysis) {
+                $analysisType = $conn->real_escape_string($analysis['analysisType']);
+                $parameter = $conn->real_escape_string($analysis['parameter']);
+                $technique = $conn->real_escape_string($analysis['technique']);
+                $elements = $analysis['element'];
+
+                $sqlInsertAnalysis = "INSERT INTO analyses (echantillon_id, analysisType, parameter, technique) VALUES ('$sampleId', '$analysisType', '$parameter', '$technique')";
+                if (!$conn->query($sqlInsertAnalysis)) {
+                    throw new Exception('Erreur lors de l\'insertion des détails d\'analyse: ' . $conn->error);
+                }
+
+                $analysisId = $conn->insert_id; // Récupérer l'ID de l'analyse insérée
+
+                // Insertion des éléments d'intérêt pour cette analyse
+                foreach ($elements as $element) {
+                    $element = $conn->real_escape_string($element);
+                    $sqlInsertElement = "INSERT INTO elementsDinteret (elementDinteret, analysis_id) VALUES ('$element', '$analysisId')";
+                    if (!$conn->query($sqlInsertElement)) {
+                        throw new Exception('Erreur lors de l\'insertion des éléments d\'intérêt: ' . $conn->error);
+                    }
                 }
             }
         }
-    }
 
-    // Réponse JSON pour confirmer la réussite de l'insertion (exemple)
-    $response = array('success' => true, 'message' => 'Demande d\'analyse enregistrée avec succès','clientReference' => $clientReference,
-    'samplesReferences' => $sampleReference);
-    header('Content-Type: application/json');
-    echo json_encode($response);
+        // Valider la transaction
+        $conn->commit();
+
+        // Réponse JSON pour confirmer la réussite de l'insertion (exemple)
+        $response = array(
+            'success' => true,
+            'message' => 'Demande d\'analyse enregistrée avec succès',
+            'clientReference' => $clientReference,
+            'samplesReferences' => $sampleReference
+        );
+        header('Content-Type: application/json');
+        echo json_encode($response);
+
+    } catch (Exception $e) {
+        // Annuler la transaction en cas d'erreur
+        $conn->rollback();
+        http_response_code(500);
+        echo json_encode(array('success' => false, 'message' => $e->getMessage()));
+    }
 }
 
 // Fermer la connexion à la base de données

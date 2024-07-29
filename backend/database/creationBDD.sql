@@ -8,7 +8,7 @@ CREATE TABLE clients (
     address VARCHAR(255) NOT NULL,
     phone VARCHAR(20) NOT NULL,
     email VARCHAR(255) NOT NULL,
-    clientReference VARCHAR(255) NOT NULL,
+    clientReference VARCHAR(255),
     dilevery_delay DATE NOT NULL,
     requestingDate DATE NOT NULL
 );
@@ -33,8 +33,8 @@ CREATE TABLE analyses (
     analysisType VARCHAR(50) NOT NULL,
     parameter VARCHAR(50) NOT NULL,
     technique VARCHAR(50) NOT NULL,
-    validated VARCHAR(50) NOT NULL,
-    departement VARCHAR(50) NOT NULL,
+    validated VARCHAR(50) DEFAULT  'reception_step_1',
+    departement VARCHAR(50) DEFAULT  'TFXE',
     FOREIGN KEY (echantillon_id) REFERENCES echantillons(id)
 );
 
@@ -74,7 +74,8 @@ INSERT INTO resultats (elementsdinteret_id, Unite, Valeur_Moyenne, Valeur_Limite
 (3, 'mg/L', '3.5', 10, 1, 'Normal'),
 (4, 'mg/L', '6.8', 10, 1, 'Slightly high'),
 (5, 'mg/L', '2.3', 10, 1, 'Below average'),
-(6, 'mg/L', '5.7', 10, 1, 'Within acceptable range'),
+(6, 'mg/L', '5.7', 10, 1, 'Within acceptable range');
+
 (7, 'mg/L', '8.2', 10, 1, 'Above limit'),
 (8, 'mg/L', '4.6', 10, 1, 'Normal'),
 (9, 'mg/L', '7.5', 10, 1, 'Slightly high'),
