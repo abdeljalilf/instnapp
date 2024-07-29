@@ -122,7 +122,7 @@ const FicheTechnique = () => {
                                 </div>
                                 {demande.echantillons.map((echantillon, echantillonIndex) => (
                                     <div key={echantillonIndex} className="sample-section">
-
+                                        <div className='test'>
                                         <h3>Echantillon {echantillonIndex+1}:</h3>
                                         <div className="form-group-ft">
                                             <label> Reference de l'échantillon:</label>
@@ -164,6 +164,7 @@ const FicheTechnique = () => {
                                                 </div>
                                             </div>
                                         ))}
+                                        </div>
 
                                     </div>
                                     

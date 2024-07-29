@@ -242,7 +242,7 @@ const DemandesForm = () => {
             parameter === 'Elements nutritif' || parameter === 'Metaux lourds') {
             return ['Fluorescence X a Energie Dispersive (FXDE)'];
         } else if (parameter === 'PM') {
-            return ['Drafimetrie'];
+            return ['Gravimetrie'];
         } else if ((parameter === 'Metaux' || parameter === 'Randon') && sampleType === 'air') {
             return ['Fluorescence X a Energie Dispersive (FXDE)'];
         }

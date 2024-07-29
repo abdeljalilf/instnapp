@@ -21,6 +21,7 @@ const WelcomePage = () => {
                 <option value="/reception">Réception</option>
                 <option value="/finance">Finance</option>
                 <option value="/bureau">Bureau</option>
+                <option value="/laboratoire">Laboratoire</option>
             </select>
         </div>
     );
