@@ -143,7 +143,11 @@ const DemandesForm = () => {
             })
         });
         const result = await response.json();
-        
+        const hak = JSON.stringify({
+            personalInfo,
+            samples
+        });
+        console.log(hak)
         // Supposons que 'result' contient la réponse JSON de votre requête
         if (result.success) {
             // Construire le message à afficher dans l'alerte
@@ -157,7 +161,7 @@ const DemandesForm = () => {
             // Afficher l'alerte avec le message complet
             alert(message);
         } else {
-            alert('Erreur lors de la soumission du formulaire.');
+            alert('Erreur lors de la soumission du formulaire.'+ result.message);
         }
 
         

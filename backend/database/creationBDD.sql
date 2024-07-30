@@ -8,7 +8,7 @@ CREATE TABLE clients (
     address VARCHAR(255) NOT NULL,
     phone VARCHAR(20) NOT NULL,
     email VARCHAR(255) NOT NULL,
-    clientReference VARCHAR(255) NOT NULL,
+    clientReference VARCHAR(255) ,
     dilevery_delay DATE NOT NULL,
     requestingDate DATE NOT NULL
 );
@@ -33,8 +33,8 @@ CREATE TABLE analyses (
     analysisType VARCHAR(50) NOT NULL,
     parameter VARCHAR(50) NOT NULL,
     technique VARCHAR(50) NOT NULL,
-    validated VARCHAR(50) NOT NULL,
-    departement VARCHAR(50) NOT NULL,
+    validated VARCHAR(50) DEFAULT "reception_step_1",
+    departement VARCHAR(50) DEFAULT "TFXE",
     FOREIGN KEY (echantillon_id) REFERENCES echantillons(id)
 );
 
@@ -67,10 +67,3 @@ CREATE TABLE resultats (
     FOREIGN KEY (elementsdinteret_id) REFERENCES elementsdinteret(id)
 );
 
--- Remplir la table "resultats" avec 30 valeurs
-DELETE FROM resultats;
-DELETE FROM results;
-DELETE FROM elementsdinteret;
-DELETE FROM analyses;
-DELETE FROM echantillons;
-DELETE FROM clients;
