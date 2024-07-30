@@ -69,7 +69,7 @@ const Rapport = () => {
 
     // Save conclusion to sessionStorage and navigate
     sessionStorage.setItem('conclusion', conclusion);
-    navigate(`/bureau/rapportfinal/${id}`);
+    navigate(`/bureau/${department}/rapportfinal/${id}`);
   };
 
   const handleObservationChange = (sampleReference, analysisKey, resultIndex, value) => {

@@ -5,6 +5,17 @@ import { useParams } from 'react-router-dom';
 import './RapportFinal.css';
 
 const RapportFinal = () => {
+  return (
+      <div>
+          <h1>RapportFinal pas encore</h1>
+          {/* Add functionality for displaying history and statistics of past analyses */}
+      </div>
+  );
+};
+
+export default RapportFinal;
+/*
+const RapportFinal = () => {
   const { id } = useParams();
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
@@ -163,3 +174,4 @@ const RapportFinal = () => {
 };
 
 export default RapportFinal;
+*/
