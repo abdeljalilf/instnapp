@@ -4,8 +4,9 @@ include '../../database/db_connection.php';
 header("Access-Control-Allow-Origin: *");
 header('Content-Type: application/json');
 
-// Get the ID from the request
+// Get the ID and department from the request
 $id = intval($_GET['id']);
+$department = isset($_GET['department']) ? $_GET['department'] : 'TFXE'; // Valeur par défaut si non spécifié
 
 // Prepare the SQL query to update the analyses table based on the client ID and department
 $sql = "
@@ -13,11 +14,11 @@ $sql = "
     JOIN echantillons ON analyses.echantillon_id = echantillons.id
     JOIN clients ON echantillons.client_id = clients.id
     SET analyses.validated = 'office_step_1'
-    WHERE clients.id = ? AND analyses.departement = 'TFXE'
+    WHERE clients.id = ? AND analyses.departement = ?
 ";
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $id);
+$stmt->bind_param("is", $id, $department);
 
 $response = [];
 if ($stmt->execute()) {

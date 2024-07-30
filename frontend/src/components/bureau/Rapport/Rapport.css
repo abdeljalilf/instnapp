@@ -169,3 +169,38 @@
 .validate-button:hover {
   background-color: #1f6848;
 }
+
+
+.analysis-section {
+  margin-bottom: 20px; /* Espace sous chaque section d'analyse */
+}
+
+.analysis-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px; /* Espace sous le tableau */
+}
+
+.analysis-table th, .analysis-table td {
+  border: 1px solid #11230f;
+  padding: 8px;
+  text-align: left;
+}
+
+.analysis-table th {
+  background-color: #2e8b57;
+}
+.valeur-norme-input,
+.norme-input,
+.observation-input {
+  border: 1px solid #ccc;
+  padding: 5px;
+  width: 100%;
+}
+
+.valeur-norme-input:focus,
+.norme-input:focus,
+.observation-input:focus {
+  border-color: #006400;
+  outline: none;
+}

@@ -4,9 +4,10 @@ header('Content-Type: application/json');
 
 include '../../database/db_connection.php';
 
-// Verify if 'demande_id' is set and is an integer
-if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id'])) {
+// Verify if 'demande_id' and 'department' are set and valid
+if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET['department'])) {
     $demande_id = intval($_GET['demande_id']);
+    $department = $_GET['department']; // Get the department from the query string
 
     // Use a prepared statement with a placeholder
     $sql = "
@@ -36,12 +37,12 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id'])) {
         JOIN analyses ON echantillons.id = analyses.echantillon_id 
         JOIN elementsdinteret ON analyses.id = elementsdinteret.analysis_id
         JOIN resultats ON elementsdinteret.id = resultats.elementsdinteret_id
-        WHERE clients.id = ?
+        WHERE clients.id = ? AND analyses.departement = ?
     ";
 
     // Prepare and execute the query
     if ($stmt = $conn->prepare($sql)) {
-        $stmt->bind_param("i", $demande_id); // Bind the parameter $demande_id
+        $stmt->bind_param("is", $demande_id, $department); // Bind the parameters $demande_id and $department
         $stmt->execute();
         $result = $stmt->get_result();
 
@@ -88,7 +89,7 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id'])) {
         echo json_encode(['error' => 'Failed to prepare SQL statement']);
     }
 } else {
-    echo json_encode(['error' => 'Invalid demande_id']);
+    echo json_encode(['error' => 'Invalid demande_id or department']);
 }
 
 $conn->close();

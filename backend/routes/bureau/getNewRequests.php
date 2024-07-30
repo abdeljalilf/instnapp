@@ -4,13 +4,26 @@ header('Content-Type: application/json');
 
 include '../../database/db_connection.php';
 
+// Get the department parameter from the URL
+$department = isset($_GET['department']) ? $_GET['department'] : '';
+
+// Prepare and execute query based on the department
 $sql = "SELECT clients.id AS demande_id, clients.dilevery_delay, echantillons.sampleType, analyses.analysisType 
         FROM clients 
         JOIN echantillons ON clients.id = echantillons.client_id 
         JOIN analyses ON echantillons.id = analyses.echantillon_id 
-        WHERE analyses.validated = 'finance' AND analyses.departement = 'TFXE'";
+        WHERE analyses.validated = 'finance'";
 
-$result = $conn->query($sql);
+if ($department) {
+    $sql .= " AND analyses.departement = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $department); // Bind the department parameter
+    $stmt->execute();
+    $result = $stmt->get_result();
+} else {
+    $result = $conn->query($sql);
+}
+
 $requests = array();
 
 if ($result->num_rows > 0) {

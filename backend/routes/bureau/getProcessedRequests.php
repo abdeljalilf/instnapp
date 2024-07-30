@@ -4,24 +4,30 @@ header('Content-Type: application/json');
 
 include '../../database/db_connection.php';
 
+// Obtenez le paramètre 'department' de l'URL
+$department = isset($_GET['department']) ? $_GET['department'] : 'TFXE'; // Valeur par défaut si non spécifié
+
 $query = "
     SELECT clients.id AS demande_id, clients.dilevery_delay, echantillons.sampleType, analyses.analysisType 
     FROM clients 
     JOIN echantillons ON clients.id = echantillons.client_id 
     JOIN analyses ON echantillons.id = analyses.echantillon_id 
-    WHERE analyses.validated = 'laboratory' AND analyses.departement = 'TFXE' 
+    WHERE analyses.validated = 'laboratory' AND analyses.departement = ?
 ";
 
-$result = mysqli_query($conn, $query);
-$data = [];
+$stmt = $conn->prepare($query);
+$stmt->bind_param("s", $department); // Bind le paramètre 'department'
+$stmt->execute();
+$result = $stmt->get_result();
 
-while ($row = mysqli_fetch_assoc($result)) {
+$data = [];
+while ($row = $result->fetch_assoc()) {
     $data[] = $row;
 }
 
 mysqli_close($conn);
 
-// Group the data by demande_id
+// Regrouper les données par demande_id
 $groupedData = [];
 foreach ($data as $row) {
     $demande_id = $row['demande_id'];
