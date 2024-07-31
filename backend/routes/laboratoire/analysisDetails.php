@@ -67,8 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
     $data = json_decode(file_get_contents('php://input'), true);
 
     if ($data) {
-        $elementsdinteretId = $data['elementsdinteretId'];
-        $analysisId = $data['analysisId'];  // Added new parameter
+        $analysisId = $data['analysisId'];
         $results = $data['results'];
 
         // Prepare the SQL statement for inserting/updating results
@@ -83,11 +82,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
         ");
 
         foreach ($results as $result) {
+            $elementsdinteretId = $result['elementsdinteretId'];  // Ensure this is provided in the payload
             $unite = $result['unite'];
-            $valeurMoyenne = $result['valeurMoyenne'] === 'non détecté' ? 'non détecté' : $result['valeurMoyenne'];
-            if ($result['valeurMoyenne'] === 'Majeur' || $result['valeurMoyenne'] === 'Mineur' || $result['valeurMoyenne'] === 'Trace') {
-                $valeurMoyenne = $result['valeurMoyenne'];
-            }
+            $valeurMoyenne = ($result['valeurMoyenne'] === 'non détecté' || in_array($result['valeurMoyenne'], ['Majeur', 'Mineur', 'Trace'])) ? $result['valeurMoyenne'] : $result['valeurMoyenne'];
             $limiteDetection = $result['limiteDetection'];
             $incertitude = $result['incertitude'] === 'non détecté' ? 'non détecté' : $result['incertitude'];
 
