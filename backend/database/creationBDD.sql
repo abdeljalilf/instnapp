@@ -62,8 +62,12 @@ CREATE TABLE resultats (
     elementsdinteret_id INT NOT NULL,
     Unite VARCHAR(50) NOT NULL,
     Valeur_Moyenne VARCHAR(50) NOT NULL,
-    Valeur_Limite_OMS INT NOT NULL,
-    Limite_Detection INT NOT NULL,
-    Observation VARCHAR(200) NOT NULL,
+    Valeur_Limite_OMS VARCHAR(50) DEFAULT "sans",
+    Limite_Detection VARCHAR(50) NOT NULL,
+    Observation VARCHAR(200) DEFAULT "RAS",
+    Incertitude VARCHAR(50) NOT null ,
+    Conclusion VARCHAR(250) default "RAS",
+   
     FOREIGN KEY (elementsdinteret_id) REFERENCES elementsdinteret(id)
 );
+ drop TABLE resultats
