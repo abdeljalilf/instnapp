@@ -40,6 +40,38 @@ const Rapport = () => {
     }
   }, [id, department]);
 
+  const handleSaveData = () => {
+    const observations = { ...observationsState };
+    const normes = { ...normesState };
+
+    const dataToSend = {
+      demande_id: id,
+      department: department,
+      conclusion: conclusion,
+      observations: observations,
+      normes: normes
+    };
+
+    fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/office_form_save.php`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(dataToSend)
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) {
+        throw new Error(data.error);
+      } else {
+        navigate(`/bureau/${department}/rapportfinal/${id}`);
+      }
+    })
+    .catch(error => {
+      setValidationError(`Error saving data: ${error.message}`);
+    });
+  };
+
   const handleValidateReport = () => {
     let errorMessage = '';
 
@@ -67,9 +99,7 @@ const Rapport = () => {
       return;
     }
 
-    // Save conclusion to sessionStorage and navigate
-    sessionStorage.setItem('conclusion', conclusion);
-    navigate(`/bureau/${department}/rapportfinal/${id}`);
+    handleSaveData(); // Enregistrer les données avant de naviguer
   };
 
   const handleObservationChange = (sampleReference, analysisKey, resultIndex, value) => {
@@ -188,7 +218,7 @@ const Rapport = () => {
                         <td>{element.Limite_Detection}</td>
                         <td>{technique}</td>
                         <td>
-                        <input
+                          <input
                             type="text"
                             placeholder="Valeur Norme"
                             value={normesState[`${sampleReference}-${analysisKey}-${resultIndex}`] || ''}

@@ -61,7 +61,7 @@ CREATE TABLE resultats (
 );
 CREATE TABLE conclusions (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    client_id INT,
+    client_id INT NOT NULL,
     departement VARCHAR(50) NOT NULL,
     conclusion VARCHAR(500) NOT NULL,
     FOREIGN KEY (client_id) REFERENCES clients(id)
