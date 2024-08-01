@@ -42,75 +42,82 @@ const Rapport = () => {
 
   const handleValidateReport = () => {
     let errorMessage = '';
-
-    // Check if all observations are filled
+  
     Object.entries(observationsState).forEach(([key, value]) => {
       if (value.trim() === '') {
         errorMessage = 'Veuillez remplir toutes les observations.';
       }
     });
-
-    // Check if all normes are filled
+  
     Object.entries(normesState).forEach(([key, value]) => {
       if (value.trim() === '') {
         errorMessage = 'Veuillez remplir toutes les normes et leurs valeurs.';
       }
     });
-
-    // Check if conclusion is filled
+  
     if (conclusion.trim() === '') {
       errorMessage = 'Veuillez entrer une conclusion.';
     }
-
+  
     if (errorMessage) {
       setValidationError(errorMessage);
       return;
     }
-
-    // Prepare data for backend
-    const usedNormes = [];
-    Object.entries(data.samples).forEach(([sampleType, samples]) => {
-      samples.forEach((sample) => {
-        const analysisKey = `${sample.analysisType}-${sample.parameter}`;
-        const usedNormeValue = normesState[`${sample.sampleReference}-${analysisKey}-normeUtilisee`] || '';
-
-        // Push each norme data with its analysis_id
-        if (usedNormeValue.trim() !== '') {
-          usedNormes.push({
-            analysis_id: sample.analysis_id, // Assuming each sample has a unique analysis_id
-            Used_norme: usedNormeValue
-          });
-        }
-      });
+  
+    // Filtrer les normes pour obtenir uniquement celles avec des element_id valides
+    const normeValuesMap = {};
+    Object.entries(normesState).forEach(([key, value]) => {
+      const [sampleReference, analysisKey, elementDinteret] = key.split('-');
+      if (elementDinteret !== 'normeUtilisee' && value.trim() !== '') {
+        normeValuesMap[elementDinteret] = value;
+      }
     });
-
-    // Send the data to the backend
+  
+    const filteredNormeValues = Object.keys(normeValuesMap).map((elementDinteret) => ({
+      element_id: elementDinteret,
+      Valeur_Norme_Utlise: normeValuesMap[elementDinteret],
+    }));
+  
+    const reportData = {
+      usedNormes: Object.entries(normesState).filter(([key]) => key.endsWith('-normeUtilisee')).map(([key, value]) => ({
+        analysis_id: key.split('-')[1],
+        Used_norme: value,
+      })),
+      normeValues: filteredNormeValues,
+      observations: Object.entries(observationsState).map(([key, value]) => {
+        const [sampleReference, analysisKey, resultIndex] = key.split('-');
+        return {
+          element_id: resultIndex,
+          Observation: value,
+        };
+      }),
+      conclusion: conclusion,
+    };
+  
+    console.log('Sending report data:', reportData);
+  
     fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/save_report.php`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ usedNormes }),
+      body: JSON.stringify(reportData),
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Failed to save data');
-        }
-        return response.json();
-      })
-      .then((result) => {
-        if (result.success) {
-          // Save conclusion to sessionStorage and navigate
-          sessionStorage.setItem('conclusion', conclusion);
-          navigate(`/bureau/${department}/rapportfinal/${id}`);
-        } else {
-          setValidationError(result.message || 'Error saving data');
-        }
-      })
-      .catch((error) => {
-        setValidationError(error.message);
-      });
+    .then((response) => response.json())
+    .then((data) => {
+      console.log('Response from server:', data);
+      if (data.success) {
+        sessionStorage.setItem('conclusion', conclusion);
+        navigate(`/bureau/${department}/rapportfinal/${id}`);
+      } else {
+        setValidationError(data.message);
+      }
+    })
+    .catch((error) => {
+      setValidationError('Erreur lors de l\'enregistrement des données.');
+    });
   };
+  
 
   const handleObservationChange = (sampleReference, analysisKey, resultIndex, value) => {
     setObservationsState((prevObservations) => ({
@@ -154,7 +161,7 @@ const Rapport = () => {
           analyses: {}
         };
       }
-      const analysisKey = `${sample.analysisType}-${sample.parameter}`;
+      const analysisKey = `${sample.analysis_id}`;
       if (!acc[sample.sampleReference].analyses[analysisKey]) {
         acc[sample.sampleReference].analyses[analysisKey] = {
           analysisType: sample.analysisType,
@@ -162,7 +169,8 @@ const Rapport = () => {
           technique: sample.technique,
           elementsdinteret: [],
           norme: '',
-          valeurs: {}
+          valeurs: {},
+          analysis_id: sample.analysis_id
         };
       }
       acc[sample.sampleReference].analyses[analysisKey].elementsdinteret.push({
@@ -170,7 +178,7 @@ const Rapport = () => {
         Unite: sample.Unite,
         Valeur_Moyenne: sample.Valeur_Moyenne,
         Limite_Detection: sample.Limite_Detection,
-        element_id: sample.element_id // Assuming each element has a unique element_id
+        element_id: sample.element_id
       });
     });
     return acc;
@@ -197,9 +205,10 @@ const Rapport = () => {
             <p><strong>Date de Prélèvement:</strong> {sampleDetails.samplingDate}</p>
             <p><strong>Prélevé par:</strong> {sampleDetails.sampledBy}</p>
 
-            {Object.entries(analyses).map(([analysisKey, { analysisType, parameter, technique, elementsdinteret, norme, valeurs }], analysisIndex) => (
+            {Object.entries(analyses).map(([analysisKey, { analysisType, parameter, technique, elementsdinteret, norme, valeurs, analysis_id }], analysisIndex) => (
               <div key={analysisKey} className="analysis-section">
                 <h4>Analyse {analysisIndex + 1}: {analysisType} pour {sampleType.toUpperCase()}</h4>
+                <p><strong>Analysis ID:</strong> {analysis_id}</p>
                 <table className="analysis-table">
                   <thead>
                     <tr>
@@ -232,8 +241,8 @@ const Rapport = () => {
                           <input
                             type="text"
                             placeholder="Valeur Norme"
-                            value={normesState[`${sampleReference}-${analysisKey}-${resultIndex}`] || ''}
-                            onChange={(e) => handleNormeChange(sampleReference, analysisKey, resultIndex, e.target.value)}
+                            value={normesState[`${sampleReference}-${analysisKey}-${element.element_id}`] || ''}
+                            onChange={(e) => handleNormeChange(sampleReference, analysisKey, element.element_id, e.target.value)}
                             className="valeur-norme-input"
                           />
                         </td>
@@ -241,10 +250,13 @@ const Rapport = () => {
                           <input
                             type="text"
                             placeholder="Observation"
-                            value={observationsState[`${sampleReference}-${analysisKey}-${resultIndex}`] || ''}
-                            onChange={(e) => handleObservationChange(sampleReference, analysisKey, resultIndex, e.target.value)}
+                            value={observationsState[`${sampleReference}-${analysisKey}-${element.element_id}`] || ''}
+                            onChange={(e) => handleObservationChange(sampleReference, analysisKey, element.element_id, e.target.value)}
                             className="observation-input"
                           />
+                        </td>
+                        <td>
+                          <strong>Element ID:</strong> {element.element_id}
                         </td>
                       </tr>
                     ))}
