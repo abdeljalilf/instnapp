@@ -2,7 +2,7 @@
 include '../../database/db_connection.php';
 
 // Ajoutez les en-têtes CORS si nécessaire
-header('Access-Control-Allow-Origin: *'); // Remplacez '*' par l'origine spécifique si nécessaire
+header('Access-Control-Allow-Origin: *'); 
 header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 

@@ -237,3 +237,84 @@
   font-weight: bold;
   margin-top: 10px;
 }
+
+
+/* Style for the request revision button */
+.request-revision-button {
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #fff;
+  background-color: #ff6f00;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 0px 10px;
+  transition: background-color 0.3s ease;
+}
+
+.request-revision-button:hover {
+  background-color: #86b300;
+}
+
+/* Style for the container of the remark form */
+.remark-form-container {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #241414;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Style for the text area in the remark form */
+.remark-textarea {
+  width: 95%; /* Adjust to fit container width */
+  height: 60px; /* Reduced height */
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  resize: none;
+  margin-bottom: 10px;
+}
+
+/* Style for the buttons container */
+.remark-form-buttons {
+  display: flex;
+  justify-content: space-between; /* Distribute buttons to the left and right */
+}
+
+/* Style for validate button */
+.validate-button {
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #fff;
+  background-color: #28a745;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 0px 20px;
+  transition: background-color 0.3s ease;
+}
+
+.validate-button:hover {
+  background-color: #218838;
+}
+
+/* Style for cancel button */
+.cancel-button {
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #fff;
+  background-color: #ce1a1a;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 0px 50px;
+  transition: background-color 0.3s ease;
+}
+
+.cancel-button:hover {
+  background-color: #f90303;
+}

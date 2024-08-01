@@ -52,7 +52,7 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
             ) latest_result ON resultats.elementsdinteret_id = latest_result.elementsdinteret_id
                 AND resultats.id = latest_result.max_id
         ) resultats ON elementsdinteret.id = resultats.elementsdinteret_id
-        WHERE clients.id = ? AND analyses.departement = ?
+        WHERE clients.id = ? AND analyses.departement = ? AND analyses.validated = 'laboratory'
     ";
 
     // Préparez et exécutez la requête

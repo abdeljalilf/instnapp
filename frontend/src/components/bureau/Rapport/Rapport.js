@@ -12,6 +12,9 @@ const Rapport = () => {
   const [validationError, setValidationError] = useState('');
   const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
   const navigate = useNavigate();
+  const [showRemarkForm, setShowRemarkForm] = useState({}); // Pour suivre l'état du formulaire de remarque
+  const [remarksState, setRemarksState] = useState({}); // Pour stocker les remarques saisies
+
 
   useEffect(() => {
     if (id && department) {
@@ -120,7 +123,41 @@ const Rapport = () => {
     });
   };
   
-
+  const handleValidateRequest = (analysis_id) => {
+    const remark = remarksState[analysis_id];
+  
+    if (!remark || remark.trim() === '') {
+      setValidationError('Veuillez entrer une remarque pour la demande de révision.');
+      return;
+    }
+  
+    const requestData = {
+      analysis_id: analysis_id,
+      office_remark: remark,
+    };
+  
+    fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/request_revision.php`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestData),
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log('Response from server:', data);
+      if (data.success) {
+        setValidationError('');
+        window.location.reload(); // Rafraîchir la page
+      } else {
+        setValidationError(data.message);
+      }
+    })
+    .catch((error) => {
+      setValidationError('Erreur lors de l\'enregistrement de la demande de révision.');
+    });
+  };
+  
   const handleObservationChange = (sampleReference, analysisKey, resultIndex, value) => {
     setObservationsState((prevObservations) => ({
       ...prevObservations,
@@ -141,6 +178,20 @@ const Rapport = () => {
       [`${sampleReference}-${analysisKey}-normeUtilisee`]: value,
     }));
   };
+
+  const handleRemarkChange = (analysisKey, value) => {
+    setRemarksState((prevRemarks) => ({
+      ...prevRemarks,
+      [analysisKey]: value,
+    }));
+  };
+  const toggleRemarkForm = (analysisKey) => {
+    setShowRemarkForm((prevShowRemarkForm) => ({
+      ...prevShowRemarkForm,
+      [analysisKey]: !prevShowRemarkForm[analysisKey],
+    }));
+  };
+    
 
   if (error) {
     return <div className="error-message">Error: {error}</div>;
@@ -264,6 +315,30 @@ const Rapport = () => {
                     ))}
                   </tbody>
                 </table>
+                {/* Bouton pour demander la révision */}
+                <button className="request-revision-button" onClick={() => toggleRemarkForm(analysisKey)}>
+                    Demander révision d'analyse
+                </button>
+
+                {/* Formulaire de remarque conditionnel */}
+                {showRemarkForm[analysisKey] && (
+                    <div className="remark-form-container">
+                        <textarea
+                            className="remark-textarea"
+                            value={remarksState[analysisKey] || ''}
+                            onChange={(e) => handleRemarkChange(analysisKey, e.target.value)}
+                            placeholder="Remarque sur l'analyse"
+                        />
+                        <div className="remark-form-buttons">
+                            <button className="validate-button" onClick={() => handleValidateRequest(analysisKey)}>
+                                Valider la demande
+                            </button>
+                            <button className="cancel-button" onClick={() => toggleRemarkForm(analysisKey)}>
+                                Annuler la demande
+                            </button>
+                        </div>
+                    </div>
+                )}
               </div>
             ))}
           </div>

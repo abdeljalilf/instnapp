@@ -36,8 +36,11 @@ CREATE TABLE analyses (
     validated VARCHAR(50) DEFAULT 'reception_step_1',
     departement VARCHAR(50) DEFAULT 'TFXE',
     Used_norme VARCHAR(100),
+    office_remark VARCHAR(300),
     FOREIGN KEY (echantillon_id) REFERENCES echantillons(id)
 );
+ALTER TABLE analyses
+ADD COLUMN office_remark VARCHAR(300);
 
 
 CREATE TABLE elementsdinteret (
