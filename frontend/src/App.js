@@ -20,7 +20,8 @@ import RapportFinal from './components/bureau/RapportFinal/RapportFinal';
 import WelcomePage from './components/welcomePage/WelcomePage';
 import AnalysisDetails from './components/laboratory/AnalysisDetails/AnalysisDetails';
 import Laboratoire from './components/laboratory/laboratoire/Laboratoire';
-import LaboMainPage from './components/laboratory/LaboMainPage/LaboMainPage';
+import LaboMainPage from './components/laboratory/LaboMainPage/LaboMainPage'
+import AdminPanel from './components/admin/AdminPanel/AdminPanel';
 
 const App = () => {
     return (
@@ -54,6 +55,7 @@ const App = () => {
                     <Route index element={<Laboratoire />} />
                     <Route path="analysis-details/:id" element={<AnalysisDetails />} />
                 </Route>
+                <Route path='/admin' element={<AdminPanel/>}></Route>
             </Routes>
         </Router>
     );

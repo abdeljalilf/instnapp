@@ -13,7 +13,7 @@ const MainPage = () => {
                     {/* <Typography variant="h6" className="main-page-title-reception">
                         Reception
                     </Typography> */}
-                    <Button color="inherit" variant="h6" className="main-page-title-reception" onClick={() => navigate('/')} className="main-button-reception">
+                    <Button color="inherit" variant="h6"  onClick={() => navigate('/')} className="main-button-reception">
                         Reception
                     </Button>
                     <Button color="inherit" onClick={() => navigate('/reception/Statistiques')} className="main-button-reception">

@@ -8,7 +8,7 @@ CREATE TABLE clients (
     address VARCHAR(255) NOT NULL,
     phone VARCHAR(20) NOT NULL,
     email VARCHAR(255) NOT NULL,
-    clientReference VARCHAR(255) ,
+    clientReference VARCHAR(255),
     dilevery_delay DATE NOT NULL,
     requestingDate DATE NOT NULL
 );
@@ -67,3 +67,13 @@ CREATE TABLE resultats (
     FOREIGN KEY (elementsdinteret_id) REFERENCES elementsdinteret(id)
 );
 
+
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(255),
+    department VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
