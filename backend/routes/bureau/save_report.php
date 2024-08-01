@@ -65,9 +65,17 @@ foreach ($data['observations'] ?? [] as $observation) {
     }
 }
 
-// Process conclusion (if applicable)
+// Process conclusion
 if (!empty($data['conclusion'])) {
-    // Add your logic to save the conclusion if needed
+    $client_id = intval($data['client_id']);
+    $departement = $conn->real_escape_string($data['departement']);
+    $conclusion = $conn->real_escape_string($data['conclusion']);
+
+    $query = "INSERT INTO conclusions (client_id, departement, conclusion) VALUES ($client_id, '$departement', '$conclusion')";
+    if (!$conn->query($query)) {
+        echo json_encode(['success' => false, 'message' => 'Error inserting conclusion: ' . $conn->error]);
+        exit;
+    }
 }
 
 // Final response

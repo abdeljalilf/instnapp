@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './analysisdetails.css';
 
 const AnalysisDetails = () => {
   const { id: analysisId } = useParams();
+  const navigate = useNavigate(); // Initialize useNavigate
   const [analysisDetails, setAnalysisDetails] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [elementsResults, setElementsResults] = useState([]);
@@ -67,6 +68,7 @@ const AnalysisDetails = () => {
     })
       .then(response => {
         alert('Résultats validés avec succès'); // Success message
+        navigate('/laboratoire'); // Navigate to Laboratory page upon successful save
       })
       .catch(error => {
         alert('Error saving results: ' + error);

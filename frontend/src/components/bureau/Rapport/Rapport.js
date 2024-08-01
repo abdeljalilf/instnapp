@@ -92,6 +92,8 @@ const Rapport = () => {
         };
       }),
       conclusion: conclusion,
+      client_id: id, // Ajoutez l'ID du client
+      departement: department, // Ajoutez le département
     };
   
     console.log('Sending report data:', reportData);
