@@ -35,7 +35,7 @@ CREATE TABLE analyses (
     technique VARCHAR(50) NOT NULL,
     validated VARCHAR(50) DEFAULT 'reception_step_1',
     departement VARCHAR(50) DEFAULT 'TFXE',
-    Used_norme VARCHAR(100) DEFAULT 'Non déterminée',
+    Used_norme VARCHAR(100),
     FOREIGN KEY (echantillon_id) REFERENCES echantillons(id)
 );
 
@@ -54,9 +54,9 @@ CREATE TABLE resultats (
     Unite VARCHAR(50) NOT NULL,
     Valeur_Moyenne VARCHAR(50) NOT NULL,
     Valeur_Norme_Utlise VARCHAR(50),
-    Limite_Detection FLOAT,
-    Incertitude FLOAT,
-    Observation VARCHAR(100),
+    Limite_Detection VARCHAR(50) NOT NULL,
+    Observation VARCHAR(200),
+    Incertitude VARCHAR(50) NOT null ,
     FOREIGN KEY (elementsdinteret_id) REFERENCES elementsdinteret(id)
 );
 CREATE TABLE conclusions (
@@ -66,6 +66,7 @@ CREATE TABLE conclusions (
     conclusion VARCHAR(500) NOT NULL,
     FOREIGN KEY (client_id) REFERENCES clients(id)
 );
+
 
 
 

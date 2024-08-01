@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import './Rapport.css';
 
 const Rapport = () => {
-  const { id, department } = useParams(); // Ajoutez le paramètre 'department'
+  const { id, department } = useParams();
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [conclusion, setConclusion] = useState('');
@@ -14,7 +14,7 @@ const Rapport = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (id && department) { // Vérifiez si 'id' et 'department' sont présents
+    if (id && department) {
       fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/rapport.php?demande_id=${id}&department=${department}`)
         .then((response) => {
           if (!response.ok) {
@@ -39,38 +39,6 @@ const Rapport = () => {
       setError('Invalid demande_id or department provided');
     }
   }, [id, department]);
-
-  const handleSaveData = () => {
-    const observations = { ...observationsState };
-    const normes = { ...normesState };
-
-    const dataToSend = {
-      demande_id: id,
-      department: department,
-      conclusion: conclusion,
-      observations: observations,
-      normes: normes
-    };
-
-    fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/office_form_save.php`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(dataToSend)
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.error) {
-        throw new Error(data.error);
-      } else {
-        navigate(`/bureau/${department}/rapportfinal/${id}`);
-      }
-    })
-    .catch(error => {
-      setValidationError(`Error saving data: ${error.message}`);
-    });
-  };
 
   const handleValidateReport = () => {
     let errorMessage = '';
@@ -99,7 +67,49 @@ const Rapport = () => {
       return;
     }
 
-    handleSaveData(); // Enregistrer les données avant de naviguer
+    // Prepare data for backend
+    const usedNormes = [];
+    Object.entries(data.samples).forEach(([sampleType, samples]) => {
+      samples.forEach((sample) => {
+        const analysisKey = `${sample.analysisType}-${sample.parameter}`;
+        const usedNormeValue = normesState[`${sample.sampleReference}-${analysisKey}-normeUtilisee`] || '';
+
+        // Push each norme data with its analysis_id
+        if (usedNormeValue.trim() !== '') {
+          usedNormes.push({
+            analysis_id: sample.analysis_id, // Assuming each sample has a unique analysis_id
+            Used_norme: usedNormeValue
+          });
+        }
+      });
+    });
+
+    // Send the data to the backend
+    fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/save_report.php`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ usedNormes }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to save data');
+        }
+        return response.json();
+      })
+      .then((result) => {
+        if (result.success) {
+          // Save conclusion to sessionStorage and navigate
+          sessionStorage.setItem('conclusion', conclusion);
+          navigate(`/bureau/${department}/rapportfinal/${id}`);
+        } else {
+          setValidationError(result.message || 'Error saving data');
+        }
+      })
+      .catch((error) => {
+        setValidationError(error.message);
+      });
   };
 
   const handleObservationChange = (sampleReference, analysisKey, resultIndex, value) => {
@@ -151,15 +161,16 @@ const Rapport = () => {
           parameter: sample.parameter,
           technique: sample.technique,
           elementsdinteret: [],
-          norme: '', // Default value for norme
-          valeurs: {} // Object to store norme values for each element
+          norme: '',
+          valeurs: {}
         };
       }
       acc[sample.sampleReference].analyses[analysisKey].elementsdinteret.push({
         elementDinteret: sample.elementDinteret,
         Unite: sample.Unite,
         Valeur_Moyenne: sample.Valeur_Moyenne,
-        Limite_Detection: sample.Limite_Detection
+        Limite_Detection: sample.Limite_Detection,
+        element_id: sample.element_id // Assuming each element has a unique element_id
       });
     });
     return acc;
