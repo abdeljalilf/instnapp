@@ -14,7 +14,7 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
     $demande_id = intval($_GET['demande_id']);
     $department = $_GET['department']; // Obtenez le département depuis la chaîne de requête
 
-    // Utilisez une instruction préparée avec un espace réservé
+    // Requête pour récupérer les données du rapport
     $sql = "
         SELECT 
             clients.id AS demande_id, 
@@ -55,60 +55,88 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
         WHERE clients.id = ? AND analyses.departement = ? AND analyses.validated = 'laboratory'
     ";
 
-    // Préparez et exécutez la requête
+    // Préparez et exécutez la requête pour les données du rapport
     if ($stmt = $conn->prepare($sql)) {
-        $stmt->bind_param("is", $demande_id, $department); // Liez les paramètres $demande_id et $department
+        $stmt->bind_param("is", $demande_id, $department);
         $stmt->execute();
         $result = $stmt->get_result();
 
-        if ($result->num_rows > 0) {
-            $reports = array();
-            while ($row = $result->fetch_assoc()) {
-                if (!isset($reports[$demande_id])) {
-                    $reports[$demande_id] = [
-                        'demande_id' => $demande_id,
-                        'dilevery_delay' => $row['dilevery_delay'],
-                        'client_name' => $row['client_name'],
-                        'client_address' => $row['client_address'],
-                        'requestingDate' => $row['requestingDate'],
-                        'clientReference' => $row['clientReference'],
-                        'samples' => []
-                    ];
-                }
-                $sampleType = strtolower($row['sampleType']); // Assurez-vous de clés cohérentes pour le type d'échantillon
-                $sampleReference = $row['sampleReference'];
-                if (!isset($reports[$demande_id]['samples'][$sampleReference])) {
-                    $reports[$demande_id]['samples'][$sampleReference] = [];
-                }
-                $reports[$demande_id]['samples'][$sampleReference][] = [
-                    'sampleType' => $sampleType,
-                    'sampleReference' => $sampleReference,
-                    'samplingLocation' => $row['samplingLocation'],
-                    'samplingDate' => $row['samplingDate'],
-                    'sampledBy' => $row['sampledBy'],
-                    'analysis_id' => $row['analysis_id'],
-                    'analysisType' => $row['analysisType'],
-                    'parameter' => $row['parameter'],
-                    'technique' => $row['technique'],
-                    'Used_norme' => $row['Used_norme'],
-                    'element_id' => $row['element_id'],
-                    'elementDinteret' => $row['elementDinteret'],
-                    'Unite' => $row['Unite'],
-                    'Valeur_Moyenne' => $row['Valeur_Moyenne'],
-                    'Limite_Detection' => $row['Limite_Detection']
+        $reports = array();
+        while ($row = $result->fetch_assoc()) {
+            if (!isset($reports[$demande_id])) {
+                $reports[$demande_id] = [
+                    'demande_id' => $demande_id,
+                    'dilevery_delay' => $row['dilevery_delay'],
+                    'client_name' => $row['client_name'],
+                    'client_address' => $row['client_address'],
+                    'requestingDate' => $row['requestingDate'],
+                    'clientReference' => $row['clientReference'],
+                    'samples' => []
                 ];
             }
-            echo json_encode(array_values($reports), JSON_PRETTY_PRINT); // Affiche JSON avec mise en forme
-        } else {
-            echo json_encode(['error' => "No results found for ID: " . $demande_id]);
+            $sampleType = strtolower($row['sampleType']);
+            $sampleReference = $row['sampleReference'];
+            if (!isset($reports[$demande_id]['samples'][$sampleReference])) {
+                $reports[$demande_id]['samples'][$sampleReference] = [];
+            }
+            $reports[$demande_id]['samples'][$sampleReference][] = [
+                'sampleType' => $sampleType,
+                'sampleReference' => $sampleReference,
+                'samplingLocation' => $row['samplingLocation'],
+                'samplingDate' => $row['samplingDate'],
+                'sampledBy' => $row['sampledBy'],
+                'analysis_id' => $row['analysis_id'],
+                'analysisType' => $row['analysisType'],
+                'parameter' => $row['parameter'],
+                'technique' => $row['technique'],
+                'Used_norme' => $row['Used_norme'],
+                'element_id' => $row['element_id'],
+                'elementDinteret' => $row['elementDinteret'],
+                'Unite' => $row['Unite'],
+                'Valeur_Moyenne' => $row['Valeur_Moyenne'],
+                'Limite_Detection' => $row['Limite_Detection']
+            ];
         }
         $stmt->close();
     } else {
         echo json_encode(['error' => 'Failed to prepare SQL statement']);
+        exit;
     }
+
+    // Requête pour compter les analyses N1 et N2 pour ce client et ce département
+    $countSql = "
+        SELECT 
+            SUM(CASE WHEN validated = 'laboratory' THEN 1 ELSE 0 END) AS N1,
+            COUNT(*) AS N2
+        FROM analyses
+        JOIN echantillons ON analyses.echantillon_id = echantillons.id
+        WHERE echantillons.client_id = ? AND analyses.departement = ? AND validated IN ('office_reject', 'office_step_1', 'laboratory')
+    ";
+
+    if ($stmt = $conn->prepare($countSql)) {
+        $stmt->bind_param("is", $demande_id, $department);
+        $stmt->execute();
+        $countResult = $stmt->get_result();
+        $counts = $countResult->fetch_assoc();
+        $stmt->close();
+    } else {
+        echo json_encode(['error' => 'Failed to prepare count SQL statement']);
+        exit;
+    }
+
+    $N1 = $counts['N1'];
+    $N2 = $counts['N2'];
+
+    // Inclure les résultats dans la réponse JSON
+    $response = [
+        'reports' => array_values($reports),
+        'N1' => $N1,
+        'N2' => $N2
+    ];
+
+    echo json_encode($response, JSON_PRETTY_PRINT);
+    $conn->close();
 } else {
     echo json_encode(['error' => 'Invalid demande_id or department']);
 }
-
-$conn->close();
 ?>

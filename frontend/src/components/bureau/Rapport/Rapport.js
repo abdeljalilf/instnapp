@@ -14,6 +14,8 @@ const Rapport = () => {
   const navigate = useNavigate();
   const [showRemarkForm, setShowRemarkForm] = useState({}); // Pour suivre l'état du formulaire de remarque
   const [remarksState, setRemarksState] = useState({}); // Pour stocker les remarques saisies
+  const [N1, setN1] = useState(0);
+  const [N2, setN2] = useState(0);
 
 
   useEffect(() => {
@@ -29,12 +31,14 @@ const Rapport = () => {
           console.log('Data received from API:', data);
           if (data.error) {
             setError(data.error);
-          } else if (Array.isArray(data) && data.length > 0) {
-            setData(data[0]);
+          } else if (data.reports && Array.isArray(data.reports) && data.reports.length > 0) {
+            setData(data.reports[0]);
+            setN1(Number(data.N1) || 0); // Assurez-vous que N1 est un nombre
+            setN2(Number(data.N2) || 0); // Assurez-vous que N2 est un nombre
           } else {
             setError('No valid data found');
           }
-        })
+        })        
         .catch((error) => {
           setError(error.message);
         });
@@ -243,11 +247,19 @@ const Rapport = () => {
   return (
     <div className="rapport-container">
       <div className="header">
-        <h1>Rapport d'Analyse</h1>
-        <p><strong>Demande ID:</strong> {data.demande_id}</p>
-        <p><strong>Date:</strong> {new Date().toLocaleDateString()}</p>
-        <p><strong>Nombre d'échantillons uniques :</strong> {uniqueSampleCount}</p>
+        <div className="header-top">
+          <p className="date"><strong>Date:</strong> {new Date().toLocaleDateString()} </p>
+            <div className="analysis-count">
+              <p style={{ color: N1 < N2 ? 'red' : 'green' }}>
+                <strong>{N1}</strong> parmi <strong>{N2}</strong> analyses sont réalisées.
+              </p>
+            </div>
+        </div>
+        <h1>Résultat d'Analyse</h1>
+        <p><strong>Nombre d'échantillons :</strong> {uniqueSampleCount}</p>
       </div>
+
+
 
       {groupedSamplesArray.map(([sampleReference, { sampleType, sampleDetails, analyses }], index) => (
         <div className="sample-section" key={index}>

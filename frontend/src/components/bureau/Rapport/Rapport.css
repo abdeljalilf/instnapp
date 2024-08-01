@@ -9,18 +9,39 @@
 }
 
 .header {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-bottom: 20px;
 }
 
-.header h1 {
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 20px;
   margin-bottom: 10px;
+}
+
+.header-top .date {
+  font-size: 16px;
+  color: #000000;
+}
+
+.analysis-count p {
+  color: var(--text-color, black); /* Utilise une variable CSS pour la couleur ou une couleur par défaut */
+  font-size: 20px; /* Ajustez la taille du texte selon vos besoins */
+  font-weight: bold; /* Applique le style gras */
+}
+
+.header h1 {
+  margin-bottom: 0px;
   color: #343a40;
 }
 
 .header p {
   font-size: 16px;
-  color: #2e8b57;
+  color: #011309;
 }
 
 .error-message,
