@@ -7,13 +7,24 @@ import './Statistiques.css'; // Assurez-vous de créer ce fichier CSS
 const Statistiques = () => {
     const [processed, setProcessed] = useState([]);
     const [monthlyData, setMonthlyData] = useState(Array(12).fill(0));
+    const [statistics, setStatistics] = useState({
+        totalRequests: 0,
+        validatedCount: 0,
+        inProgressCount: 0
+    });
+
     const currentYear = new Date().getFullYear();
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+    const session_id = localStorage.getItem('session_id');
+
     useEffect(() => {
-        // Fetch the processed data from the API
         const fetchData = async () => {
             try {
-                const response = await axios.get(`${apiBaseUrl}/instnapp/backend/routes/reception/demandeslist.php`);
+                const response = await axios.get(`${apiBaseUrl}/instnapp/backend/routes/reception/demandesList.php`, {
+                    headers: {
+                        Authorization: session_id
+                    }
+                });
                 if (response.data.success && Array.isArray(response.data.demandes)) {
                     setProcessed(response.data.demandes);
                 } else {
@@ -25,7 +36,7 @@ const Statistiques = () => {
         };
 
         fetchData();
-    }, []);
+    }, [apiBaseUrl, session_id]);
 
     useEffect(() => {
         if (!Array.isArray(processed)) {
@@ -37,17 +48,13 @@ const Statistiques = () => {
         let totalRequests = 0;
         let validatedCount = 0;
         let inProgressCount = 0;
+
         processed.forEach(demande => {
             if (demande.clientId) totalRequests++;
 
             demande.echantillons.forEach(echantillon => {
                 echantillon.analyses.forEach(analysis => {
                     if (analysis.validated !== 'laboratory') inProgressCount++;
-                });
-            });
-
-            demande.echantillons.forEach(echantillon => {
-                echantillon.analyses.forEach(analysis => {
                     if (analysis.validated === 'laboratory') validatedCount++;
                 });
             });
@@ -62,22 +69,15 @@ const Statistiques = () => {
         });
 
         setMonthlyData(monthlyCounts);
-
         setStatistics({
             totalRequests,
             validatedCount,
             inProgressCount
         });
-    }, [processed]);
-
-    const [statistics, setStatistics] = useState({
-        totalRequests: 0,
-        validatedCount: 0,
-        inProgressCount: 0
-    });
+    }, [processed, currentYear]);
 
     const chartData = {
-        labels: ['Janvier', 'Fevrier', 'Mars', 'Averil', 'Mai', 'Juin', 'Juiet', 'Aout', 'Septembre', 'Octobre', 'Novembre', 'Decembre'],
+        labels: ['Janvier', 'Fevrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Aout', 'Septembre', 'Octobre', 'Novembre', 'Decembre'],
         datasets: [
             {
                 label: 'Demandes Traitées',
@@ -103,26 +103,25 @@ const Statistiques = () => {
 
     return (
         <div>
-        <div className="statistics-container">
-            <div className="stat-card">
-                <div className="stat-number">{statistics.totalRequests}</div>
-                <div className="stat-description">Demandes Traitées</div>
+            <div className="statistics-container">
+                <div className="stat-card">
+                    <div className="stat-number">{statistics.totalRequests}</div>
+                    <div className="stat-description">Demandes Traitées</div>
+                </div>
+                <div className="stat-card">
+                    <div className="stat-number">{statistics.validatedCount}</div>
+                    <div className="stat-description">Analyses Effectuées</div>
+                </div>
+                <div className="stat-card">
+                    <div className="stat-number">{statistics.inProgressCount}</div>
+                    <div className="stat-description">Analyses en Cours</div>
+                </div>
             </div>
-            <div className="stat-card">
-                <div className="stat-number">{statistics.validatedCount}</div>
-                <div className="stat-description">Analyses Effectuées</div>
+            <div className="statistics-container">
+                <div className="chart-container">
+                    <Bar data={chartData} options={chartOptions} />
+                </div>
             </div>
-            <div className="stat-card">
-                <div className="stat-number">{statistics.inProgressCount}</div>
-                <div className="stat-description">Analyses en Cours</div>
-            </div>
-            
-        </div>
-        <div className="statistics-container">
-        <div className="chart-container">
-                <Bar data={chartData} options={chartOptions} />
-        </div>
-        </div>
         </div>
     );
 };
