@@ -235,6 +235,7 @@ const Rapport = () => {
         Unite: sample.Unite,
         Valeur_Moyenne: sample.Valeur_Moyenne,
         Limite_Detection: sample.Limite_Detection,
+        Incertitude: sample.Incertitude,
         element_id: sample.element_id
       });
     });
@@ -258,8 +259,6 @@ const Rapport = () => {
         <h1>Résultat d'Analyse</h1>
         <p><strong>Nombre d'échantillons :</strong> {uniqueSampleCount}</p>
       </div>
-
-
 
       {groupedSamplesArray.map(([sampleReference, { sampleType, sampleDetails, analyses }], index) => (
         <div className="sample-section" key={index}>
@@ -291,7 +290,7 @@ const Rapport = () => {
                           className="norme-input"
                         />
                       </th>
-                      <th>Observations</th>
+                      <th>Observations </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -299,7 +298,10 @@ const Rapport = () => {
                       <tr key={resultIndex}>
                         <td>{element.elementDinteret}</td>
                         <td>{element.Unite}</td>
-                        <td>{element.Valeur_Moyenne}</td>
+                        <td>
+                        {element.Valeur_Moyenne}
+                        {element.Incertitude && element.Incertitude.trim() !== '' && element.Incertitude !== '0' ? ` ± ${element.Incertitude}` : ''}
+                        </td>
                         <td>{element.Limite_Detection}</td>
                         <td>{technique}</td>
                         <td>

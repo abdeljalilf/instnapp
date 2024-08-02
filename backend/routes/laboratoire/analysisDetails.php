@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
             $unite = $result['unite'];
             $valeurMoyenne = ($result['valeurMoyenne'] === 'non détecté' || in_array($result['valeurMoyenne'], ['Majeur', 'Mineur', 'Trace'])) ? $result['valeurMoyenne'] : $result['valeurMoyenne'];
             $limiteDetection = $result['limiteDetection'];
-            $incertitude = $result['incertitude'] === 'non détecté' ? 'non détecté' : $result['incertitude'];
+            $incertitude = $result['incertitude'] === 'non détecté' ? '' : $result['incertitude'];
 
             // Bind the parameters
             $stmt->bind_param("issss", $elementsdinteretId, $unite, $valeurMoyenne, $limiteDetection, $incertitude);

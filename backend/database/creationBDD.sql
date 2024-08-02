@@ -59,7 +59,7 @@ CREATE TABLE resultats (
     Valeur_Norme_Utlise VARCHAR(50),
     Limite_Detection VARCHAR(50) NOT NULL,
     Observation VARCHAR(200),
-    Incertitude VARCHAR(50) NOT null ,
+    Incertitude VARCHAR(50) ,
     FOREIGN KEY (elementsdinteret_id) REFERENCES elementsdinteret(id)
 );
 CREATE TABLE conclusions (
