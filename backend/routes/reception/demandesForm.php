@@ -24,7 +24,7 @@ function generateSampleReference($year, $clientId, $sampleCount) {
     return sprintf("%s%04dC%02d", $year, $clientId, $sampleCount);
 }
 $techniqueToDepartement = [
-    "Spectrometrie d'Absportion Atomic (SAA)" => 'TFXE',
+    "Spectrometrie d'Absportion Atomic (SAA)" => "TFXE",
     'Analyseur Direct de Mercure (ADM)' => 'TFXE',
     'Chromatographie Ionique (CI)' => 'HI',
     'Spectrometre Gamma' => 'ATN',

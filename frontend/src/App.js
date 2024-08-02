@@ -1,6 +1,6 @@
 // src/App.js
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import DemandesForm from './components/reception/DemandesForm/DemandesForm';
 import DemandeList from './components/reception/DemandesList/DemandesList';
 import MainPage from './components/reception/MainPage/MainPage';
@@ -22,6 +22,7 @@ import WelcomePage from './components/welcomePage/WelcomePage';
 import AnalysisDetails from './components/laboratory/AnalysisDetails/AnalysisDetails';
 import Laboratoire from './components/laboratory/laboratoire/Laboratoire';
 import LaboMainPage from './components/laboratory/LaboMainPage/LaboMainPage';
+import AnalysisList from './components/laboratory/AnalysisList/AnalysisList'; // Import the AnalysisList component
 
 const App = () => {
     return (
@@ -53,6 +54,7 @@ const App = () => {
                 </Route>
                 <Route path="/laboratoire" element={<LaboMainPage />}>
                     <Route index element={<Laboratoire />} />
+                    <Route path="analyses/:selectedLabo" element={<AnalysisList />} /> {/* New route for AnalysisList */}
                     <Route path="analysis-details/:id" element={<AnalysisDetails />} />
                 </Route>
             </Routes>

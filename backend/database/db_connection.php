@@ -2,7 +2,7 @@
 // Paramètres de connexion à la base de données MySQL
 $servername = "localhost";
 $username = "root"; // Utilisateur MySQL
-$password = "Af1802Ie"; // Mot de passe MySQL
+$password = "root"; // Mot de passe MySQL
 $database = "laboratoire"; // Nom de votre base de données
 
 // Créer une connexion à la base de données
