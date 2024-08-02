@@ -17,6 +17,7 @@ import Dashboard from './components/bureau/Dashboard/Dashboard';
 import RequestDetails from './components/bureau/RequestDetails/RequestDetails';
 import Rapport from './components/bureau/Rapport/Rapport';
 import RapportFinal from './components/bureau/RapportFinal/RapportFinal'; 
+import Shoose_departement from './components/bureau/Shoose_departement/Shoose_departement'; 
 import WelcomePage from './components/welcomePage/WelcomePage';
 import AnalysisDetails from './components/laboratory/AnalysisDetails/AnalysisDetails';
 import Laboratoire from './components/laboratory/laboratoire/Laboratoire';
@@ -40,15 +41,15 @@ const App = () => {
                     <Route path="DemandesList/:clientId" element={<DemandesDetails />} />
                     <Route path="DemandesList/fiche-technique/:clientId" element={<FicheTechnique />} />
                 </Route>
-                
-                <Route path="/bureau" element={<LaboratoryMainPage />}>
+                <Route path="/bureau" element={<Shoose_departement />} />
+                <Route path="/bureau/:department" element={<LaboratoryMainPage />}>
                     <Route index element={<Dashboard />} /> {/* Default route */}
                     <Route path="new-requests" element={<NewRequests />} />
                     <Route path="processed-requests" element={<ProcessedRequests />} />
                     <Route path="dashboard" element={<Dashboard />} />
-                    <Route path="request/:id" element={<RequestDetails />} /> {/* Route for request details */}
-                    <Route path="rapport/:id" element={<Rapport />} /> {/* Route for report details */}
-                    <Route path="rapportfinal/:id" element={<RapportFinal />} /> {/* New route for final report */}
+                    <Route path="request/:id" element={<RequestDetails />} />
+                    <Route path="rapport/:id" element={<Rapport />} />
+                    <Route path="rapportfinal/:id" element={<RapportFinal />} />
                 </Route>
                 <Route path="/laboratoire" element={<LaboMainPage />}>
                     <Route index element={<Laboratoire />} />

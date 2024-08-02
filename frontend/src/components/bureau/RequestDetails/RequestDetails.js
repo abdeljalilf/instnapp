@@ -3,13 +3,13 @@ import { useParams, useNavigate } from 'react-router-dom';
 import './RequestDetails.css'; // Assurez-vous d'avoir un fichier CSS pour le style
 
 const RequestDetails = () => {
-    const { id } = useParams();
+    const { id, department } = useParams(); // Get the department from the URL
     const navigate = useNavigate();
     const [requests, setRequests] = useState([]);
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
     useEffect(() => {
-        fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/getRequestDetails.php?id=${id}`)
+        fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/getRequestDetails.php?id=${id}&department=${department}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -24,17 +24,17 @@ const RequestDetails = () => {
                 console.error('Error fetching data:', error);
                 setRequests([]);
             });
-    }, [id]);
+    }, [id, department]);
 
     const handleValidation = () => {
-        fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/validateRequest.php?id=${id}`, {
+        fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/validateRequest.php?id=${id}&department=${department}`, {
             method: 'POST',
         })
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                navigate('/bureau/new-requests');
+                navigate(`/bureau/${department}/new-requests`);
             })
             .catch(error => {
                 console.error('Error validating request:', error);

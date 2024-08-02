@@ -9,18 +9,39 @@
 }
 
 .header {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-bottom: 20px;
 }
 
-.header h1 {
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 20px;
   margin-bottom: 10px;
+}
+
+.header-top .date {
+  font-size: 16px;
+  color: #000000;
+}
+
+.analysis-count p {
+  color: var(--text-color, black); /* Utilise une variable CSS pour la couleur ou une couleur par défaut */
+  font-size: 20px; /* Ajustez la taille du texte selon vos besoins */
+  font-weight: bold; /* Applique le style gras */
+}
+
+.header h1 {
+  margin-bottom: 0px;
   color: #343a40;
 }
 
 .header p {
   font-size: 16px;
-  color: #2e8b57;
+  color: #011309;
 }
 
 .error-message,
@@ -107,6 +128,7 @@
   font-size: 16px;
 }
 
+
 .conclusion-form {
   margin-top: 30px;
   padding: 20px;
@@ -168,4 +190,152 @@
 
 .validate-button:hover {
   background-color: #1f6848;
+}
+
+
+.analysis-section {
+  margin-bottom: 20px; /* Espace sous chaque section d'analyse */
+}
+
+.analysis-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px; /* Espace sous le tableau */
+}
+
+.analysis-table th, .analysis-table td {
+  border: 1px solid #11230f;
+  padding: 8px;
+  text-align: left;
+}
+
+.analysis-table th {
+  background-color: #2e8b57;
+}
+.valeur-norme-input,
+.norme-input,
+.observation-input {
+  border: 1px solid #ccc;
+  padding: 5px;
+  width: 100%;
+}
+
+.valeur-norme-input:focus,
+.norme-input:focus,
+.observation-input:focus {
+  border-color: #006400;
+  outline: none;
+}
+
+
+/* Container for centering error messages */
+.error-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 5px;
+  color: #721c24;
+  font-weight: bold;
+  z-index: 1000; /* Ensure it appears above other content */
+  text-align: center;
+  display: none; /* Hidden by default */
+}
+
+/* For general error messages */
+.error-message {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* For validation errors */
+.validation-error {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+
+/* Style for the request revision button */
+.request-revision-button {
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #fff;
+  background-color: #ff6f00;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 0px 10px;
+  transition: background-color 0.3s ease;
+}
+
+.request-revision-button:hover {
+  background-color: #86b300;
+}
+
+/* Style for the container of the remark form */
+.remark-form-container {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #241414;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Style for the text area in the remark form */
+.remark-textarea {
+  width: 95%; /* Adjust to fit container width */
+  height: 60px; /* Reduced height */
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  resize: none;
+  margin-bottom: 10px;
+}
+
+/* Style for the buttons container */
+.remark-form-buttons {
+  display: flex;
+  justify-content: space-between; /* Distribute buttons to the left and right */
+}
+
+/* Style for validate button */
+.validate-button {
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #fff;
+  background-color: #28a745;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 0px 20px;
+  transition: background-color 0.3s ease;
+}
+
+.validate-button:hover {
+  background-color: #218838;
+}
+
+/* Style for cancel button */
+.cancel-button {
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #fff;
+  background-color: #ce1a1a;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 0px 50px;
+  transition: background-color 0.3s ease;
+}
+
+.cancel-button:hover {
+  background-color: #f90303;
 }

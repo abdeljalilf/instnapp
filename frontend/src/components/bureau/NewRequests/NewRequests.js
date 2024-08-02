@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom'; // Import Link here
 import './NewRequests.css';
 
 // Fonction pour capitaliser la première lettre
@@ -8,30 +8,33 @@ const capitalizeFirstLetter = (string) => {
 };
 
 const NewRequests = () => {
+    const { department } = useParams(); // Get the department from the URL
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true); // État de chargement initial
     const [error, setError] = useState(null); // État pour gérer les erreurs
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
     useEffect(() => {
-        fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/getNewRequests.php`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('Fetched data:', data);
-                setRequests(data);
-                setLoading(false); // Mettre à jour l'état de chargement
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                setError('Erreur lors du chargement des demandes.'); // Message d'erreur
-                setLoading(false); // Gérer l'état de chargement en cas d'erreur
-            });
-    }, []);
+        if (department) {
+            fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/getNewRequests.php?department=${department}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Fetched data:', data);
+                    setRequests(data);
+                    setLoading(false); // Mettre à jour l'état de chargement
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    setError('Erreur lors du chargement des demandes.'); // Message d'erreur
+                    setLoading(false); // Gérer l'état de chargement en cas d'erreur
+                });
+        }
+    }, [department]); // Fetch data whenever the department changes
 
     if (loading) {
         return <div>Loading...</div>; // Afficher un message de chargement si les données ne sont pas encore chargées
@@ -67,7 +70,7 @@ const NewRequests = () => {
                                 ))}
                             </td>
                             <td>
-                                <Link to={`/bureau/request/${request.demande_id}`} className="btn-primary">
+                                <Link to={`/bureau/${department}/request/${request.demande_id}`} className="btn-primary">
                                     Afficher plus
                                 </Link>
                             </td>

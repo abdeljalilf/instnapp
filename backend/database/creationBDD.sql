@@ -1,4 +1,3 @@
-
 CREATE DATABASE laboratoire;
 
 USE laboratoire;
@@ -9,7 +8,7 @@ CREATE TABLE clients (
     address VARCHAR(255) NOT NULL,
     phone VARCHAR(20) NOT NULL,
     email VARCHAR(255) NOT NULL,
-    clientReference VARCHAR(255) ,
+    clientReference VARCHAR(255),
     dilevery_delay DATE NOT NULL,
     requestingDate DATE NOT NULL
 );
@@ -34,10 +33,15 @@ CREATE TABLE analyses (
     analysisType VARCHAR(50) NOT NULL,
     parameter VARCHAR(50) NOT NULL,
     technique VARCHAR(50) NOT NULL,
-    validated VARCHAR(50) DEFAULT "reception_step_1",
-    departement VARCHAR(50) DEFAULT "TFXE",
+    validated VARCHAR(50) DEFAULT 'reception_step_1',
+    departement VARCHAR(50) DEFAULT 'TFXE',
+    Used_norme VARCHAR(100),
+    office_remark VARCHAR(300),
     FOREIGN KEY (echantillon_id) REFERENCES echantillons(id)
 );
+ALTER TABLE analyses
+ADD COLUMN office_remark VARCHAR(300);
+
 
 CREATE TABLE elementsdinteret (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -46,28 +50,48 @@ CREATE TABLE elementsdinteret (
     FOREIGN KEY (analysis_id) REFERENCES analyses(id)
 );
 
-CREATE TABLE results (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    analysis_id INT NOT NULL,
-    element VARCHAR(255) NOT NULL,
-    mean_value FLOAT NOT NULL,
-    incertitude FLOAT NOT NULL,
-    unit VARCHAR(50) NOT NULL,
-    FOREIGN KEY (analysis_id) REFERENCES analyses(id),
-    UNIQUE (analysis_id,element)
-);
 
 CREATE TABLE resultats (
     id INT AUTO_INCREMENT PRIMARY KEY,
     elementsdinteret_id INT NOT NULL,
     Unite VARCHAR(50) NOT NULL,
     Valeur_Moyenne VARCHAR(50) NOT NULL,
-    Valeur_Limite_OMS VARCHAR(50) DEFAULT "sans",
+    Valeur_Norme_Utlise VARCHAR(50),
     Limite_Detection VARCHAR(50) NOT NULL,
-    Observation VARCHAR(200) DEFAULT "RAS",
-    Incertitude VARCHAR(50) NOT null ,
-    Conclusion VARCHAR(250) default "RAS",
-   
+    Observation VARCHAR(200),
+    Incertitude VARCHAR(50) ,
     FOREIGN KEY (elementsdinteret_id) REFERENCES elementsdinteret(id)
 );
- drop TABLE resultats
+CREATE TABLE conclusions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    client_id INT NOT NULL,
+    departement VARCHAR(50) NOT NULL,
+    conclusion VARCHAR(500) NOT NULL,
+    FOREIGN KEY (client_id) REFERENCES clients(id)
+);
+
+
+
+
+
+
+CREATE TABLE resultats (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    elementsdinteret_id INT NOT NULL,
+    Unite VARCHAR(50) NOT NULL,
+    Valeur_Moyenne VARCHAR(50) NOT NULL,
+    Valeur_Norme_Utlise VARCHAR(50),
+    Valeur_Limite_OMS VARCHAR(50),
+    Limite_Detection float,
+    Incertitude float ,
+    Observation VARCHAR(100),
+    FOREIGN KEY (elementsdinteret_id) REFERENCES elementsdinteret(id)
+);
+
+--suprimer les valeurs dans les tables
+DELETE FROM resultats;
+DELETE FROM results;
+DELETE FROM elementsdinteret;
+DELETE FROM analyses;
+DELETE FROM echantillons;
+DELETE FROM clients;
