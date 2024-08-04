@@ -1,0 +1,120 @@
+/* Global styles */
+.analysislist body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background: #f0f4f8; /* Soft background color */
+    background-size: auto;
+    background-position: center;
+}
+
+/* Container styles */
+.analysislist-container {
+    width: 90%;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.8); /* Translucent background color */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Header styles */
+.analysislist-header {
+    background-color: #2e8b57; /* Green */
+    padding: 10px;
+    border-radius: 5px 5px 0 0;
+    color: white;
+    text-align: center;
+    margin: -20px -20px 20px -20px;
+}
+
+/* Select group styles */
+.analysislist-select-group {
+    margin-bottom: 25px; /* Increase margin to avoid overlap */
+}
+
+/* Select styles */
+.analysislist-select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #2e8b57; /* Green */
+    border-radius: 5px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    background-color: white; /* Set background color to white */
+}
+
+.analysislist-select:focus {
+    background-color: #e0f7fa; /* Background color on focus */
+    border-color: #238443; /* Darker border on focus */
+}
+
+/* Button styles */
+.analysislist button {
+    display: inline-flex; /* Use inline-flex to adjust width based on content */
+    padding: 10px 20px; /* Space around text (adjust as needed) */
+    font-size: 16px; /* Text size (adjust as needed) */
+    border: none;
+    border-radius: 5px;
+    background-color: #2e8b57; /* Background color (adjust as needed) */
+    color: white;
+    cursor: pointer;
+    text-align: center;
+    white-space: nowrap; /* Prevent text from breaking into multiple lines */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Shadow (adjust as needed) */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Transition effects */
+    margin-left: 5%;
+}
+
+.analysislist button:hover {
+    background-color: #183020; /* Darker green */
+}
+
+.analysislist button:active {
+    background-color: #1a5f32; /* Even darker green */
+}
+
+/* Input and select focus styles */
+.analysislist input:focus,
+select:focus {
+    border-color: #238443; /* Darker green */
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 128, 0, 0.5); /* Green shadow */
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Table styles */
+.analyses-table {
+    margin-top: 20px;
+}
+
+.analyses-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.analyses-table th, .analyses-table td {
+    border: 1px solid #ccc;
+    padding: 20px;
+    text-align: left;
+}
+
+.analyses-table th {
+    background-color: #2e8b57;
+    color: white;
+}
+
+.analyses-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
