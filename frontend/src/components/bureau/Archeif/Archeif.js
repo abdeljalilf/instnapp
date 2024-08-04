@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom'; // Import Link here
-import './NewRequests.css';
+import './Archeif.css';
 
 // Fonction pour capitaliser la première lettre
 const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
-const NewRequests = () => {
+const Archeif = () => {
     const { department } = useParams(); // Get the department from the URL
     const [requests, setRequests] = useState([]);
     const [loading, setLoading] = useState(true); // État de chargement initial
@@ -16,7 +16,7 @@ const NewRequests = () => {
 
     useEffect(() => {
         if (department) {
-            fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/getNewRequests.php?department=${department}`)
+            fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/Archeif.php?department=${department}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
@@ -46,7 +46,7 @@ const NewRequests = () => {
 
     return (
         <div className="table-container">
-            <h2>Les nouvelles demandes à valider</h2>
+            <h2>Historiques des demandes</h2>
             <table className="table">
                 <thead>
                     <tr>
@@ -70,8 +70,8 @@ const NewRequests = () => {
                                 ))}
                             </td>
                             <td>
-                                <Link to={`/bureau/${department}/request/${request.demande_id}`} className="btn-primary">
-                                    Afficher plus
+                                <Link to={`/bureau/${department}/GenerateRapport/${request.demande_id}`} className="btn-primary">
+                                    Générer le Rapport
                                 </Link>
                             </td>
                         </tr>
@@ -82,4 +82,4 @@ const NewRequests = () => {
     );
 };
 
-export default NewRequests;
+export default Archeif;

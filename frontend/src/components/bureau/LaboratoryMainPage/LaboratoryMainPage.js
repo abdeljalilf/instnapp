@@ -16,6 +16,8 @@ const LaboratoryMainPage = () => {
                     <Button color="inherit" onClick={() => navigate(`/bureau/${department}/new-requests`)}>Les nouvelles demandes</Button>
                     <Button color="inherit" onClick={() => navigate(`/bureau/${department}/processed-requests`)}>Les nouveaux résultats</Button>
                     <Button color="inherit" onClick={() => navigate(`/bureau/${department}/dashboard`)}>Dashboard et Statistiques</Button>
+                    <Button color="inherit" onClick={() => navigate(`/bureau/${department}/Archeif`)}>Archeif</Button>
+
                 </Toolbar>
             </AppBar>
             <div className="content">

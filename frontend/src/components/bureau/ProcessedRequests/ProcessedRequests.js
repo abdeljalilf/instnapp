@@ -57,7 +57,7 @@ const ProcessedRequests = () => {
                             const descriptionLines = request.description.split('\n').map(line => capitalizeWords(line));
                             return (
                                 <tr key={request.demande_id}>
-                                    <td>{request.demande_id}</td>
+                                    <td>{request.clientReference}</td>
                                     <td>{request.dilevery_delay}</td>
                                     <td>
                                        <div>

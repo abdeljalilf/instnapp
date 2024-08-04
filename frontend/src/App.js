@@ -14,10 +14,12 @@ import LaboratoryMainPage from './components/bureau/LaboratoryMainPage/Laborator
 import NewRequests from './components/bureau/NewRequests/NewRequests';
 import ProcessedRequests from './components/bureau/ProcessedRequests/ProcessedRequests';
 import Dashboard from './components/bureau/Dashboard/Dashboard';
+import Archeif from './components/bureau/Archeif/Archeif';
 import RequestDetails from './components/bureau/RequestDetails/RequestDetails';
-import Rapport from './components/bureau/Rapport/Rapport';
-import RapportFinal from './components/bureau/RapportFinal/RapportFinal'; 
-import Shoose_departement from './components/bureau/Shoose_departement/Shoose_departement'; 
+import Rapport from './components/bureau/EnterReport/Rapport';
+import RapportFinal from './components/bureau/Review_FinalReport/RapportFinal'; 
+import Shoose_departement from './components/bureau/Shoose_departement/Shoose_departement';
+import GenerateRapport from './components/bureau/GenerateReport/GenerateRapport'; 
 import WelcomePage from './components/welcomePage/WelcomePage';
 import AnalysisDetails from './components/laboratory/AnalysisDetails/AnalysisDetails';
 import Laboratoire from './components/laboratory/laboratoire/Laboratoire';
@@ -47,9 +49,11 @@ const App = () => {
                     <Route path="new-requests" element={<NewRequests />} />
                     <Route path="processed-requests" element={<ProcessedRequests />} />
                     <Route path="dashboard" element={<Dashboard />} />
+                    <Route path="Archeif" element={<Archeif />} />
                     <Route path="request/:id" element={<RequestDetails />} />
                     <Route path="rapport/:id" element={<Rapport />} />
                     <Route path="rapportfinal/:id" element={<RapportFinal />} />
+                    <Route path="GenerateRapport/:id" element={<GenerateRapport />} />
                 </Route>
                 <Route path="/laboratoire" element={<LaboMainPage />}>
                     <Route index element={<Laboratoire />} />

@@ -69,7 +69,15 @@ CREATE TABLE conclusions (
     conclusion VARCHAR(500) NOT NULL,
     FOREIGN KEY (client_id) REFERENCES clients(id)
 );
-
+CREATE TABLE standard_results (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    elementsdinteret_id INT NOT NULL,
+    Unite_s VARCHAR(50) NOT NULL,
+    Valeur_Moyenne_s VARCHAR(50) NOT NULL,
+    Limite_Detection VARCHAR(50) NOT NULL,
+    Incertitude VARCHAR(50) ,
+    FOREIGN KEY (elementsdinteret_id) REFERENCES elementsdinteret(id)
+);
 
 
 

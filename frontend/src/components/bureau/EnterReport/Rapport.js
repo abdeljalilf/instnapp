@@ -213,7 +213,7 @@ const Rapport = () => {
     samples.forEach((sample) => {
       if (!acc[sample.sampleReference]) {
         acc[sample.sampleReference] = {
-          sampleType,
+          sampleType:sample.sampleType,
           sampleDetails: sample,
           analyses: {}
         };

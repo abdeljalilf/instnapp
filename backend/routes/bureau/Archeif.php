@@ -12,7 +12,7 @@ $sql = "SELECT clients.id AS demande_id, clients.clientReference, clients.dileve
         FROM clients 
         JOIN echantillons ON clients.id = echantillons.client_id 
         JOIN analyses ON echantillons.id = analyses.echantillon_id 
-        WHERE analyses.validated = 'finance'";
+        WHERE analyses.validated = 'office_step_2'";
 
 if ($department) {
     $sql .= " AND analyses.departement = ?";

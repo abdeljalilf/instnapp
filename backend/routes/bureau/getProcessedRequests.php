@@ -11,6 +11,7 @@ $department = isset($_GET['department']) ? $_GET['department'] : 'TFXE'; // Vale
 $query = "
     SELECT clients.id AS demande_id, 
            clients.dilevery_delay, 
+           clients.clientReference,
            echantillons.sampleType, 
            analyses.analysisType,
            (
@@ -69,6 +70,7 @@ foreach ($data as $row) {
         $groupedData[$demande_id] = [
             'demande_id' => $demande_id,
             'dilevery_delay' => $row['dilevery_delay'],
+            'clientReference' => $row['clientReference'],
             'samples' => [],
             'N1' => $N1,
             'N2' => $N2
