@@ -168,6 +168,9 @@ const AnalysisDetails = () => {
                       <option value="g/L">g/L</option>
                       <option value="mg/L">mg/L</option>
                       <option value="µg/L">µg/L</option>
+                      <option value="µg/Kg">g/Kg</option>
+                      <option value="µg/Kg">mg/Kg</option>
+                      <option value="µg/Kg">µg/Kg</option>
                     </select>
                   </td>
                   <td>

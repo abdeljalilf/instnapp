@@ -24,6 +24,8 @@ import WelcomePage from './components/welcomePage/WelcomePage';
 import AnalysisDetails from './components/laboratory/AnalysisDetails/AnalysisDetails';
 import Laboratoire from './components/laboratory/laboratoire/Laboratoire';
 import LaboMainPage from './components/laboratory/LaboMainPage/LaboMainPage';
+import AnalysisList from './components/laboratory/AnalysisList/AnalysisList'; // Import the AnalysisList component
+
 
 const App = () => {
     return (
@@ -57,6 +59,7 @@ const App = () => {
                 </Route>
                 <Route path="/laboratoire" element={<LaboMainPage />}>
                     <Route index element={<Laboratoire />} />
+                    <Route path="analyses/:selectedLabo" element={<AnalysisList />} /> {/* New route for AnalysisList */}
                     <Route path="analysis-details/:id" element={<AnalysisDetails />} />
                 </Route>
             </Routes>

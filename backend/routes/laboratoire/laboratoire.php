@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             a.analysisType, 
             a.parameter, 
             a.technique,
+            a.validated,
             GROUP_CONCAT(ed.elementDinteret SEPARATOR ', ') AS elementDinteret
         FROM 
             analyses a
