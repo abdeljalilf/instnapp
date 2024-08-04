@@ -37,26 +37,27 @@ const GenirateRapport = () => {
     const handleDownload = () => {
         const element = document.getElementById('report-container');
         const opt = {
-            margin: [30, 5], // 30mm margin for top and bottom
-            filename: `rapport_final_${id}.pdf`,
-            image: { type: 'jpeg', quality: 0.98 },
+            margin: [35, 10], // 35mm pour le haut et le bas, 10mm pour les côtés
+            filename: `rapport_final_${data.clientReference}.pdf`,
+            image: { type: 'jpeg', quality: 1 },
             html2canvas: { scale: 2 },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-            pagebreak: { mode: ['avoid-all', 'css', 'legacy'] } // Add page breaks if needed
+            pagebreak: { mode: ['avoid-all', 'css', 'legacy'] } // Ajouter des sauts de page si nécessaire
         };
-
+    
         html2pdf().from(element).set(opt).toPdf().get('pdf').then((pdf) => {
             const totalPages = pdf.internal.getNumberOfPages();
             pdf.setPage(1);
-
+    
             for (let i = 1; i <= totalPages; i++) {
                 pdf.setPage(i);
                 pdf.text(`Page ${i} sur ${totalPages}`, 190, 285, { align: 'right' });
             }
-
+    
             pdf.save(`rapport_final_${id}.pdf`);
         });
     };
+    
 
     if (error) {
         return <div className="error-message">Erreur : {error}</div>;
@@ -140,7 +141,7 @@ const GenirateRapport = () => {
                         {sampleList}
                     </div>
                     <p>
-                        <strong>Date d'arrivée :</strong> {new Date(data.date_arrive).toLocaleDateString()}
+                        <strong>Date d'arrivée :</strong> {new Date(data.requestingDate).toLocaleDateString()}
                     </p>
                 </section>
 

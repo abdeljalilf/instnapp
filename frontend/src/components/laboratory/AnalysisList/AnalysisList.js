@@ -55,7 +55,7 @@ const Analyses = () => {
                   </td>
                   <td>{getStatusMessage(analysis.validated)}</td>
                   <td>
-                    <Link to={`/analysis-details/${analysis.analysisId}`}>
+                    <Link to={`/laboratoire/analysis-details/${analysis.analysisId}`}>
                       <button className="result-button">Ajouter les resultats</button>
                     </Link>
                   </td>

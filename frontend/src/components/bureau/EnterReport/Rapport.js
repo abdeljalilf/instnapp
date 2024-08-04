@@ -258,6 +258,7 @@ const Rapport = () => {
         </div>
         <h1>Résultat d'Analyse</h1>
         <p><strong>Nombre d'échantillons :</strong> {uniqueSampleCount}</p>
+        <p><strong>Date de livraison :</strong> {data.dilevery_delay}</p>
       </div>
 
       {groupedSamplesArray.map(([sampleReference, { sampleType, sampleDetails, analyses }], index) => (

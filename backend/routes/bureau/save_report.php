@@ -13,7 +13,7 @@ if (!$data) {
     exit;
 }
 
-// Process usedNormes
+// Process usedNormes and validated field in analyses
 foreach ($data['usedNormes'] ?? [] as $norme) {
     $analysis_id = intval($norme['analysis_id']);
     $Used_norme = $conn->real_escape_string($norme['Used_norme']);
@@ -21,6 +21,11 @@ foreach ($data['usedNormes'] ?? [] as $norme) {
     $query = "UPDATE analyses SET Used_norme = '$Used_norme' WHERE id = $analysis_id";
     if (!$conn->query($query)) {
         echo json_encode(['success' => false, 'message' => 'Error updating analyses: ' . $conn->error]);
+        exit;
+    };
+    $query = "UPDATE analyses SET validated = 'office_step_2' WHERE id = $analysis_id";
+    if (!$conn->query($query)) {
+        echo json_encode(['success' => false, 'message' => 'Error updating analyses validated field: ' . $conn->error]);
         exit;
     }
 }

@@ -66,7 +66,8 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
             GROUP BY client_id, departement
         )
     ) last_conclusion ON clients.id = last_conclusion.client_id AND analyses.departement = last_conclusion.departement
-    WHERE clients.id = ? AND analyses.departement = ? AND analyses.validated = 'office_step_2'
+    WHERE clients.id = ? AND analyses.departement = ? AND 
+    (analyses.validated = 'office_step_2' OR analyses.validated = 'office_step_3')
 ";
 
 

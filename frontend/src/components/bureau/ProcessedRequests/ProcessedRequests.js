@@ -24,6 +24,8 @@ const ProcessedRequests = () => {
                     }
                 })
                 .then(data => {
+                    // Trier les demandes par ordre décroissant de clientReference
+                    data.sort((a, b) => b.clientReference.localeCompare(a.clientReference));
                     setRequests(data);
                     setLoading(false);
                 })
@@ -44,10 +46,10 @@ const ProcessedRequests = () => {
                 <table className="table">
                     <thead>
                         <tr>
-                            <th>Numéro de la demande</th>
+                            <th>Référence de la demande</th>
                             <th>Date de livraison</th>
                             <th>Description</th>
-                            <th>Nombre d'analyses finies</th> {/* Nouvelle colonne */}
+                            <th>Nombre d'analyses finis</th> {/* Nouvelle colonne */}
                             <th>Actions</th>
                         </tr>
                     </thead>

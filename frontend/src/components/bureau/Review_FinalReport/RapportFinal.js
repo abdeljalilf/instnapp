@@ -52,7 +52,7 @@ const handleGenerateReport = () => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ demande_id: id, newValidatedValue: 'office_step_2' }) // Ensure 'demande_id' is the client_id
+            body: JSON.stringify({ demande_id: id, newValidatedValue: 'office_step_3' }) // Ensure 'demande_id' is the client_id
         })
             .then(response => {
                 console.log('Response:', response);
@@ -145,7 +145,7 @@ const handleGenerateReport = () => {
                 <p>{data.conclusion}</p>
             </section>
 
-            <section className="results-section">
+            <section className="reportresults-section">
                 <h2>2. Résultats</h2>
                 <p>Les résultats d’analyses sont reportés dans les tableaux ci-dessous.</p>
             </section>
@@ -204,22 +204,13 @@ const handleGenerateReport = () => {
                     ))}
                 </div>
             ))}
-
-            <footer className="report-footer">
-                <p>
-                    Fait à Antananarivo, le{' '}
-                    {new Date().toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}
-                </p>
-                <p>Chef du département des analyses</p>
-            </footer>
-
-            <div className="signature-space"></div>
             
-            <div className="buttons-container">
-                <button onClick={handleGenerateReport}>Générer le rapport</button>
-                <button onClick={handleModifyResults}>Modifier les résultats</button>
+            <div className="final_reportbuttons-container">
+               <button onClick={handleGenerateReport} className="left-button">Générer le rapport</button>
+               <button onClick={handleModifyResults} className="right-button">Modifier les résultats</button>
+</div>
+
             </div>
-        </div>
     );
 };
 

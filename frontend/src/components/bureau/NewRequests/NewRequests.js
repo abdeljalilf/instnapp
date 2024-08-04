@@ -25,6 +25,8 @@ const NewRequests = () => {
                 })
                 .then(data => {
                     console.log('Fetched data:', data);
+                    // Trier les demandes par ordre décroissant de clientReference
+                    data.sort((a, b) => b.clientReference.localeCompare(a.clientReference));
                     setRequests(data);
                     setLoading(false); // Mettre à jour l'état de chargement
                 })
@@ -50,7 +52,7 @@ const NewRequests = () => {
             <table className="table">
                 <thead>
                     <tr>
-                        <th>Numéro de la demande</th>
+                        <th>Référence de la demande</th>
                         <th>Date de livraison</th>
                         <th>Description</th>
                         <th>Actions</th>
