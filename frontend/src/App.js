@@ -14,7 +14,9 @@ import LaboratoryMainPage from './components/bureau/LaboratoryMainPage/Laborator
 import NewRequests from './components/bureau/NewRequests/NewRequests';
 import ProcessedRequests from './components/bureau/ProcessedRequests/ProcessedRequests';
 import Dashboard from './components/bureau/Dashboard/Dashboard';
-import Archeif from './components/bureau/Archeif/Archeif';
+import Archive from './components/bureau/Dashboard/Archive/Archive';
+import INSTN from './components/bureau/Dashboard/INSTN/INSTN';
+import Department from './components/bureau/Dashboard/Department/Department';
 import RequestDetails from './components/bureau/RequestDetails/RequestDetails';
 import Rapport from './components/bureau/EnterReport/Rapport';
 import RapportFinal from './components/bureau/Review_FinalReport/RapportFinal'; 
@@ -50,8 +52,12 @@ const App = () => {
                     <Route index element={<Dashboard />} /> {/* Default route */}
                     <Route path="new-requests" element={<NewRequests />} />
                     <Route path="processed-requests" element={<ProcessedRequests />} />
-                    <Route path="dashboard" element={<Dashboard />} />
-                    <Route path="Archeif" element={<Archeif />} />
+                    <Route path="dashboard" element={<Dashboard />}>
+                        {/* Additional Dashboard Routes */}
+                        <Route path="instn" element={<INSTN />} />
+                        <Route path="department" element={<Department />} />
+                        <Route path="archive" element={<Archive />} />
+                    </Route>
                     <Route path="request/:id" element={<RequestDetails />} />
                     <Route path="rapport/:id" element={<Rapport />} />
                     <Route path="rapportfinal/:id" element={<RapportFinal />} />

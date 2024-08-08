@@ -39,9 +39,6 @@ CREATE TABLE analyses (
     office_remark VARCHAR(300),
     FOREIGN KEY (echantillon_id) REFERENCES echantillons(id)
 );
-ALTER TABLE analyses
-ADD COLUMN office_remark VARCHAR(300);
-
 
 CREATE TABLE elementsdinteret (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -73,28 +70,11 @@ CREATE TABLE standard_results (
     id INT AUTO_INCREMENT PRIMARY KEY,
     elementsdinteret_id INT NOT NULL,
     Unite_s VARCHAR(50) NOT NULL,
-    Valeur_Moyenne_s VARCHAR(50) NOT NULL,
-    Limite_Detection VARCHAR(50) NOT NULL,
-    Incertitude VARCHAR(50) ,
+    Valeur_Moyenne_standard VARCHAR(50) NOT NULL,
+    Valeur_Moyenne_mesure VARCHAR(50) NOT NULL,
     FOREIGN KEY (elementsdinteret_id) REFERENCES elementsdinteret(id)
 );
 
-
-
-
-
-CREATE TABLE resultats (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    elementsdinteret_id INT NOT NULL,
-    Unite VARCHAR(50) NOT NULL,
-    Valeur_Moyenne VARCHAR(50) NOT NULL,
-    Valeur_Norme_Utlise VARCHAR(50),
-    Valeur_Limite_OMS VARCHAR(50),
-    Limite_Detection float,
-    Incertitude float ,
-    Observation VARCHAR(100),
-    FOREIGN KEY (elementsdinteret_id) REFERENCES elementsdinteret(id)
-);
 
 --suprimer les valeurs dans les tables
 DELETE FROM resultats;

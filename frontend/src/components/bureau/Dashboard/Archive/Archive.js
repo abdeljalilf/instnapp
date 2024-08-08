@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import './Archeif.css';
+import './Archive.css';
 
 // Fonction pour capitaliser la première lettre
 const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
-const Archeif = () => {
+const Archive = () => {
     const { department } = useParams(); // Get the department from the URL
     const [requests, setRequests] = useState([]);
     const [filteredRequests, setFilteredRequests] = useState([]); // État pour les demandes filtrées
@@ -18,7 +18,7 @@ const Archeif = () => {
 
     useEffect(() => {
         if (department) {
-            fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/Archeif.php?department=${department}`)
+            fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/Archive.php?department=${department}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
@@ -116,4 +116,4 @@ const Archeif = () => {
     );
 };
 
-export default Archeif;
+export default Archive;
