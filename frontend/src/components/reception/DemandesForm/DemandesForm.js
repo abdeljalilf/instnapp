@@ -8,7 +8,7 @@ const DemandesForm = () => {
     };
 
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
-
+    const session_id = localStorage.getItem('session_id');
     const [personalInfo, setPersonalInfo] = useState({
         name: '',
         address: '',
@@ -135,7 +135,8 @@ const DemandesForm = () => {
         const response = await fetch(`${apiBaseUrl}/instnapp/backend/routes/reception/demandesForm.php`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                Authorization: session_id
             },
             body: JSON.stringify({
                 personalInfo,

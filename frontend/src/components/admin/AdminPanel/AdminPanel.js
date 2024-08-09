@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate, Outlet } from 'react-router-dom';
+import { AppBar, Toolbar, Button, Typography } from '@mui/material';
 import axios from 'axios';
 import './AdminPanel.css';
 
@@ -9,6 +11,8 @@ const AdminPanel = () => {
     const [editUserId, setEditUserId] = useState(null);
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
     const apiUrl = `${apiBaseUrl}/instnapp/backend/routes/admin`;
+    const session_id = localStorage.getItem('session_id');
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchUsers();
@@ -16,8 +20,11 @@ const AdminPanel = () => {
 
     const fetchUsers = async () => {
         try {
-            const response = await axios.get(`${apiUrl}/get_users.php`);
-            console.log('Fetched users:', response.data);
+            const response = await axios.get(`${apiUrl}/get_users.php`, {
+                headers: {
+                    Authorization: session_id
+                }
+            });
             if (Array.isArray(response.data)) {
                 setUsers(response.data);
             } else {
@@ -35,13 +42,35 @@ const AdminPanel = () => {
         setForm({ ...form, [name]: value });
     };
 
+    const handleLogout = async () => {
+        try {
+            await axios.post(`${apiBaseUrl}/instnapp/backend/routes/login/logout.php`, {}, {
+                headers: {
+                    Authorization: session_id
+                }
+            });
+            localStorage.removeItem('session_id');
+            navigate('/login'); // Rediriger vers la page de connexion
+        } catch (error) {
+            console.error('Error logging out:', error);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             if (isEditing) {
-                await axios.post(`${apiUrl}/update_user.php`, { ...form, id: editUserId });
+                await axios.post(`${apiUrl}/update_user.php`, { ...form, id: editUserId }, {
+                    headers: {
+                        Authorization: session_id
+                    }
+                });
             } else {
-                await axios.post(`${apiUrl}/create_user.php`, form);
+                await axios.post(`${apiUrl}/create_user.php`, form, {
+                    headers: {
+                        Authorization: session_id
+                    }
+                });
             }
             fetchUsers();
             setForm({ email: '', password: '', role: '', department: '' });
@@ -59,7 +88,11 @@ const AdminPanel = () => {
 
     const handleDelete = async (id) => {
         try {
-            await axios.post(`${apiUrl}/delete_user.php`, { id });
+            await axios.post(`${apiUrl}/delete_user.php`, { id }, {
+                headers: {
+                    Authorization: session_id
+                }
+            });
             fetchUsers();
         } catch (error) {
             console.error('Error deleting user:', error);
@@ -68,7 +101,11 @@ const AdminPanel = () => {
 
     return (
         <div className="admin-panel">
-            <h2 className="form-header">Admin Panel</h2>
+            <h2 className="form-header">Admin Panel
+            <Button color="inherit" onClick={handleLogout} className="logout-button">
+                        Logout
+                    </Button>
+            </h2>
             <form className="admin-form" onSubmit={handleSubmit}>
                 <label>Email:</label>
                 <input type="email" name="email" value={form.email} onChange={handleInputChange} placeholder="Email" required />
