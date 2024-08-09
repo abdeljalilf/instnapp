@@ -24,7 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             FROM clients c 
             JOIN echantillons e ON c.id = e.client_id 
             JOIN analyses a ON e.id = a.echantillon_id AND a.validated = 'reception_step_1'
-            LEFT JOIN elementsdinteret ed ON e.id = ed.analysis_id";
+            LEFT JOIN elementsdinteret ed ON e.id = ed.analysis_id
+            ORDER BY c.id DESC";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {

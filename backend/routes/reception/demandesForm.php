@@ -16,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 $user = checkSession($conn);
 authorize(['reception'], $user);
 
+
 // Fonction pour générer la référence client
 function generateClientReference($clientId, $year) {
     return sprintf("INSTN/DG/XRF/%s/%04d", $year, $clientId);
@@ -25,6 +26,15 @@ function generateClientReference($clientId, $year) {
 function generateSampleReference($year, $clientId, $sampleCount) {
     return sprintf("%s%04dC%02d", $year, $clientId, $sampleCount);
 }
+$techniqueToDepartement = [
+    "Spectrometrie d'Absportion Atomic (SAA)" => 'TFXE',
+    'Analyseur Direct de Mercure (ADM)' => 'TFXE',
+    'Chromatographie Ionique (CI)' => 'HI',
+    'Spectrometre Gamma' => 'ATN',
+    'Spectrometre alpha' => 'ATN',
+    'Fluorescence X a Energie Dispersive (FXDE)' => 'TFXE',
+    'Gravimetrie' => 'TFXE'
+];
 
 // Vérifier si une requête POST a été envoyée depuis le formulaire React
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -97,9 +107,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $analysisType = $conn->real_escape_string($analysis['analysisType']);
                 $parameter = $conn->real_escape_string($analysis['parameter']);
                 $technique = $conn->real_escape_string($analysis['technique']);
+                $departement = isset($techniqueToDepartement[$technique]) ? $techniqueToDepartement[$technique] : 'Unknown';
                 $elements = $analysis['element'];
 
-                $sqlInsertAnalysis = "INSERT INTO analyses (echantillon_id, analysisType, parameter, technique) VALUES ('$sampleId', '$analysisType', '$parameter', '$technique')";
+                $sqlInsertAnalysis = "INSERT INTO analyses (echantillon_id, analysisType, parameter, technique,departement) VALUES ('$sampleId', '$analysisType', '$parameter', '$technique','$departement')";
                 if (!$conn->query($sqlInsertAnalysis)) {
                     throw new Exception('Erreur lors de l\'insertion des détails d\'analyse: ' . $conn->error);
                 }
