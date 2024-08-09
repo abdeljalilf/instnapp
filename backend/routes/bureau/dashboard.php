@@ -1,220 +1,165 @@
 <?php
-// Inclure le fichier de connexion
-include '../../database/db_connection.php';
 header('Content-Type: application/json');
 header("Access-Control-Allow-Origin: *");
-function getDataThreeMonths($department, $conn) {
-    $currentDate = date('Y-m-d');
-    $threeMonthsAgo = date('Y-m-d', strtotime('-3 months'));
 
+// Inclure la connexion à la base de données
+include '../../database/db_connection.php';
+
+// Récupérer le département depuis les paramètres URL
+$department = $_GET['department'];
+
+// Obtenir les données des demandes, rapports et statistiques
+function getDashboardData($conn, $department) {
+    $data = [];
+
+    // Nombre de demandes reçues sur les trois derniers mois
     $query = "
-        SELECT
-            COUNT(*) AS demandesTroisMois
-        FROM
-            clients
-        WHERE
-            requestingDate BETWEEN ? AND ?
+        SELECT COUNT(*) AS count 
+        FROM clients 
+        WHERE requestingDate >= DATE_SUB(NOW(), INTERVAL 3 MONTH)
     ";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("ss", $threeMonthsAgo, $currentDate);
     $stmt->execute();
     $result = $stmt->get_result();
-    $data = $result->fetch_assoc();
-    $demandesTroisMois = $data['demandesTroisMois'];
+    $row = $result->fetch_assoc();
+    $data['demandes_recues']['recent'] = $row['count'];
 
+    // Nombre de demandes reçues sur l'année
     $query = "
-        SELECT
-            COUNT(*) AS rapportsGeneres
-        FROM
-            analyses
-        WHERE
-            validated = 'office_step_3'
-            AND departement = ?
+        SELECT COUNT(*) AS count 
+        FROM clients 
+        WHERE requestingDate >= DATE_SUB(NOW(), INTERVAL 1 YEAR)
     ";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("s", $department);
     $stmt->execute();
     $result = $stmt->get_result();
-    $data = $result->fetch_assoc();
-    $rapportsGeneres = $data['rapportsGeneres'];
+    $row = $result->fetch_assoc();
+    $data['demandes_recues']['year'] = $row['count'];
 
+    // Nombre de rapports générés sur les trois derniers mois
     $query = "
-        SELECT
-            COUNT(*) AS rapportsAttente
-        FROM
-            analyses
-        WHERE
-            validated IN ('office_step_3', 'laboratory')
-            AND departement = ?
+        SELECT COUNT(DISTINCT client_id) AS count 
+        FROM echantillons 
+        JOIN analyses ON echantillons.id = analyses.echantillon_id
+        WHERE analyses.departement = ? 
+        AND echantillons.samplingDate >= DATE_SUB(NOW(), INTERVAL 3 MONTH)
     ";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("s", $department);
+    $stmt->bind_param('s', $department);
     $stmt->execute();
     $result = $stmt->get_result();
-    $data = $result->fetch_assoc();
-    $rapportsAttente = $data['rapportsAttente'];
+    $row = $result->fetch_assoc();
+    $data['rapports_generes']['recent'] = $row['count'];
 
+    // Nombre de rapports générés sur l'année
     $query = "
-        SELECT
-            sampleType,
-            COUNT(*) AS count
-        FROM
-            echantillons
-        GROUP BY
-            sampleType
+        SELECT COUNT(DISTINCT client_id) AS count 
+        FROM echantillons 
+        JOIN analyses ON echantillons.id = analyses.echantillon_id
+        WHERE analyses.departement = ? 
+        AND echantillons.samplingDate >= DATE_SUB(NOW(), INTERVAL 1 YEAR)
     ";
-    $result = $conn->query($query);
-    $echantillons = [];
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('s', $department);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    $data['rapports_generes']['year'] = $row['count'];
+
+    // Nombre de rapports en attente sur les trois derniers mois
+    $query = "
+        SELECT COUNT(DISTINCT client_id) AS count 
+        FROM echantillons 
+        JOIN analyses ON echantillons.id = analyses.echantillon_id
+        WHERE analyses.departement = ? 
+        AND (analyses.validated = 'office_step_3' OR analyses.validated = 'laboratory') 
+        AND echantillons.samplingDate >= DATE_SUB(NOW(), INTERVAL 3 MONTH)
+    ";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('s', $department);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    $data['rapports_en_attente']['recent'] = $row['count'];
+
+    // Statistiques sur les échantillons par type
+    $query = "
+        SELECT sampleType, COUNT(*) AS count 
+        FROM echantillons 
+        JOIN analyses ON echantillons.id = analyses.echantillon_id
+        WHERE analyses.departement = ?
+        GROUP BY sampleType
+    ";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('s', $department);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $data['echantillons_par_type']['recent'] = [];
+    $data['echantillons_par_type']['year'] = [];
     while ($row = $result->fetch_assoc()) {
-        $echantillons[] = $row;
+        $data['echantillons_par_type']['recent'][] = $row;
+        $data['echantillons_par_type']['year'][] = $row;
     }
 
+    // Statistiques sur les analyses par type
     $query = "
-        SELECT
-            analysisType,
-            COUNT(*) AS count
-        FROM
-            analyses
-        GROUP BY
-            analysisType
-    ";
-    $result = $conn->query($query);
-    $analyses = [];
-    while ($row = $result->fetch_assoc()) {
-        $analyses[] = $row;
-    }
-
-    $query = "
-        SELECT
-            MONTH(requestingDate) AS month,
-            COUNT(*) AS count
-        FROM
-            clients
-        WHERE
-            requestingDate BETWEEN ? AND ?
-        GROUP BY
-            MONTH(requestingDate)
+        SELECT analysisType, COUNT(*) AS count 
+        FROM analyses 
+        WHERE departement = ? 
+        GROUP BY analysisType
     ";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("ss", $threeMonthsAgo, $currentDate);
+    $stmt->bind_param('s', $department);
     $stmt->execute();
     $result = $stmt->get_result();
-    $demandesParMois = [];
+    $data['analyses_par_type']['recent'] = [];
+    $data['analyses_par_type']['year'] = [];
     while ($row = $result->fetch_assoc()) {
-        $demandesParMois[] = $row;
+        $data['analyses_par_type']['recent'][] = $row;
+        $data['analyses_par_type']['year'][] = $row;
     }
 
+    // Graphes des demandes par mois
     $query = "
-        SELECT
-            SUM(CASE WHEN validated = 'reception_step_1' THEN 1 ELSE 0 END) AS enAttentePayement,
-            SUM(CASE WHEN validated = 'finance' THEN 1 ELSE 0 END) AS enAttenteValidationBureau,
+        SELECT MONTH(samplingDate) AS month, COUNT(*) AS count 
+        FROM echantillons 
+        JOIN analyses ON echantillons.id = analyses.echantillon_id
+        WHERE analyses.departement = ?
+        GROUP BY MONTH(samplingDate)
+    ";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('s', $department);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $data['demandes_par_mois'] = [];
+    while ($row = $result->fetch_assoc()) {
+        $data['demandes_par_mois'][] = $row;
+    }
+
+    // Status des demandes
+    $query = "
+        SELECT 
+            SUM(CASE WHEN validated = 'reception_step_1' THEN 1 ELSE 0 END) AS enAttenteDePaiement,
+            SUM(CASE WHEN validated = 'finance' THEN 1 ELSE 0 END) AS enAttenteDeValidationBureau,
             SUM(CASE WHEN validated = 'office_step_1' THEN 1 ELSE 0 END) AS enCoursAnalyse,
-            SUM(CASE WHEN validated IN ('laboratory', 'office_step_2') THEN 1 ELSE 0 END) AS enAttenteValidationResultats,
+            SUM(CASE WHEN validated IN ('laboratory', 'office_step_2') THEN 1 ELSE 0 END) AS enAttenteDeValidationResultats,
             SUM(CASE WHEN validated = 'office_step_3' THEN 1 ELSE 0 END) AS finies
-        FROM
-            analyses
-        WHERE
-            departement = ?
+        FROM analyses 
+        WHERE departement = ?
     ";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("s", $department);
+    $stmt->bind_param('s', $department);
     $stmt->execute();
     $result = $stmt->get_result();
-    $statusDemandes = $result->fetch_assoc();
+    $data['status_demandes'] = $result->fetch_assoc();
 
-    return [
-        'demandesTroisMois' => $demandesTroisMois,
-        'rapportsGeneres' => $rapportsGeneres,
-        'rapportsAttente' => $rapportsAttente,
-        'echantillons' => $echantillons,
-        'analyses' => $analyses,
-        'demandesParMois' => $demandesParMois,
-        'statusDemandes' => $statusDemandes
-    ];
+    return $data;
 }
 
-function getDataYear($department, $conn) {
-    $currentDate = date('Y-m-d');
-    $startOfYear = date('Y-01-01');
+$data = getDashboardData($conn, $department);
 
-    $query = "
-        SELECT
-            COUNT(*) AS demandesAnnee
-        FROM
-            clients
-        WHERE
-            requestingDate BETWEEN ? AND ?
-    ";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("ss", $startOfYear, $currentDate);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $data = $result->fetch_assoc();
-    $demandesAnnee = $data['demandesAnnee'];
-
-    $query = "
-        SELECT
-            COUNT(*) AS rapportsGeneres
-        FROM
-            analyses
-        WHERE
-            validated = 'office_step_3'
-            AND departement = ?
-    ";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param("s", $department);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $data = $result->fetch_assoc();
-    $rapportsGeneres = $data['rapportsGeneres'];
-
-    $query = "
-        SELECT
-            sampleType,
-            COUNT(*) AS count
-        FROM
-            echantillons
-        GROUP BY
-            sampleType
-    ";
-    $result = $conn->query($query);
-    $echantillons = [];
-    while ($row = $result->fetch_assoc()) {
-        $echantillons[] = $row;
-    }
-
-    $query = "
-        SELECT
-            analysisType,
-            COUNT(*) AS count
-        FROM
-            analyses
-        GROUP BY
-            analysisType
-    ";
-    $result = $conn->query($query);
-    $analyses = [];
-    while ($row = $result->fetch_assoc()) {
-        $analyses[] = $row;
-    }
-
-    return [
-        'demandesAnnee' => $demandesAnnee,
-        'rapportsGeneres' => $rapportsGeneres,
-        'echantillons' => $echantillons,
-        'analyses' => $analyses
-    ];
-}
-
-$department = $_GET['department'] ?? 'TFXE'; // Définir un département par défaut
-
-$dataThreeMonths = getDataThreeMonths($department, $conn);
-$dataYear = getDataYear($department, $conn);
-
-$response = array_merge($dataThreeMonths, $dataYear);
-
-header('Content-Type: application/json');
-echo json_encode($response);
+// Retourner les données en JSON
+echo json_encode($data);
 
 $conn->close();
 ?>
