@@ -1,0 +1,23 @@
+.main-page-container-finance {
+    background-color: #2e8b57;
+}
+
+.main-page-title-finance {
+    flex-grow: 1;
+}
+
+.main-button-finance {
+    padding: 20px 40px !important;
+    font-size: 19px;
+    background-color: #2e8b57;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: xx-large;
+}
+
+.main-button:hover {
+    background-color: #2e8b57;
+}
