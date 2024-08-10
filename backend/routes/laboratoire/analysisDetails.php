@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
         while ($row = $result->fetch_assoc()) {
             $elements[] = [
                 'id' => $row['id'],
-                'elementDinteret' => $row['elementDinteret'] // Ensure this matches your column name in elementsdinteret table
+                'elementDinteret' => $row['elementDinteret']
             ];
         }
 
@@ -42,10 +42,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
             // Combine all data into a single array
             $details = array_merge($analysis, [
                 'elementsdinteret' => $elements,
-                'sampleType' => $sample['sampleType'], // Ensure these match your column names in echantillons table
+                'sampleType' => $sample['sampleType'],
                 'samplingLocation' => $sample['samplingLocation'],
                 'samplingDate' => $sample['samplingDate'],
-                'sampleReference' => $sample['sampleReference'] // Add this field
+                'sampleReference' => $sample['sampleReference']
             ]);
         } else {
             // Sample details not found
@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
                 'sampleType' => null,
                 'samplingLocation' => null,
                 'samplingDate' => null,
-                'sampleReference' => null // Add this field
+                'sampleReference' => null
             ]);
         }
 
@@ -68,9 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
 
     if ($data) {
         $analysisId = $data['analysisId'];
+        $analyseTime = $data['analyseTime']; // Get analyseTime from the request
         $results = $data['results'];
-        
-        // Corrected: use 'qualite' instead of 'qualityResults'
         $qualite = isset($data['qualite']) && is_array($data['qualite']) ? $data['qualite'] : [];
 
         // Prepare the SQL statement for inserting/updating results in the resultats table
@@ -85,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
         ");
 
         foreach ($results as $result) {
-            $elementsdinteretId = $result['elementsdinteretId'];  // Ensure this is provided in the payload
+            $elementsdinteretId = $result['elementsdinteretId'];
             $unite = $result['unite'];
             $valeurMoyenne = $result['valeurMoyenne'];
             $limiteDetection = $result['limiteDetection'];
@@ -119,20 +118,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
             $qualityStmt->execute();
         }
 
-        // Update the validated column in analyses table using the analysisId
-        $updateQuery = $conn->prepare("UPDATE analyses SET validated = 'laboratory' WHERE id = ?");
-        $updateQuery->bind_param("i", $analysisId);
+        // Update the validated column and analyse_time in analyses table using the analysisId
+        $updateQuery = $conn->prepare("UPDATE analyses SET validated = 'laboratory', analyse_time = ? WHERE id = ?");
+        $updateQuery->bind_param("si", $analyseTime, $analysisId);
         $updateQuery->execute();
 
         // Return success message
         echo json_encode(['message' => 'Results saved successfully']);
     } else {
         // Return error message
-        echo json_encode(['error' => 'Invalid input']);
+        echo json_encode(['error' => 'No data to save']);
     }
 } else {
     echo json_encode(['error' => 'Invalid request method']);
 }
-
-$conn->close();
 ?>

@@ -1,4 +1,5 @@
-.labo-analaysis body {
+/* General page styling */
+.labo-analysis body {
     margin: 0;
     padding: 0;
     font-family: 'Arial', sans-serif;
@@ -18,23 +19,24 @@
     animation: fadeIn 1s ease-in-out;
 }
 
-.labo-analaysis h1 {
+.labo-analysis h1 {
     color: #2e8b57; /* Green */
     text-align: center;
 }
 
-.labo-analaysis table {
+.labo-analysis table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
 }
 
-.labo-analaysis td, th {
+.labo-analysis td, th {
     border: 1px solid #ccc;
     padding: 10px;
     text-align: left;
 }
 
+/* Upload Results and Results Section Styling */
 .file-upload-section, .results-section {
     margin-top: 20px;
     padding: 20px;
@@ -44,6 +46,7 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Dropzone Styling */
 .dropzone {
     padding: 20px;
     border: 2px dashed #2e8b57; /* Green border */
@@ -57,26 +60,28 @@
     color: #2e8b57; /* Green */
 }
 
-.labo-analaysis aside {
+/* Aside Section Styling */
+.labo-analysis aside {
     margin-top: 10px;
 }
 
-.labo-analaysis aside h4 {
+.labo-analysis aside h4 {
     color: #2e8b57; /* Green */
 }
 
-.labo-analaysis aside ul {
+.labo-analysis aside ul {
     list-style: none;
     padding: 0;
 }
 
-.labo-analaysis aside li {
+.labo-analysis aside li {
     background: #f2f2f2;
     padding: 5px;
     border-radius: 5px;
     margin-bottom: 5px;
 }
 
+/* Results Section Table Styling */
 .results-section table {
     width: 100%;
     border-collapse: collapse;
@@ -89,6 +94,7 @@
     text-align: left;
 }
 
+/* Styling for input fields within the results section */
 .results-section input[type="number"], .results-section input[type="text"] {
     width: 100%;
     padding: 5px;
@@ -97,6 +103,30 @@
     box-sizing: border-box;
 }
 
+/* Durée d'analyse field */
+.duree-analyse-field {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.duree-analyse-field label {
+    font-weight: bold;
+    color: #2e8b57; /* Green */
+}
+
+.duree-analyse-field input {
+    width: calc(100% - 20px);
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin-top: 5px;
+}
+
+/* Button Styling */
 .valider-button {
     display: inline-block;
     padding: 10px 20px;
@@ -113,6 +143,7 @@
     background-color: #276b47; /* Darker green on hover */
 }
 
+/* Fade-in animation */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -120,4 +151,25 @@
     to {
         opacity: 1;
     }
+}
+.duree-analyse-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.duree-analyse-label {
+    font-weight: bold;
+    white-space: nowrap;
+    color: #2e8b57; /* Green */
+    margin-right: 20px; /* Space between label and input */
+}
+
+.duree-analyse-input {
+    width: 20 px; /* Adjust the width as needed */
+    padding: 5px;
+    border: 1px solid #2e8b57; /* Green border */
+    border-radius: 5px;
+    background-color: #f9f9f9; /* Light background */
+    color: #333; /* Dark text color */
 }

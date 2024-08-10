@@ -9,7 +9,8 @@ const AnalysisDetails = () => {
   const [analysisDetails, setAnalysisDetails] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [elementsResults, setElementsResults] = useState([]);
-  const [qualiteResults, setQualiteResults] = useState([]); // New state for Analyse Qualité
+  const [qualiteResults, setQualiteResults] = useState([]);
+  const [analyseTime, setAnalyseTime] = useState(''); // New state for durée d'analyse
   const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
@@ -21,7 +22,7 @@ const AnalysisDetails = () => {
         setElementsResults(response.data.elementsdinteret.map(element => ({
           id: element.id,
           element: element.elementDinteret,
-          unite: 'g/L', // Default value
+          unite: '', // Default value, will be set based on department
           valeurMoyenne: '',
           incertitude: '',
           limiteDetection: 1, // Default value
@@ -31,7 +32,7 @@ const AnalysisDetails = () => {
           id: element.id,
           element: element.elementDinteret,
           referenceMateriel: '', // Default value
-          unite: 'g/L', // Default value
+          unite: '', // Default value, will be set based on department
           valeurRecommandee: '',
           valeurMesuree: ''
         })));
@@ -66,6 +67,23 @@ const AnalysisDetails = () => {
     setQualiteResults(newQualiteResults);
   };
 
+  const getUnitOptions = (departement) => {
+    if (departement === 'ATN') {
+      return [{ value: 'Bq/Kg', label: 'Bq/Kg' }];
+    } else if (departement === 'HI') {
+      return [
+        { value: '', label: '' },
+        { value: 'ppm', label: 'ppm' },
+        { value: 'mg/L', label: 'mg/L' },
+        { value: 'mV', label: 'mV' },
+        { value: '%', label: '%' },
+        { value: 'meq/L', label: 'meq/L' },
+        { value: 'other', label: 'Autre (Saisir)' }
+      ];
+    }
+    return [];
+  };
+
   const handleSaveResults = () => {
     const resultsPayload = elementsResults.map(result => ({
       elementsdinteretId: result.id,
@@ -85,8 +103,9 @@ const AnalysisDetails = () => {
 
     axios.post(`${apiBaseUrl}/instnapp/backend/routes/laboratoire/analysisDetails.php`, {
       analysisId: analysisId,
+      analyseTime: analysisDetails.departement === 'ATN' ? analyseTime : null, // Include analyseTime if department is ATN
       results: resultsPayload,
-      qualite: qualitePayload // Add Analyse Qualité results to the payload
+      qualite: qualitePayload
     })
       .then(response => {
         alert('Résultats validés avec succès');
@@ -158,6 +177,20 @@ const AnalysisDetails = () => {
 
         <section className="results-section">
           <h2>Enter Results</h2>
+          {analysisDetails.departement === 'ATN' && (
+            <div className="duree-analyse-container">
+              <label htmlFor="analyseTime" className="duree-analyse-label"> Durée d'analyse :</label>
+              <input
+                type="text"
+                id="analyseTime"
+                value={analyseTime}
+                onChange={(e) => setAnalyseTime(e.target.value)}
+                className="duree-analyse-input"
+                
+              />
+            </div>
+          )}
+
           <table>
             <thead>
               <tr>
@@ -187,13 +220,18 @@ const AnalysisDetails = () => {
                       value={result.unite}
                       onChange={(e) => handleResultChange(index, 'unite', e.target.value)}
                     >
-                      <option value="g/L">g/L</option>
-                      <option value="mg/L">mg/L</option>
-                      <option value="µg/L">µg/L</option>
-                      <option value="g/Kg">g/Kg</option>
-                      <option value="mg/Kg">mg/Kg</option>
-                      <option value="µg/Kg">µg/Kg</option>
+                      {getUnitOptions(analysisDetails.departement).map(option => (
+                        <option key={option.value} value={option.value}>{option.label}</option>
+                      ))}
                     </select>
+                    {result.unite === 'other' && (
+                      <input
+                        type="text"
+                        value={result.unite === 'other' ? '' : result.unite}
+                        onChange={(e) => handleResultChange(index, 'unite', e.target.value)}
+                        placeholder="Enter unit"
+                      />
+                    )}
                   </td>
                   <td>
                     {analysisDetails.analysisType === 'Quantitative' ? (
@@ -203,18 +241,7 @@ const AnalysisDetails = () => {
                         onChange={(e) => handleResultChange(index, 'valeurMoyenne', e.target.value)}
                         disabled={result.status === 'non détectable'}
                       />
-                    ) : (
-                      <select
-                        value={result.valeurMoyenne}
-                        onChange={(e) => handleResultChange(index, 'valeurMoyenne', e.target.value)}
-                        disabled={result.status === 'non détectable'}
-                      >
-                        <option value="">Select</option>
-                        <option value="Majeur">Majeur</option>
-                        <option value="Mineur">Mineur</option>
-                        <option value="Trace">Trace</option>
-                      </select>
-                    )}
+                    ) : 'N/A'}
                   </td>
                   {analysisDetails.analysisType === 'Quantitative' && (
                     <td>
@@ -228,16 +255,19 @@ const AnalysisDetails = () => {
                   )}
                   <td>
                     <input
-                      type="text"
+                      type="number"
                       value={result.limiteDetection}
                       onChange={(e) => handleResultChange(index, 'limiteDetection', e.target.value)}
+                      disabled={result.status === 'non détectable'}
                     />
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          
+        </section>
+
+        <section className="qualite-section">
           <h2>Analyse Qualité</h2>
           <table>
             <thead>
@@ -265,13 +295,18 @@ const AnalysisDetails = () => {
                       value={result.unite}
                       onChange={(e) => handleQualiteChange(index, 'unite', e.target.value)}
                     >
-                      <option value="g/L">g/L</option>
-                      <option value="mg/L">mg/L</option>
-                      <option value="µg/L">µg/L</option>
-                      <option value="g/Kg">g/Kg</option>
-                      <option value="mg/Kg">mg/Kg</option>
-                      <option value="µg/Kg">µg/Kg</option>
+                      {getUnitOptions(analysisDetails.departement).map(option => (
+                        <option key={option.value} value={option.value}>{option.label}</option>
+                      ))}
                     </select>
+                    {result.unite === 'other' && (
+                      <input
+                        type="text"
+                        value={result.unite === 'other' ? '' : result.unite}
+                        onChange={(e) => handleQualiteChange(index, 'unite', e.target.value)}
+                        placeholder="Enter unit"
+                      />
+                    )}
                   </td>
                   <td>
                     <input
@@ -291,9 +326,11 @@ const AnalysisDetails = () => {
               ))}
             </tbody>
           </table>
-
-          <button onClick={handleSaveResults} className="valider-button">Valider</button>
         </section>
+
+        <div className="button-section">
+          <button onClick={handleSaveResults}>Enregistrer les résultats</button>
+        </div>
       </div>
     </div>
   );

@@ -43,6 +43,8 @@ ALTER TABLE analyses
 ADD COLUMN office_remark VARCHAR(300);
 ALTER TABLE analyses
 ADD COLUMN Used_norme VARCHAR(300);
+ALTER TABLE analyses
+ADD COLUMN analyse_time VARCHAR(300);
 
 
 CREATE TABLE elementsdinteret (
