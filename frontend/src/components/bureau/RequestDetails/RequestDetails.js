@@ -7,9 +7,16 @@ const RequestDetails = () => {
     const navigate = useNavigate();
     const [requests, setRequests] = useState([]);
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+    const session_id = localStorage.getItem('session_id');
 
     useEffect(() => {
-        fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/getRequestDetails.php?id=${id}&department=${department}`)
+        fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/getRequestDetails.php?id=${id}&department=${department}`
+            , {
+                headers: {
+                    Authorization: session_id
+                }
+            }
+        )
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -28,7 +35,10 @@ const RequestDetails = () => {
 
     const handleValidation = () => {
         fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/validateRequest.php?id=${id}&department=${department}`, {
-            method: 'POST',
+            method: 'POST',  
+                headers: {
+                    Authorization: session_id
+                }   
         })
             .then(response => {
                 if (!response.ok) {

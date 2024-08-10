@@ -1,13 +1,26 @@
 <?php
-header("Access-Control-Allow-Origin: *");
+require_once '../../routes/login/session_util.php';
+require_once '../../database/db_connection.php';
+
+header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
-// Assurez-vous que les erreurs sont affichées
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
 
-include '../../database/db_connection.php';
+
+
+
+// Get the department parameter from the URL
+$department = isset($_GET['department']) ? $_GET['department'] : '';
+
+// Vérifiez la session
+$user = checkSession($conn);
+authorize(['bureau'], $user, $department);
 
 // Vérifiez si 'demande_id' et 'department' sont définis et valides
 if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET['department'])) {
@@ -24,6 +37,7 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
         clients.phone AS client_phone, 
         clients.requestingDate,
         clients.clientReference,
+        clients.ref_client_ATN,
         echantillons.sampleType, 
         echantillons.sampleReference,
         echantillons.samplingLocation,
@@ -66,7 +80,8 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
             GROUP BY client_id, departement
         )
     ) last_conclusion ON clients.id = last_conclusion.client_id AND analyses.departement = last_conclusion.departement
-    WHERE clients.id = ? AND analyses.departement = ? AND analyses.validated = 'office_step_2'
+    WHERE clients.id = ? AND analyses.departement = ? AND 
+    (analyses.validated = 'office_step_2' OR analyses.validated = 'office_step_3')
 ";
 
 
@@ -86,6 +101,7 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
                     'client_address' => $row['client_address'],
                     'requestingDate' => $row['requestingDate'],
                     'clientReference' => $row['clientReference'],
+                    'ref_client_ATN' => $row['ref_client_ATN'],
                     'client_phone' => $row['client_phone'], 
                     'conclusion' => $row['conclusion'] ?? '' ,
                     'samples' => []

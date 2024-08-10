@@ -9,9 +9,11 @@ CREATE TABLE clients (
     phone VARCHAR(20) NOT NULL,
     email VARCHAR(255) NOT NULL,
     clientReference VARCHAR(255),
+    ref_client_ATN VARCHAR(255),
     dilevery_delay DATE NOT NULL,
     requestingDate DATE NOT NULL
 );
+ALTER TABLE clients ADD ref_client_ATN VARCHAR(155);
 
 CREATE TABLE echantillons (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -39,8 +41,9 @@ CREATE TABLE analyses (
     office_remark VARCHAR(300),
     FOREIGN KEY (echantillon_id) REFERENCES echantillons(id)
 );
-ALTER TABLE analyses
-ADD COLUMN office_remark VARCHAR(300);
+ALTER TABLE analyses ADD analysis_time INT;
+ALTER TABLE analyses ADD analysis_result_file BLOB;
+
 
 
 CREATE TABLE elementsdinteret (
@@ -73,28 +76,11 @@ CREATE TABLE standard_results (
     id INT AUTO_INCREMENT PRIMARY KEY,
     elementsdinteret_id INT NOT NULL,
     Unite_s VARCHAR(50) NOT NULL,
-    Valeur_Moyenne_s VARCHAR(50) NOT NULL,
-    Limite_Detection VARCHAR(50) NOT NULL,
-    Incertitude VARCHAR(50) ,
+    Valeur_Moyenne_standard VARCHAR(50) NOT NULL,
+    Valeur_Moyenne_mesure VARCHAR(50) NOT NULL,
     FOREIGN KEY (elementsdinteret_id) REFERENCES elementsdinteret(id)
 );
 
-
-
-
-
-CREATE TABLE resultats (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    elementsdinteret_id INT NOT NULL,
-    Unite VARCHAR(50) NOT NULL,
-    Valeur_Moyenne VARCHAR(50) NOT NULL,
-    Valeur_Norme_Utlise VARCHAR(50),
-    Valeur_Limite_OMS VARCHAR(50),
-    Limite_Detection float,
-    Incertitude float ,
-    Observation VARCHAR(100),
-    FOREIGN KEY (elementsdinteret_id) REFERENCES elementsdinteret(id)
-);
 
 --suprimer les valeurs dans les tables
 DELETE FROM resultats;
@@ -103,3 +89,19 @@ DELETE FROM elementsdinteret;
 DELETE FROM analyses;
 DELETE FROM echantillons;
 DELETE FROM clients;
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(255) NOT NULL,
+    department VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE sessions (
+    session_id VARCHAR(255) PRIMARY KEY,
+    user_id INT NOT NULL,
+    login_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);

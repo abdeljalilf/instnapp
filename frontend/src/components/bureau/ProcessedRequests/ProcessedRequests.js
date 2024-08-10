@@ -12,10 +12,15 @@ const ProcessedRequests = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+    const session_id = localStorage.getItem('session_id');
 
     useEffect(() => {
         if (department) {
-            fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/getProcessedRequests.php?department=${department}`)
+            fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/getProcessedRequests.php?department=${department}`, {
+                headers: {
+                    Authorization: session_id
+                }
+            })
                 .then(response => {
                     if (response.ok) {
                         return response.json();
@@ -24,6 +29,8 @@ const ProcessedRequests = () => {
                     }
                 })
                 .then(data => {
+                    // Trier les demandes par ordre décroissant de clientReference
+                    data.sort((a, b) => b.clientReference.localeCompare(a.clientReference));
                     setRequests(data);
                     setLoading(false);
                 })
@@ -44,10 +51,10 @@ const ProcessedRequests = () => {
                 <table className="table">
                     <thead>
                         <tr>
-                            <th>Numéro de la demande</th>
+                            <th>Référence de la demande</th>
                             <th>Date de livraison</th>
                             <th>Description</th>
-                            <th>Nombre d'analyses finies</th> {/* Nouvelle colonne */}
+                            <th>Nombre d'analyses finis</th> {/* Nouvelle colonne */}
                             <th>Actions</th>
                         </tr>
                     </thead>

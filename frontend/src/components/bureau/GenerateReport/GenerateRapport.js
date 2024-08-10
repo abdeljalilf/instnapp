@@ -9,10 +9,15 @@ const GenirateRapport = () => {
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+    const session_id = localStorage.getItem('session_id');
 
     useEffect(() => {
         if (id && department) {
-            fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/GenerateReport.php?demande_id=${id}&department=${department}`)
+            fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/GenerateReport.php?demande_id=${id}&department=${department}`, {
+                headers: {
+                    Authorization: session_id
+                }
+            })
                 .then((response) => response.text())
                 .then((text) => {
                     try {
@@ -37,26 +42,27 @@ const GenirateRapport = () => {
     const handleDownload = () => {
         const element = document.getElementById('report-container');
         const opt = {
-            margin: [30, 5], // 30mm margin for top and bottom
-            filename: `rapport_final_${id}.pdf`,
-            image: { type: 'jpeg', quality: 0.98 },
+            margin: [35, 10], // 35mm pour le haut et le bas, 10mm pour les côtés
+            filename: `rapport_final_${data.clientReference}.pdf`,
+            image: { type: 'jpeg', quality: 1 },
             html2canvas: { scale: 2 },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-            pagebreak: { mode: ['avoid-all', 'css', 'legacy'] } // Add page breaks if needed
+            pagebreak: { mode: ['avoid-all', 'css', 'legacy'] } // Ajouter des sauts de page si nécessaire
         };
-
+    
         html2pdf().from(element).set(opt).toPdf().get('pdf').then((pdf) => {
             const totalPages = pdf.internal.getNumberOfPages();
             pdf.setPage(1);
-
+    
             for (let i = 1; i <= totalPages; i++) {
                 pdf.setPage(i);
                 pdf.text(`Page ${i} sur ${totalPages}`, 190, 285, { align: 'right' });
             }
-
+    
             pdf.save(`rapport_final_${id}.pdf`);
         });
     };
+    
 
     if (error) {
         return <div className="error-message">Erreur : {error}</div>;
@@ -107,14 +113,32 @@ const GenirateRapport = () => {
             <span className="sample-code">Code {sampleReference} :</span> {sampleType}
         </div>
     ));
-
+    // Déterminer le texte du <th> en fonction du département
+    const getHeaderText = () => {
+        switch (department) {
+            case 'TFXE':
+            case 'HI':
+                return 'Valeur Moyenne Mesurée';
+            case 'ATN':
+                return 'Activité';
+            default:
+                return 'Valeur Moyenne'; // Valeur par défaut si aucun des cas ne correspond
+        }
+    };
     return (
         <div className="report-wrapper">
             <div className="report-container" id="report-container">
                 <header className="report-header">
                     <h1>RÉSULTATS D'ANALYSES</h1>
                     <p>
-                        <strong>Référence Client :</strong> {data.clientReference}
+                        <strong>Référence de la demande :</strong> {data.clientReference}/{department}
+                    </p>
+                    <p>
+                        {department === 'ATN' && data.ref_client_ATN &&(
+                            <>
+                            <strong>Référence du client :</strong> {data.ref_client_ATN}
+                            </> 
+                        )}
                     </p>
                     <p className="date-location">
                         <strong>Antananarivo, le</strong>{' '}
@@ -140,7 +164,7 @@ const GenirateRapport = () => {
                         {sampleList}
                     </div>
                     <p>
-                        <strong>Date d'arrivée :</strong> {new Date(data.date_arrive).toLocaleDateString()}
+                        <strong>Date d'arrivée :</strong> {new Date(data.requestingDate).toLocaleDateString()}
                     </p>
                 </section>
 
@@ -172,19 +196,26 @@ const GenirateRapport = () => {
                             <strong>Prélevé par :</strong> {sampleDetails.sampledBy}
                         </p>
 
-                        {Object.entries(analyses).map(([analysisKey, { analysisType, parameter, technique, elementsdinteret, norme }], analysisIndex) => (
+                        {Object.entries(analyses).map(([analysisKey, { analysisType, parameter, technique, elementsdinteret, norme,analysis_time }], analysisIndex) => (
                             <div key={analysisKey} className="reportanalysis-section">
                                 <h4>Analyse {analysisIndex + 1}: {analysisType} pour {sampleType.toUpperCase()}</h4>
+                                {department === 'ATN' && (
+                                <p><strong>Durée de mesure :</strong> {analysis_time}</p>
+                                )}
                                 <table className="reportanalysis-table">
                                     <thead>
                                         <tr>
-                                            <th>Élément d'Intérêt</th>
+                                            <th>{parameter}</th>
                                             <th>Unité</th>
-                                            <th>Valeur Moyenne</th>
+                                            <th>{getHeaderText()}</th>
                                             <th>Limite de Détection</th>
                                             <th>Technique Utilisée</th>
+                                            {analysisType === 'Quantitative' && (
                                             <th>{norme}</th>
+                                            )}
+                                            {analysisType === 'Quantitative' && (
                                             <th>Observation</th>
+                                            )}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -195,8 +226,12 @@ const GenirateRapport = () => {
                                                 <td>{element.Valeur_Moyenne}</td>
                                                 <td>{element.Limite_Detection}</td>
                                                 <td>{technique}</td>
+                                                {analysisType === 'Quantitative' && (
                                                 <td>{element.Valeur_Norme_Utlise}</td>
+                                                )}
+                                                {analysisType === 'Quantitative' && (
                                                 <td>{element.Observation}</td>
+                                                )}
                                             </tr>
                                         ))}
                                     </tbody>

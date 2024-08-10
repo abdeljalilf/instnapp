@@ -1,0 +1,71 @@
+/* src/components/AdminPanel/AdminPanel.css */
+
+.admin-panel {
+    width: 90%;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.8); 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1s ease-in-out;
+}
+
+.admin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.admin-form input,
+.admin-form select {
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.admin-panel .styled-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-panel .styled-table th, .styled-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.admin-panel .styled-table tbody tr:hover {
+    background-color: rgba(63, 81, 181, 0.2);
+    cursor: pointer;
+}
+
+.admin-panel .styled-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.admin-panel .details-button-admin {
+    display: inline-flex;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #2e8b57;
+    color: white;
+    cursor: pointer;
+    text-align: center;
+    white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.admin-panel .details-button:hover {
+    background-color: #183020;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}

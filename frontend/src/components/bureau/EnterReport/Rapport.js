@@ -7,6 +7,7 @@ const Rapport = () => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [conclusion, setConclusion] = useState('');
+  const [ReferenceClientATN, setReferenceClientATN] = useState('');
   const [observationsState, setObservationsState] = useState({});
   const [normesState, setNormesState] = useState({});
   const [validationError, setValidationError] = useState('');
@@ -16,11 +17,16 @@ const Rapport = () => {
   const [remarksState, setRemarksState] = useState({}); // Pour stocker les remarques saisies
   const [N1, setN1] = useState(0);
   const [N2, setN2] = useState(0);
+  const session_id = localStorage.getItem('session_id');
 
 
   useEffect(() => {
     if (id && department) {
-      fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/rapport.php?demande_id=${id}&department=${department}`)
+      fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/rapport.php?demande_id=${id}&department=${department}`, {
+        headers: {
+            Authorization: session_id
+        }
+    })      
         .then((response) => {
           if (!response.ok) {
             throw new Error('Failed to fetch data');
@@ -84,7 +90,11 @@ const Rapport = () => {
       element_id: elementDinteret,
       Valeur_Norme_Utlise: normeValuesMap[elementDinteret],
     }));
-  
+    const allAnalysisIds = Object.keys(groupedSamples).reduce((acc, sampleReference) => {
+      const analyses = groupedSamples[sampleReference].analyses;
+      const analysisIds = Object.keys(analyses).map(key => analyses[key].analysis_id);
+      return [...acc, ...analysisIds];
+    }, []);
     const reportData = {
       usedNormes: Object.entries(normesState).filter(([key]) => key.endsWith('-normeUtilisee')).map(([key, value]) => ({
         analysis_id: key.split('-')[1],
@@ -98,9 +108,12 @@ const Rapport = () => {
           Observation: value,
         };
       }),
+     
       conclusion: conclusion,
+      ReferenceClientATN: ReferenceClientATN,
       client_id: id, // Ajoutez l'ID du client
       departement: department, // Ajoutez le département
+      allAnalysisIds: allAnalysisIds,
     };
   
     console.log('Sending report data:', reportData);
@@ -109,6 +122,7 @@ const Rapport = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: session_id
       },
       body: JSON.stringify(reportData),
     })
@@ -144,6 +158,7 @@ const Rapport = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: session_id
       },
       body: JSON.stringify(requestData),
     })
@@ -224,6 +239,7 @@ const Rapport = () => {
           analysisType: sample.analysisType,
           parameter: sample.parameter,
           technique: sample.technique,
+          analysis_time: sample.analysis_time,
           elementsdinteret: [],
           norme: '',
           valeurs: {},
@@ -244,7 +260,18 @@ const Rapport = () => {
 
   const groupedSamplesArray = Object.entries(groupedSamples);
   const uniqueSampleCount = groupedSamplesArray.length;
-
+// Déterminer le texte du <th> en fonction du département
+const getHeaderText = () => {
+  switch (department) {
+      case 'TFXE':
+      case 'HI':
+          return 'Valeur Moyenne Mesurée';
+      case 'ATN':
+          return 'Activité';
+      default:
+          return 'Valeur Moyenne Mesurée'; // Valeur par défaut si aucun des cas ne correspond
+  }
+};
   return (
     <div className="rapport-container">
       <div className="header">
@@ -258,8 +285,22 @@ const Rapport = () => {
         </div>
         <h1>Résultat d'Analyse</h1>
         <p><strong>Nombre d'échantillons :</strong> {uniqueSampleCount}</p>
+        <p><strong>Date de livraison :</strong> {data.dilevery_delay}</p>
       </div>
-
+      {/* Condition pour afficher le div seulement si department est "ATN" */}
+      <div>
+      {department === 'ATN' && (
+        <div className="Ref_client-form">
+          <h3>Référence Client</h3>
+          <textarea
+            className="Ref_client-textarea"
+            value={ReferenceClientATN}
+            onChange={(e) => setReferenceClientATN(e.target.value)}
+            placeholder="Entrez La référence client si ça existe..."
+          />
+        </div>
+      )}
+      </div>
       {groupedSamplesArray.map(([sampleReference, { sampleType, sampleDetails, analyses }], index) => (
         <div className="sample-section" key={index}>
           <h3 className="sample-type">Échantillon {index + 1} : {sampleType.toUpperCase()}</h3>
@@ -269,18 +310,22 @@ const Rapport = () => {
             <p><strong>Date de Prélèvement:</strong> {sampleDetails.samplingDate}</p>
             <p><strong>Prélevé par:</strong> {sampleDetails.sampledBy}</p>
 
-            {Object.entries(analyses).map(([analysisKey, { analysisType, parameter, technique, elementsdinteret, norme, valeurs, analysis_id }], analysisIndex) => (
+            {Object.entries(analyses).map(([analysisKey, { analysisType, parameter, technique, elementsdinteret, norme, valeurs, analysis_id,analysis_time }], analysisIndex) => (
               <div key={analysisKey} className="analysis-section">
                 <h4>Analyse {analysisIndex + 1}: {analysisType} pour {sampleType.toUpperCase()}</h4>
+                {department === 'ATN' && (
+                <p><strong>Durée de mesure :</strong> {analysis_time}</p>
+                )}
                 <p><strong>Analysis ID:</strong> {analysis_id}</p>
                 <table className="analysis-table">
                   <thead>
                     <tr>
-                      <th>Élément d'Intérêt</th>
+                      <th>{parameter}</th>
                       <th>Unité</th>
-                      <th>Valeur Moyenne</th>
+                      <th>{getHeaderText()}</th>
                       <th>Limite de Détection</th>
                       <th>Technique Utilisée</th>
+                      {analysisType === 'Quantitative' && (
                       <th>
                         <input
                           type="text"
@@ -290,7 +335,10 @@ const Rapport = () => {
                           className="norme-input"
                         />
                       </th>
+                      )}
+                      {analysisType === 'Quantitative' && (
                       <th>Observations </th>
+                      )}
                     </tr>
                   </thead>
                   <tbody>
@@ -304,6 +352,7 @@ const Rapport = () => {
                         </td>
                         <td>{element.Limite_Detection}</td>
                         <td>{technique}</td>
+                        {analysisType === 'Quantitative' && (
                         <td>
                           <input
                             type="text"
@@ -313,6 +362,8 @@ const Rapport = () => {
                             className="valeur-norme-input"
                           />
                         </td>
+                        )}
+                        {analysisType === 'Quantitative' && (
                         <td>
                           <input
                             type="text"
@@ -322,6 +373,7 @@ const Rapport = () => {
                             className="observation-input"
                           />
                         </td>
+                        )}
                         <td>
                           <strong>Element ID:</strong> {element.element_id}
                         </td>

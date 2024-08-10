@@ -1,9 +1,27 @@
 <?php
-include '../../database/db_connection.php';
-// Ajoutez les en-têtes CORS si nécessaire
-header('Access-Control-Allow-Origin: *'); 
-header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
+require_once '../../routes/login/session_util.php';
+require_once '../../database/db_connection.php';
+
+header('Access-Control-Allow-Origin: *');
+header('Content-Type: application/json');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
+
+
+
+// Get the department parameter from the URL
+$department = isset($_GET['department']) ? $_GET['department'] : '';
+
+// Vérifiez la session
+$user = checkSession($conn);
+authorize(['bureau'], $user, $department);
+
 $data = json_decode(file_get_contents('php://input'), true);
 
 $analysis_id = $data['analysis_id'];

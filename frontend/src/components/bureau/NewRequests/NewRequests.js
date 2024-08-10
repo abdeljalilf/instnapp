@@ -13,10 +13,15 @@ const NewRequests = () => {
     const [loading, setLoading] = useState(true); // État de chargement initial
     const [error, setError] = useState(null); // État pour gérer les erreurs
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+    const session_id = localStorage.getItem('session_id');
 
     useEffect(() => {
         if (department) {
-            fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/getNewRequests.php?department=${department}`)
+            fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/getNewRequests.php?department=${department}`, {
+                headers: {
+                    Authorization: session_id
+                }
+            })
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
@@ -25,6 +30,8 @@ const NewRequests = () => {
                 })
                 .then(data => {
                     console.log('Fetched data:', data);
+                    // Trier les demandes par ordre décroissant de clientReference
+                    data.sort((a, b) => b.clientReference.localeCompare(a.clientReference));
                     setRequests(data);
                     setLoading(false); // Mettre à jour l'état de chargement
                 })
@@ -50,7 +57,7 @@ const NewRequests = () => {
             <table className="table">
                 <thead>
                     <tr>
-                        <th>Numéro de la demande</th>
+                        <th>Référence de la demande</th>
                         <th>Date de livraison</th>
                         <th>Description</th>
                         <th>Actions</th>

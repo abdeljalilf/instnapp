@@ -1,13 +1,32 @@
 <?php
-header("Access-Control-Allow-Origin: *");
+require_once '../../routes/login/session_util.php';
+require_once '../../database/db_connection.php';
+
+header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
+
+
+
+// Get the department parameter from the URL
+$department = isset($_GET['department']) ? $_GET['department'] : '';
+
+// Vérifiez la session
+$user = checkSession($conn);
+authorize(['bureau'], $user, $department);
 
 // Assurez-vous que les erreurs sont affichées
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-include '../../database/db_connection.php';
 
 // Vérifiez si 'demande_id' et 'department' sont définis et valides
 if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET['department'])) {
@@ -34,6 +53,7 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
         analyses.parameter,
         analyses.technique,
         analyses.Used_norme,
+        analyses.analysis_time,
         elementsdinteret.id AS element_id,
         elementsdinteret.elementDinteret,
         resultats.Unite,
@@ -66,7 +86,8 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
             GROUP BY client_id, departement
         )
     ) last_conclusion ON clients.id = last_conclusion.client_id AND analyses.departement = last_conclusion.departement
-    WHERE clients.id = ? AND analyses.departement = ? AND analyses.validated = 'laboratory'
+    WHERE clients.id = ? AND analyses.departement = ? AND 
+    (analyses.validated = 'laboratory' OR analyses.validated = 'office_step_2')
 ";
 
 
@@ -108,6 +129,7 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
                 'parameter' => $row['parameter'],
                 'technique' => $row['technique'],
                 'Used_norme' => $row['Used_norme'],
+                'analysis_time' => $row['analysis_time'],
                 'element_id' => $row['element_id'],
                 'elementDinteret' => $row['elementDinteret'],
                 'Unite' => $row['Unite'],
@@ -127,11 +149,11 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
     // Requête pour compter les analyses N1 et N2 pour ce client et ce département
     $countSql = "
         SELECT 
-            SUM(CASE WHEN validated = 'laboratory' THEN 1 ELSE 0 END) AS N1,
+            SUM(CASE WHEN validated IN ('laboratory','office_step_2') THEN 1 ELSE 0 END) AS N1,
             COUNT(*) AS N2
         FROM analyses
         JOIN echantillons ON analyses.echantillon_id = echantillons.id
-        WHERE echantillons.client_id = ? AND analyses.departement = ? AND validated IN ('office_reject', 'office_step_1', 'laboratory')
+        WHERE echantillons.client_id = ? AND analyses.departement = ? AND validated IN ('office_reject', 'office_step_1', 'laboratory','office_step_2')
     ";
 
     if ($stmt = $conn->prepare($countSql)) {

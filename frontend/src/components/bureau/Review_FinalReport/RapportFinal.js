@@ -9,13 +9,20 @@ const RapportFinal = () => {
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const [N1, setN1] = useState(0);
+    const [N2, setN2] = useState(0);
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+    const session_id = localStorage.getItem('session_id');
 
     useEffect(() => {
         if (id && department) {
             console.log("Fetching data with demande_id:", id, "and department:", department);
 
-            fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/rapport.php?demande_id=${id}&department=${department}`)
+            fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/rapport.php?demande_id=${id}&department=${department}`, {
+                headers: {
+                    Authorization: session_id
+                }
+            })
                 .then((response) => {
                     console.log("Response status:", response.status);
                     return response.text();  // Utilisez text() pour voir la réponse brute
@@ -27,7 +34,9 @@ const RapportFinal = () => {
                         if (data.error) {
                             setError(data.error);
                         } else {
-                            setData(data.reports[0]); // Assuming data is an array with a single element
+                            setData(data.reports[0]);
+                            setN1(Number(data.N1) || 0); // Assurez-vous que N1 est un nombre
+                            setN2(Number(data.N2) || 0); // Assuming data is an array with a single element
                         }
                     } catch (error) {
                         setError('Failed to parse JSON');
@@ -47,12 +56,13 @@ const RapportFinal = () => {
 
 const handleGenerateReport = () => {
     if (window.confirm("Êtes-vous sûr des données car cette étape est irréversible ?")) {
-        fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/validaterapport.php`, {
+        fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/validaterapport.php?department=${department}`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                Authorization: session_id
             },
-            body: JSON.stringify({ demande_id: id, newValidatedValue: 'office_step_2' }) // Ensure 'demande_id' is the client_id
+            body: JSON.stringify({ demande_id: id, newValidatedValue: 'office_step_3' }) // Ensure 'demande_id' is the client_id
         })
             .then(response => {
                 console.log('Response:', response);
@@ -133,6 +143,11 @@ const handleGenerateReport = () => {
     return (
         <div className="rapport-final-container">
             <header className="report-header">
+            <div className="analysis-count">
+              <p style={{ color: N1 < N2 ? 'red' : 'green' }}>
+                <strong>{N1}</strong> parmi <strong>{N2}</strong> analyses sont réalisées.
+              </p>
+            </div>
                 <h1>RÉSULTATS D'ANALYSES</h1>
                 <p className="date-location">
                     <strong>Antananarivo, le</strong>{' '}
@@ -145,7 +160,7 @@ const handleGenerateReport = () => {
                 <p>{data.conclusion}</p>
             </section>
 
-            <section className="results-section">
+            <section className="reportresults-section">
                 <h2>2. Résultats</h2>
                 <p>Les résultats d’analyses sont reportés dans les tableaux ci-dessous.</p>
             </section>
@@ -168,9 +183,12 @@ const handleGenerateReport = () => {
                         <strong>Prélevé par :</strong> {sampleDetails.sampledBy}
                     </p>
 
-                    {Object.entries(analyses).map(([analysisKey, { analysisType, parameter, technique, elementsdinteret, norme }], analysisIndex) => (
+                    {Object.entries(analyses).map(([analysisKey, { analysisType, parameter, technique, elementsdinteret, norme,analysis_time }], analysisIndex) => (
                         <div key={analysisKey} className="analysis-section">
                             <h4>Analyse {analysisIndex + 1}: {analysisType} pour {sampleType.toUpperCase()}</h4>
+                            {department === 'ATN' && (
+                            <p><strong>Durée de mesure :</strong> {analysis_time}</p>
+                            )}
                             <table className="analysis-table">
                                 <thead>
                                     <tr>
@@ -179,8 +197,12 @@ const handleGenerateReport = () => {
                                         <th>Valeur Moyenne</th>
                                         <th>Limite de Détection</th>
                                         <th>Technique Utilisée</th>
+                                        {analysisType === 'Quantitative' && (
                                         <th>{norme}</th>
+                                        )}
+                                        {analysisType === 'Quantitative' && (
                                         <th>Observation</th>
+                                        )}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -194,8 +216,12 @@ const handleGenerateReport = () => {
                                             </td>
                                             <td>{element.Limite_Detection}</td>
                                             <td>{technique}</td>
+                                            {analysisType === 'Quantitative' && (
                                             <td>{element.Valeur_Norme_Utlise}</td>
+                                            )}
+                                            {analysisType === 'Quantitative' && (
                                             <td>{element.Observation}</td>
+                                            )}
                                         </tr>
                                     ))}
                                 </tbody>
@@ -204,22 +230,13 @@ const handleGenerateReport = () => {
                     ))}
                 </div>
             ))}
-
-            <footer className="report-footer">
-                <p>
-                    Fait à Antananarivo, le{' '}
-                    {new Date().toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}
-                </p>
-                <p>Chef du département des analyses</p>
-            </footer>
-
-            <div className="signature-space"></div>
             
-            <div className="buttons-container">
-                <button onClick={handleGenerateReport}>Générer le rapport</button>
-                <button onClick={handleModifyResults}>Modifier les résultats</button>
+            <div className="final_reportbuttons-container">
+               <button onClick={handleGenerateReport} className="left-button">Générer le rapport</button>
+               <button onClick={handleModifyResults} className="right-button">Modifier les résultats</button>
+</div>
+
             </div>
-        </div>
     );
 };
 
