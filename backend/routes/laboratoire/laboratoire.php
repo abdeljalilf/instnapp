@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             a.analysisType, 
             a.parameter, 
             a.technique,
+            a.validated,
             GROUP_CONCAT(ed.elementDinteret SEPARATOR ', ') AS elementDinteret
         FROM 
             analyses a
@@ -26,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             elementsdinteret ed ON a.id = ed.analysis_id
         WHERE 
             a.departement = ? 
-            AND a.validated = 'office_step_1'
+            AND (a.validated = 'office_step_1' OR a.validated = 'office_reject')
         GROUP BY 
             a.id, e.sampleReference, a.analysisType, a.parameter, a.technique
     ");

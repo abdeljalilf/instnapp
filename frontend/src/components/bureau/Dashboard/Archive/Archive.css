@@ -44,16 +44,3 @@
 .btn-primary:hover {
     background-color: #03541d;
 }
-
-/* Styles pour les résultats des analyses */
-.analyses-summary {
-    font-weight: bold;
-}
-
-.analyses-summary.red {
-    color: red;
-}
-
-.analyses-summary.green {
-    color: green;
-}

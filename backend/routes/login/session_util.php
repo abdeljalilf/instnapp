@@ -52,11 +52,20 @@ function checkSession($conn) {
     }
 }
 
-function authorize($allowedRoles, $session) {
+function authorize($allowedRoles, $session, $requiredDepartment = null) {
+    // Vérifier le rôle
     if (!in_array($session['role'], $allowedRoles)) {
         http_response_code(403);
-        echo json_encode(array('success' => false, 'message' => 'Access denied'));
+        echo json_encode(array('success' => false, 'message' => 'Access denied: Invalid role'));
+        exit;
+    }
+    
+    // Si un département est requis, vérifiez également le département
+    if ($requiredDepartment !== null && $session['department'] !== $requiredDepartment) {
+        http_response_code(403);
+        echo json_encode(array('success' => false, 'message' => 'Access denied: Invalid department'));
         exit;
     }
 }
+
 ?>

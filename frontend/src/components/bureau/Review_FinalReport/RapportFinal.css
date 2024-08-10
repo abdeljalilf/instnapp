@@ -28,14 +28,14 @@
   
   .client-info,
   .conclusion-section,
-  .results-section,
+  .reportresults-section,
   .sample-table {
     margin-bottom: 20px;
   }
   
   .client-info h2,
   .conclusion-section h2,
-  .results-section h2 {
+  .reportresults-section h2 {
     font-size: 18px;
     text-decoration: underline;
     margin-bottom: 10px;
@@ -79,13 +79,20 @@
     font-size: 14px;
   }
   
-  .report-footer {
-    margin-top: 50px;
-    text-align: left;
-    font-size: 16px;
-  }
-  
-  .signature-space {
-    height: 100px;
-  }
+  .final_reportbuttons-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.final_reportbuttons-container .left-button {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.final_reportbuttons-container .right-button {
+  margin-right: auto;
+  margin-left: auto;
+}
+
   

@@ -27,8 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
         while ($row = $result->fetch_assoc()) {
             $elements[] = [
                 'id' => $row['id'],
-                'elementDinteret' => $row['elementDinteret']
-            ]; // Ensure this matches your column name in elementsdinteret table
+                'elementDinteret' => $row['elementDinteret'] // Ensure this matches your column name in elementsdinteret table
+            ];
         }
 
         // Query to fetch sample details
@@ -67,31 +67,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
     $data = json_decode(file_get_contents('php://input'), true);
 
     if ($data) {
-        $elementsdinteretId = $data['elementsdinteretId'];
-        $analysisId = $data['analysisId'];  // Added new parameter
+        $analysisId = $data['analysisId'];
         $results = $data['results'];
 
         // Prepare the SQL statement for inserting/updating results
         $stmt = $conn->prepare("
-            INSERT INTO resultats (elementsdinteret_id, Unite, Valeur_Moyenne, Valeur_Limite_OMS, Limite_Detection, Observation)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO resultats (elementsdinteret_id, Unite, Valeur_Moyenne, Limite_Detection, Incertitude)
+            VALUES (?, ?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE
             Unite = VALUES(Unite),
             Valeur_Moyenne = VALUES(Valeur_Moyenne),
-            Valeur_Limite_OMS = VALUES(Valeur_Limite_OMS),
             Limite_Detection = VALUES(Limite_Detection),
-            Observation = VALUES(Observation)
+            Incertitude = VALUES(Incertitude);
         ");
 
         foreach ($results as $result) {
+            $elementsdinteretId = $result['elementsdinteretId'];  // Ensure this is provided in the payload
             $unite = $result['unite'];
-            $valeurMoyenne = $result['valeurMoyenne'];
-            $valeurLimiteOMS = $result['valeurLimiteOMS'];
+            $valeurMoyenne = ($result['valeurMoyenne'] === 'non détecté' || in_array($result['valeurMoyenne'], ['Majeur', 'Mineur', 'Trace'])) ? $result['valeurMoyenne'] : $result['valeurMoyenne'];
             $limiteDetection = $result['limiteDetection'];
-            $observation = $result['observation'];
+            $incertitude = $result['incertitude'] === 'non détecté' ? '' : $result['incertitude'];
 
             // Bind the parameters
-            $stmt->bind_param("isssis", $elementsdinteretId, $unite, $valeurMoyenne, $valeurLimiteOMS, $limiteDetection, $observation);
+            $stmt->bind_param("issss", $elementsdinteretId, $unite, $valeurMoyenne, $limiteDetection, $incertitude);
             $stmt->execute();
         }
 

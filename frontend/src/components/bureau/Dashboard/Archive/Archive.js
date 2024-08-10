@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom'; // Import Link here
-import './NewRequests.css';
+import { useParams, Link } from 'react-router-dom';
+import './Archive.css';
 
 // Fonction pour capitaliser la première lettre
 const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
-const NewRequests = () => {
+const Archive = () => {
     const { department } = useParams(); // Get the department from the URL
     const [requests, setRequests] = useState([]);
+    const [filteredRequests, setFilteredRequests] = useState([]); // État pour les demandes filtrées
     const [loading, setLoading] = useState(true); // État de chargement initial
     const [error, setError] = useState(null); // État pour gérer les erreurs
+    const [searchTerm, setSearchTerm] = useState(""); // État pour le terme de recherche
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
     const session_id = localStorage.getItem('session_id');
 
     useEffect(() => {
         if (department) {
-            fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/getNewRequests.php?department=${department}`, {
+            fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/Archive.php?department=${department}`, {
                 headers: {
                     Authorization: session_id
                 }
@@ -33,6 +35,7 @@ const NewRequests = () => {
                     // Trier les demandes par ordre décroissant de clientReference
                     data.sort((a, b) => b.clientReference.localeCompare(a.clientReference));
                     setRequests(data);
+                    setFilteredRequests(data); // Initialement, les demandes filtrées sont toutes les demandes
                     setLoading(false); // Mettre à jour l'état de chargement
                 })
                 .catch(error => {
@@ -42,6 +45,18 @@ const NewRequests = () => {
                 });
         }
     }, [department]); // Fetch data whenever the department changes
+
+    const handleSearch = (event) => {
+        const term = event.target.value;
+        setSearchTerm(term);
+        if (term) {
+            // Filtrer les demandes par clientReference
+            const filtered = requests.filter(request => request.clientReference.includes(term));
+            setFilteredRequests(filtered);
+        } else {
+            setFilteredRequests(requests); // Réinitialiser les demandes filtrées si la recherche est vide
+        }
+    };
 
     if (loading) {
         return <div>Loading...</div>; // Afficher un message de chargement si les données ne sont pas encore chargées
@@ -53,18 +68,27 @@ const NewRequests = () => {
 
     return (
         <div className="table-container">
-            <h2>Les nouvelles demandes à valider</h2>
+            <h2>Historiques des demandes</h2>
+            {/* Ajouter la case de recherche */}
+            <input 
+                type="text"
+                placeholder="Rechercher par Numéro de la demande"
+                value={searchTerm}
+                onChange={handleSearch}
+                className="search-input"
+            />
             <table className="table">
                 <thead>
                     <tr>
                         <th>Référence de la demande</th>
                         <th>Date de livraison</th>
                         <th>Description</th>
+                        <th>Statut</th> {/* Ajout de la colonne de statut */}
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {requests.map((request) => (
+                    {filteredRequests.map((request) => (
                         <tr key={request.demande_id}>
                             <td>{request.clientReference}</td>
                             <td>{request.dilevery_delay}</td>
@@ -77,8 +101,16 @@ const NewRequests = () => {
                                 ))}
                             </td>
                             <td>
-                                <Link to={`/bureau/${department}/request/${request.demande_id}`} className="btn-primary">
-                                    Afficher plus
+                                <span style={{ color: request.status === 'Pas encore validée' ? 'red' : 'green' }}>
+                                    {request.status}
+                                </span>
+                            </td>
+                            <td>
+                                <Link 
+                                    to={`/bureau/${department}/${request.status === 'Validée' ? 'GenerateRapport' : 'rapportfinal'}/${request.demande_id}`} 
+                                    className="btn-primary"
+                                >
+                                    Générer le Rapport
                                 </Link>
                             </td>
                         </tr>
@@ -89,4 +121,4 @@ const NewRequests = () => {
     );
 };
 
-export default NewRequests;
+export default Archive;

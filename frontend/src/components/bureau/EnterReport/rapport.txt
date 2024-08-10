@@ -1,5 +1,3 @@
-// Rapport.js
-
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './Rapport.css';
@@ -92,9 +90,8 @@ const Rapport = () => {
           a.technique === sample.technique &&
           a.Unite === sample.Unite &&
           a.Valeur_Moyenne === sample.Valeur_Moyenne &&
-          a.Valeur_Limite_OMS === sample.Valeur_Limite_OMS &&
           a.Limite_Detection === sample.Limite_Detection &&
-          a.Observation === sample.Observation
+          a.Observation === sample.Observation // Removed
       );
 
       if (!isDuplicate) {
@@ -134,9 +131,7 @@ const Rapport = () => {
                   <th>Élément d'Intérêt</th>
                   <th>Unité</th>
                   <th>Valeur Moyenne</th>
-                  <th>Valeur Limite OMS</th>
                   <th>Limite de Détection</th>
-                  <th>Observation</th>
                   <th>Technique Utilisée</th>
                 </tr>
               </thead>
@@ -146,9 +141,7 @@ const Rapport = () => {
                     <td>{sample.elementDinteret}</td>
                     <td>{sample.Unite}</td>
                     <td>{sample.Valeur_Moyenne}</td>
-                    <td>{sample.Valeur_Limite_OMS}</td>
                     <td>{sample.Limite_Detection}</td>
-                    <td>{sample.Observation}</td>
                     <td>{sample.technique}</td>
                   </tr>
                 ))}

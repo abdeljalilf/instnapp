@@ -1,0 +1,117 @@
+@media print {
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    #report-container {
+        position: center;
+        margin: 35mm 10mm; /* Marges pour le contenu du rapport */
+        border: none; /* Pas de bordure autour du rapport */
+    }
+    .report-header, .report-footer {
+        position: relative;
+        border-bottom: 1px solid #000; /* Ligne en dessous de l'en-tête */
+        border-top: 1px solid #000; /* Ligne au-dessus du pied de page */
+        padding-bottom: 0px; /* Espace en dessous de l'en-tête */
+        padding-top: 0px; /* Espace au-dessus du pied de page */
+    }
+    .report-footer {
+        border-top: none; /* Pas de bordure supérieure pour le pied de page */
+        margin-top: 20px; /* Marge au-dessus du pied de page */
+    }
+    .report-header::before {
+        content: "";
+        display: block;
+        border-bottom: 1px solid #000;
+        margin-bottom: 10px;
+    }
+    .report-footer::after {
+        content: "";
+        display: block;
+        border-top: 1.5px solid #000;
+        margin-top: 10px;
+    }
+    .report-sample-section {
+        page-break-inside: auto; /* Éviter les coupures dans les échantillons */
+    }
+    .report-analysis-section {
+        page-break-inside: avoid; /* Éviter les coupures dans les analyses */
+    }
+    .report-analysis-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+    .report-analysis-table th, .report-analysis-table td {
+        border: 1px solid #000;
+        padding: 8px; /* Ajuster le padding pour le texte des cellules */
+        text-align: left;
+    }
+    .report-analysis-table tr {
+        page-break-inside: avoid; /* Éviter les coupures dans les lignes de table */
+    }
+    .report-analysis-table thead {
+        display: table-header-group; /* Répéter les en-têtes de table si nécessaire */
+    }
+    .report-download-button {
+        display: none; /* Masquer le bouton de téléchargement lors de l'impression */
+    }
+}
+
+.report-container {
+    width: 100%;
+    max-width: 800px;
+    font-family: 'Arial', sans-serif;
+    color: #000;
+    background-color: #fff;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.report-header, .report-footer {
+    margin-bottom: 30px;
+}
+
+.client-info, .reportconclusion-section, .reportresults-section {
+    margin-bottom: 20px;
+}
+
+.reportsample-section {
+    margin-bottom: 20px;
+    page-break-inside: avoid;
+}
+
+.sample-count {
+    margin-bottom: 10px;
+}
+
+.sample-list {
+    margin-left: 20px;
+}
+
+.sample-item {
+    display: flex;
+    align-items: center;
+}
+
+.sample-code {
+    width: 290px; /* Ajuster selon les besoins pour aligner le contenu */
+    text-align: right;
+    margin-right: 10px;
+}
+
+.reportanalysis-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.reportanalysis-table th, .reportanalysis-table td {
+    border: 1px solid #000;
+    padding: 8px;
+    text-align: left;
+}
+
+.report-download-button {
+    margin-top: 20px;
+}

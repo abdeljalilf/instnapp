@@ -22,11 +22,11 @@ $department = isset($_GET['department']) ? $_GET['department'] : '';
 $user = checkSession($conn);
 authorize(['bureau'], $user, $department);
 
+
 // Assurez-vous que les erreurs sont affichées
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
 
 
 // Vérifiez si 'demande_id' et 'department' sont définis et valides
@@ -87,7 +87,7 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
         )
     ) last_conclusion ON clients.id = last_conclusion.client_id AND analyses.departement = last_conclusion.departement
     WHERE clients.id = ? AND analyses.departement = ? AND 
-    (analyses.validated = 'laboratory' OR analyses.validated = 'office_step_2')
+    (analyses.validated = 'office_step_2' OR analyses.validated = 'office_step_3')
 ";
 
 

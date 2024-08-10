@@ -23,11 +23,11 @@ $user = checkSession($conn);
 authorize(['bureau'], $user, $department);
 
 // Prepare and execute query based on the department
-$sql = "SELECT clients.id AS demande_id, clients.clientReference, clients.dilevery_delay, echantillons.sampleType, analyses.analysisType 
+$sql = "SELECT clients.id AS demande_id, clients.clientReference, clients.dilevery_delay, echantillons.sampleType, analyses.analysisType, analyses.validated, analyses.departement 
         FROM clients 
         JOIN echantillons ON clients.id = echantillons.client_id 
         JOIN analyses ON echantillons.id = analyses.echantillon_id 
-        WHERE analyses.validated = 'finance'";
+        WHERE analyses.validated IN ('office_step_2', 'office_step_3')";
 
 if ($department) {
     $sql .= " AND analyses.departement = ?";
@@ -49,7 +49,8 @@ if ($result->num_rows > 0) {
                 'demande_id' => $demande_id,
                 'dilevery_delay' => $row['dilevery_delay'],
                 'clientReference' => $row['clientReference'],
-                'samples' => []
+                'samples' => [],
+                'all_validated' => true // Assume all analyses are validated initially
             ];
         }
         $sampleType = $row['sampleType'];
@@ -57,10 +58,23 @@ if ($result->num_rows > 0) {
             $requests[$demande_id]['samples'][$sampleType] = [];
         }
         $requests[$demande_id]['samples'][$sampleType][] = $row['analysisType'];
+        
+        // Check the validation status for the specific department
+        if ($row['departement'] == $department && $row['validated'] !== 'office_step_2') {
+            $requests[$demande_id]['all_validated'] = false;
+        }
     }
 }
 
-echo json_encode(array_values($requests));
+// Convert the associative array to an indexed array
+$requests = array_values($requests);
+
+// Add the status field
+foreach ($requests as &$request) {
+    $request['status'] = $request['all_validated'] ? 'Pas encore validée' : 'Validée';
+}
+
+echo json_encode($requests);
 
 $conn->close();
 ?>

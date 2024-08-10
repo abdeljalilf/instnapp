@@ -51,10 +51,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $redirectUrl = '/reception';
                             break;
                         case 'bureau':
-                            $redirectUrl = '/bureau';
+                            switch ($user['department']) {
+                                case 'TFXE':
+                                    $redirectUrl = '/bureau/TFXE';
+                                    break;
+                                case 'ATN':
+                                    $redirectUrl = '/bureau/ATN';
+                                    break;
+                                case 'HI':
+                                    $redirectUrl = '/bureau/HI';
+                                    break;
+                            }
                             break;
                         case 'laboratoire':
-                            $redirectUrl = '/laboratoire';
+                            switch ($user['department']) {
+                                case 'TFXE':
+                                    $redirectUrl = '/laboratoire/TFXE';
+                                    break;
+                                case 'ATN':
+                                    $redirectUrl = '/laboratoire/ATN';
+                                    break;
+                                case 'HI':
+                                    $redirectUrl = '/laboratoire/HI';
+                                    break;
+                            }
                             break;
                         default:
                             $redirectUrl = '/';

@@ -1,0 +1,31 @@
+.dashboard {
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+.dashboard h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.chart-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.chart {
+    flex: 1;
+    min-width: 300px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chart h2 {
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #555;
+}

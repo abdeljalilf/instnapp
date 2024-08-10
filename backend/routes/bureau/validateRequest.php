@@ -1,11 +1,30 @@
 <?php
-include '../../database/db_connection.php';
+require_once '../../routes/login/session_util.php';
+require_once '../../database/db_connection.php';
 
-header("Access-Control-Allow-Origin: *");
+header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
-// Get the ID from the request
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
+
+
+
+// Get the department parameter from the URL
+$department = isset($_GET['department']) ? $_GET['department'] : '';
+// Get the ID and department from the request
 $id = intval($_GET['id']);
+
+// Vérifiez la session
+$user = checkSession($conn);
+authorize(['bureau'], $user, $department);
+
+
 
 // Prepare the SQL query to update the analyses table based on the client ID and department
 $sql = "
@@ -13,11 +32,11 @@ $sql = "
     JOIN echantillons ON analyses.echantillon_id = echantillons.id
     JOIN clients ON echantillons.client_id = clients.id
     SET analyses.validated = 'office_step_1'
-    WHERE clients.id = ? AND analyses.departement = 'TFXE'
+    WHERE clients.id = ? AND analyses.departement = ?
 ";
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $id);
+$stmt->bind_param("is", $id, $department);
 
 $response = [];
 if ($stmt->execute()) {
