@@ -9,9 +9,11 @@ CREATE TABLE clients (
     phone VARCHAR(20) NOT NULL,
     email VARCHAR(255) NOT NULL,
     clientReference VARCHAR(255),
+    ref_client_ATN VARCHAR(255),
     dilevery_delay DATE NOT NULL,
     requestingDate DATE NOT NULL
 );
+ALTER TABLE clients ADD ref_client_ATN VARCHAR(155);
 
 CREATE TABLE echantillons (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -39,6 +41,10 @@ CREATE TABLE analyses (
     office_remark VARCHAR(300),
     FOREIGN KEY (echantillon_id) REFERENCES echantillons(id)
 );
+ALTER TABLE analyses ADD analysis_time INT;
+ALTER TABLE analyses ADD analysis_result_file BLOB;
+
+
 
 CREATE TABLE elementsdinteret (
     id INT AUTO_INCREMENT PRIMARY KEY,

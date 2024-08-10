@@ -12,8 +12,19 @@ if (!$data) {
     echo json_encode(['success' => false, 'message' => 'Invalid data']);
     exit;
 }
+// Update the ref_client_ATN in clients table
+if (!empty($data['ReferenceClientATN']) && !empty($data['client_id'])) {
+    $referenceClient = $conn->real_escape_string($data['ReferenceClientATN']);
+    $client_id = intval($data['client_id']);
 
-// Process usedNormes and validated field in analyses
+    $query = "UPDATE clients SET ref_client_ATN = '$referenceClient' WHERE id = $client_id";
+    if (!$conn->query($query)) {
+        echo json_encode(['success' => false, 'message' => 'Error updating ref_client_ATN: ' . $conn->error]);
+        exit;
+    }
+}
+
+// Process usedNormes 
 foreach ($data['usedNormes'] ?? [] as $norme) {
     $analysis_id = intval($norme['analysis_id']);
     $Used_norme = $conn->real_escape_string($norme['Used_norme']);
@@ -23,6 +34,9 @@ foreach ($data['usedNormes'] ?? [] as $norme) {
         echo json_encode(['success' => false, 'message' => 'Error updating analyses: ' . $conn->error]);
         exit;
     };
+};
+// Process validated field in analyses
+foreach ($data['allAnalysisIds'] ?? [] as $analysis_id) {  
     $query = "UPDATE analyses SET validated = 'office_step_2' WHERE id = $analysis_id";
     if (!$conn->query($query)) {
         echo json_encode(['success' => false, 'message' => 'Error updating analyses validated field: ' . $conn->error]);

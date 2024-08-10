@@ -16,21 +16,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 // Fonction pour générer la référence client
 function generateClientReference($clientId, $year) {
-    return sprintf("INSTN/DG/XRF/%s/%04d", $year, $clientId);
+    return sprintf("%s/%04d/INSTN/DG/", $year, $clientId);
 }
 
 // Fonction pour générer la référence échantillon
 function generateSampleReference($year, $clientId, $sampleCount) {
-    return sprintf("%s%04dC%02d", $year, $clientId, $sampleCount);
+    return sprintf("%s%04dS%02d", $year, $clientId, $sampleCount);
 }
 $techniqueToDepartement = [
-    "Spectrometrie d'Absportion Atomic (SAA)" => 'TFXE',
-    'Analyseur Direct de Mercure (ADM)' => 'TFXE',
-    'Chromatographie Ionique (CI)' => 'HI',
-    'Spectrometre Gamma' => 'ATN',
-    'Spectrometre alpha' => 'ATN',
-    'Fluorescence X a Energie Dispersive (FXDE)' => 'TFXE',
-    'Gravimetrie' => 'TFXE'
+    "Spectrometrie d Absportion Atomic (SAA)" => "TFXE",
+    "Analyseur Direct de Mercure (ADM)" => "TFXE",
+    "Chromatographie Ionique (CI)" => "HI",
+    "Spectrometre Gamma" => "ATN",
+    "Spectrometre alpha" => "ATN",
+    "Fluorescence X a Energie Dispersive (FXDE)" => "TFXE",
+    "Gravimetrie" => "TFXE"
 ];
 
 // Vérifier si une requête POST a été envoyée depuis le formulaire React

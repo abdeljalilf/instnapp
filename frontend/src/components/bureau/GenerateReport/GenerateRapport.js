@@ -108,14 +108,32 @@ const GenirateRapport = () => {
             <span className="sample-code">Code {sampleReference} :</span> {sampleType}
         </div>
     ));
-
+    // Déterminer le texte du <th> en fonction du département
+    const getHeaderText = () => {
+        switch (department) {
+            case 'TFXE':
+            case 'HI':
+                return 'Valeur Moyenne Mesurée';
+            case 'ATN':
+                return 'Activité';
+            default:
+                return 'Valeur Moyenne'; // Valeur par défaut si aucun des cas ne correspond
+        }
+    };
     return (
         <div className="report-wrapper">
             <div className="report-container" id="report-container">
                 <header className="report-header">
                     <h1>RÉSULTATS D'ANALYSES</h1>
                     <p>
-                        <strong>Référence Client :</strong> {data.clientReference}
+                        <strong>Référence de la demande :</strong> {data.clientReference}/{department}
+                    </p>
+                    <p>
+                        {department === 'ATN' && data.ref_client_ATN &&(
+                            <>
+                            <strong>Référence du client :</strong> {data.ref_client_ATN}
+                            </> 
+                        )}
                     </p>
                     <p className="date-location">
                         <strong>Antananarivo, le</strong>{' '}
@@ -173,19 +191,26 @@ const GenirateRapport = () => {
                             <strong>Prélevé par :</strong> {sampleDetails.sampledBy}
                         </p>
 
-                        {Object.entries(analyses).map(([analysisKey, { analysisType, parameter, technique, elementsdinteret, norme }], analysisIndex) => (
+                        {Object.entries(analyses).map(([analysisKey, { analysisType, parameter, technique, elementsdinteret, norme,analysis_time }], analysisIndex) => (
                             <div key={analysisKey} className="reportanalysis-section">
                                 <h4>Analyse {analysisIndex + 1}: {analysisType} pour {sampleType.toUpperCase()}</h4>
+                                {department === 'ATN' && (
+                                <p><strong>Durée de mesure :</strong> {analysis_time}</p>
+                                )}
                                 <table className="reportanalysis-table">
                                     <thead>
                                         <tr>
-                                            <th>Élément d'Intérêt</th>
+                                            <th>{parameter}</th>
                                             <th>Unité</th>
-                                            <th>Valeur Moyenne</th>
+                                            <th>{getHeaderText()}</th>
                                             <th>Limite de Détection</th>
                                             <th>Technique Utilisée</th>
+                                            {analysisType === 'Quantitative' && (
                                             <th>{norme}</th>
+                                            )}
+                                            {analysisType === 'Quantitative' && (
                                             <th>Observation</th>
+                                            )}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -196,8 +221,12 @@ const GenirateRapport = () => {
                                                 <td>{element.Valeur_Moyenne}</td>
                                                 <td>{element.Limite_Detection}</td>
                                                 <td>{technique}</td>
+                                                {analysisType === 'Quantitative' && (
                                                 <td>{element.Valeur_Norme_Utlise}</td>
+                                                )}
+                                                {analysisType === 'Quantitative' && (
                                                 <td>{element.Observation}</td>
+                                                )}
                                             </tr>
                                         ))}
                                     </tbody>

@@ -24,6 +24,7 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
         clients.phone AS client_phone, 
         clients.requestingDate,
         clients.clientReference,
+        clients.ref_client_ATN,
         echantillons.sampleType, 
         echantillons.sampleReference,
         echantillons.samplingLocation,
@@ -87,6 +88,7 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
                     'client_address' => $row['client_address'],
                     'requestingDate' => $row['requestingDate'],
                     'clientReference' => $row['clientReference'],
+                    'ref_client_ATN' => $row['ref_client_ATN'],
                     'client_phone' => $row['client_phone'], 
                     'conclusion' => $row['conclusion'] ?? '' ,
                     'samples' => []
