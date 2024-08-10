@@ -22,7 +22,7 @@ const Analyses = () => {
 
   const getStatusMessage = (validated) => {
     if (validated === 'office_step_1') {
-      return 'résultats à analyser';
+      return 'Analyse à effectuer';
     } else if (validated === 'office_reject') {
       return 'résultats à corriger';
     } else {
@@ -55,7 +55,7 @@ const Analyses = () => {
                   </td>
                   <td>{getStatusMessage(analysis.validated)}</td>
                   <td>
-                    <Link to={`/analysis-details/${analysis.analysisId}`}>
+                    <Link to={`/laboratoire/analysis-details/${analysis.analysisId}`}>
                       <button className="result-button">Ajouter les resultats</button>
                     </Link>
                   </td>

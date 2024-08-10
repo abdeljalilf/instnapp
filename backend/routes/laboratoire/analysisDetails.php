@@ -69,8 +69,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
     if ($data) {
         $analysisId = $data['analysisId'];
         $results = $data['results'];
+        
+        // Corrected: use 'qualite' instead of 'qualityResults'
+        $qualite = isset($data['qualite']) && is_array($data['qualite']) ? $data['qualite'] : [];
 
-        // Prepare the SQL statement for inserting/updating results
+        // Prepare the SQL statement for inserting/updating results in the resultats table
         $stmt = $conn->prepare("
             INSERT INTO resultats (elementsdinteret_id, Unite, Valeur_Moyenne, Limite_Detection, Incertitude)
             VALUES (?, ?, ?, ?, ?)
@@ -84,13 +87,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
         foreach ($results as $result) {
             $elementsdinteretId = $result['elementsdinteretId'];  // Ensure this is provided in the payload
             $unite = $result['unite'];
-            $valeurMoyenne = ($result['valeurMoyenne'] === 'non détecté' || in_array($result['valeurMoyenne'], ['Majeur', 'Mineur', 'Trace'])) ? $result['valeurMoyenne'] : $result['valeurMoyenne'];
+            $valeurMoyenne = $result['valeurMoyenne'];
             $limiteDetection = $result['limiteDetection'];
-            $incertitude = $result['incertitude'] === 'non détecté' ? '' : $result['incertitude'];
+            $incertitude = $result['incertitude'];
 
             // Bind the parameters
             $stmt->bind_param("issss", $elementsdinteretId, $unite, $valeurMoyenne, $limiteDetection, $incertitude);
             $stmt->execute();
+        }
+
+        // Prepare the SQL statement for inserting/updating results in the analyse_qualite table
+        $qualityStmt = $conn->prepare("
+            INSERT INTO analyse_qualite (elementsdinteret_id, Reference_Materiel, Unite, Valeur_Recommandee, Valeur_Mesuree)
+            VALUES (?, ?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE
+            Reference_Materiel = VALUES(Reference_Materiel),
+            Unite = VALUES(Unite),
+            Valeur_Recommandee = VALUES(Valeur_Recommandee),
+            Valeur_Mesuree = VALUES(Valeur_Mesuree);
+        ");
+
+        foreach ($qualite as $qualityResult) {
+            $elementsdinteretId = $qualityResult['elementsdinteretId'];
+            $referenceMateriel = $qualityResult['referenceMateriel'];
+            $unite = $qualityResult['unite'];
+            $valeurRecommandee = $qualityResult['valeurRecommandee'];
+            $valeurMesuree = $qualityResult['valeurMesuree'];
+
+            // Bind the parameters
+            $qualityStmt->bind_param("issss", $elementsdinteretId, $referenceMateriel, $unite, $valeurRecommandee, $valeurMesuree);
+            $qualityStmt->execute();
         }
 
         // Update the validated column in analyses table using the analysisId

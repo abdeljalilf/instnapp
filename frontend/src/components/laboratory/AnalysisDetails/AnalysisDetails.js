@@ -5,10 +5,11 @@ import './analysisdetails.css';
 
 const AnalysisDetails = () => {
   const { id: analysisId } = useParams();
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
   const [analysisDetails, setAnalysisDetails] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [elementsResults, setElementsResults] = useState([]);
+  const [qualiteResults, setQualiteResults] = useState([]); // New state for Analyse Qualité
   const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
@@ -17,7 +18,6 @@ const AnalysisDetails = () => {
     })
       .then(response => {
         setAnalysisDetails(response.data);
-        // Initialize results with the elements of interest
         setElementsResults(response.data.elementsdinteret.map(element => ({
           id: element.id,
           element: element.elementDinteret,
@@ -26,6 +26,14 @@ const AnalysisDetails = () => {
           incertitude: '',
           limiteDetection: 1, // Default value
           status: 'détectable' // Default value
+        })));
+        setQualiteResults(response.data.elementsdinteret.map(element => ({
+          id: element.id,
+          element: element.elementDinteret,
+          referenceMateriel: '', // Default value
+          unite: 'g/L', // Default value
+          valeurRecommandee: '',
+          valeurMesuree: ''
         })));
       })
       .catch(error => alert('Error fetching analysis details: ' + error));
@@ -52,6 +60,12 @@ const AnalysisDetails = () => {
     setElementsResults(newResults);
   };
 
+  const handleQualiteChange = (index, field, value) => {
+    const newQualiteResults = [...qualiteResults];
+    newQualiteResults[index][field] = value;
+    setQualiteResults(newQualiteResults);
+  };
+
   const handleSaveResults = () => {
     const resultsPayload = elementsResults.map(result => ({
       elementsdinteretId: result.id,
@@ -61,14 +75,22 @@ const AnalysisDetails = () => {
       limiteDetection: result.limiteDetection
     }));
 
+    const qualitePayload = qualiteResults.map(result => ({
+      elementsdinteretId: result.id,
+      referenceMateriel: result.referenceMateriel,
+      unite: result.unite,
+      valeurRecommandee: result.valeurRecommandee,
+      valeurMesuree: result.valeurMesuree
+    }));
+
     axios.post(`${apiBaseUrl}/instnapp/backend/routes/laboratoire/analysisDetails.php`, {
-      elementsdinteretId: elementsResults[0].id, // Adjust to fit the expected payload structure if necessary
-      analysisId: analysisId, // Added new parameter
-      results: resultsPayload
+      analysisId: analysisId,
+      results: resultsPayload,
+      qualite: qualitePayload // Add Analyse Qualité results to the payload
     })
       .then(response => {
-        alert('Résultats validés avec succès'); // Success message
-        navigate('/laboratoire'); // Navigate to Laboratory page upon successful save
+        alert('Résultats validés avec succès');
+        navigate('/laboratoire');
       })
       .catch(error => {
         alert('Error saving results: ' + error);
@@ -168,8 +190,8 @@ const AnalysisDetails = () => {
                       <option value="g/L">g/L</option>
                       <option value="mg/L">mg/L</option>
                       <option value="µg/L">µg/L</option>
-                      <option value="µg/Kg">g/Kg</option>
-                      <option value="µg/Kg">mg/Kg</option>
+                      <option value="g/Kg">g/Kg</option>
+                      <option value="mg/Kg">mg/Kg</option>
                       <option value="µg/Kg">µg/Kg</option>
                     </select>
                   </td>
@@ -215,6 +237,61 @@ const AnalysisDetails = () => {
               ))}
             </tbody>
           </table>
+          
+          <h2>Analyse Qualité</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Element</th>
+                <th>Reference Matériel</th>
+                <th>Unité</th>
+                <th>Valeur Recommandée</th>
+                <th>Valeur Mesurée</th>
+              </tr>
+            </thead>
+            <tbody>
+              {qualiteResults.map((result, index) => (
+                <tr key={index}>
+                  <td>{result.element}</td>
+                  <td>
+                    <input
+                      type="text"
+                      value={result.referenceMateriel}
+                      onChange={(e) => handleQualiteChange(index, 'referenceMateriel', e.target.value)}
+                    />
+                  </td>
+                  <td>
+                    <select
+                      value={result.unite}
+                      onChange={(e) => handleQualiteChange(index, 'unite', e.target.value)}
+                    >
+                      <option value="g/L">g/L</option>
+                      <option value="mg/L">mg/L</option>
+                      <option value="µg/L">µg/L</option>
+                      <option value="g/Kg">g/Kg</option>
+                      <option value="mg/Kg">mg/Kg</option>
+                      <option value="µg/Kg">µg/Kg</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      value={result.valeurRecommandee}
+                      onChange={(e) => handleQualiteChange(index, 'valeurRecommandee', e.target.value)}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      value={result.valeurMesuree}
+                      onChange={(e) => handleQualiteChange(index, 'valeurMesuree', e.target.value)}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
           <button onClick={handleSaveResults} className="valider-button">Valider</button>
         </section>
       </div>

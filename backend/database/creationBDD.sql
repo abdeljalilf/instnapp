@@ -89,6 +89,15 @@ CREATE TABLE resultats (
     Observation VARCHAR(100),
     FOREIGN KEY (elementsdinteret_id) REFERENCES elementsdinteret(id)
 );
+CREATE TABLE analyse_qualite (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    elementsdinteret_id INT NOT NULL,
+    Reference_Materiel VARCHAR(255),
+    Unite VARCHAR(50) NOT NULL,
+    Valeur_Recommandee VARCHAR(50),
+    Valeur_Mesuree VARCHAR(50),
+    FOREIGN KEY (elementsdinteret_id) REFERENCES elementsdinteret(id)
+);
 
 --suprimer les valeurs dans les tables
 DELETE FROM resultats;
