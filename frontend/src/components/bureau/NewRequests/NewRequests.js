@@ -13,10 +13,15 @@ const NewRequests = () => {
     const [loading, setLoading] = useState(true); // État de chargement initial
     const [error, setError] = useState(null); // État pour gérer les erreurs
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+    const session_id = localStorage.getItem('session_id');
 
     useEffect(() => {
         if (department) {
-            fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/getNewRequests.php?department=${department}`)
+            fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/getNewRequests.php?department=${department}`, {
+                headers: {
+                    Authorization: session_id
+                }
+            })
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');

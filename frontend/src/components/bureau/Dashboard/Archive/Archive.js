@@ -15,10 +15,15 @@ const Archive = () => {
     const [error, setError] = useState(null); // État pour gérer les erreurs
     const [searchTerm, setSearchTerm] = useState(""); // État pour le terme de recherche
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+    const session_id = localStorage.getItem('session_id');
 
     useEffect(() => {
         if (department) {
-            fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/Archive.php?department=${department}`)
+            fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/Archive.php?department=${department}`, {
+                headers: {
+                    Authorization: session_id
+                }
+            })
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');

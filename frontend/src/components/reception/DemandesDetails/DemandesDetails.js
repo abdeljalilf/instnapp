@@ -12,7 +12,7 @@ const DemandesDetails = () => {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
-
+    const session_id = localStorage.getItem('session_id');
     useEffect(() => {
         if (!clientId) {
             setError('Client ID manquant dans l\'URL');
@@ -22,7 +22,11 @@ const DemandesDetails = () => {
 
         const fetchDetails = async () => {
             try {
-                const response = await axios.get(`${apiBaseUrl}/instnapp/backend/routes/reception/demandesDetails.php?referenceClient=${generateClientReference(clientId)}`);
+                const response = await axios.get(`${apiBaseUrl}/instnapp/backend/routes/reception/demandesDetails.php?referenceClient=${generateClientReference(clientId)}`, {
+                    headers: {
+                        Authorization: session_id
+                    }
+                });
                 if (response.data.success) {
                     setDemandes(response.data.demandes);
                 } else {

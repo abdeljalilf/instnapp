@@ -31,7 +31,7 @@ const Dashboard = () => {
                         <NavLink 
                             to="archive" 
                             className={({ isActive }) => (isActive ? 'active' : '')} 
-                            data-tooltip="Archive"
+                            data-tooltip="dashboard/Archive"
                         >
                             Archive
                         </NavLink>

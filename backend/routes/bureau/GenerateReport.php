@@ -1,13 +1,26 @@
 <?php
-header("Access-Control-Allow-Origin: *");
+require_once '../../routes/login/session_util.php';
+require_once '../../database/db_connection.php';
+
+header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
-// Assurez-vous que les erreurs sont affichées
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
 
-include '../../database/db_connection.php';
+
+
+
+// Get the department parameter from the URL
+$department = isset($_GET['department']) ? $_GET['department'] : '';
+
+// Vérifiez la session
+$user = checkSession($conn);
+authorize(['bureau'], $user, $department);
 
 // Vérifiez si 'demande_id' et 'department' sont définis et valides
 if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET['department'])) {

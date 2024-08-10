@@ -12,12 +12,17 @@ const RapportFinal = () => {
     const [N1, setN1] = useState(0);
     const [N2, setN2] = useState(0);
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+    const session_id = localStorage.getItem('session_id');
 
     useEffect(() => {
         if (id && department) {
             console.log("Fetching data with demande_id:", id, "and department:", department);
 
-            fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/rapport.php?demande_id=${id}&department=${department}`)
+            fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/rapport.php?demande_id=${id}&department=${department}`, {
+                headers: {
+                    Authorization: session_id
+                }
+            })
                 .then((response) => {
                     console.log("Response status:", response.status);
                     return response.text();  // Utilisez text() pour voir la réponse brute
@@ -51,10 +56,11 @@ const RapportFinal = () => {
 
 const handleGenerateReport = () => {
     if (window.confirm("Êtes-vous sûr des données car cette étape est irréversible ?")) {
-        fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/validaterapport.php`, {
+        fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/validaterapport.php?department=${department}`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                Authorization: session_id
             },
             body: JSON.stringify({ demande_id: id, newValidatedValue: 'office_step_3' }) // Ensure 'demande_id' is the client_id
         })

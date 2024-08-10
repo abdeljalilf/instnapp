@@ -9,10 +9,15 @@ const GenirateRapport = () => {
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+    const session_id = localStorage.getItem('session_id');
 
     useEffect(() => {
         if (id && department) {
-            fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/GenerateReport.php?demande_id=${id}&department=${department}`)
+            fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/GenerateReport.php?demande_id=${id}&department=${department}`, {
+                headers: {
+                    Authorization: session_id
+                }
+            })
                 .then((response) => response.text())
                 .then((text) => {
                     try {

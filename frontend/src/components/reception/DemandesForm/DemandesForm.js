@@ -8,7 +8,7 @@ const DemandesForm = () => {
     };
 
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
-
+    const session_id = localStorage.getItem('session_id');
     const [personalInfo, setPersonalInfo] = useState({
         name: '',
         address: '',
@@ -135,7 +135,8 @@ const DemandesForm = () => {
         const response = await fetch(`${apiBaseUrl}/instnapp/backend/routes/reception/demandesForm.php`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                Authorization: session_id
             },
             body: JSON.stringify({
                 personalInfo,
@@ -143,7 +144,11 @@ const DemandesForm = () => {
             })
         });
         const result = await response.json();
-        
+        const hak = JSON.stringify({
+            personalInfo,
+            samples
+        });
+        console.log(hak)
         // Supposons que 'result' contient la réponse JSON de votre requête
         if (result.success) {
             // Construire le message à afficher dans l'alerte
@@ -157,7 +162,7 @@ const DemandesForm = () => {
             // Afficher l'alerte avec le message complet
             alert(message);
         } else {
-            alert('Erreur lors de la soumission du formulaire.');
+            alert('Erreur lors de la soumission du formulaire.'+ result.message);
         }
 
         
@@ -231,7 +236,7 @@ const DemandesForm = () => {
 
     const getTechniqueOptions = (sampleType, parameter) => {
         if (parameter === 'Metaux' && (sampleType === 'eau' || sampleType === 'denree')) {
-            return ["Spectrometrie d Absportion Atomic (SAA)"];
+            return ["Spectrometrie d'Absportion Atomic (SAA)"];
         } else if (parameter === 'Hg') {
             return ['Analyseur Direct de Mercure (ADM)'];
         } else if (parameter === 'Anion' || parameter === 'Cation') {

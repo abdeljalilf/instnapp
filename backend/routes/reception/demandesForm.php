@@ -1,36 +1,39 @@
 <?php
-// Inclure le fichier de configuration pour la connexion à la base de données
+require_once '../../routes/login/session_util.php';
 require_once '../../database/db_connection.php';
 
-// Set CORS headers
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
-header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    // Handle preflight request
     http_response_code(200);
     exit;
 }
 
+// Vérifiez la session
+$user = checkSession($conn);
+authorize(['reception'], $user);
+
+
 // Fonction pour générer la référence client
 function generateClientReference($clientId, $year) {
-    return sprintf("%s/%04d/INSTN/DG/", $year, $clientId);
+    return sprintf("INSTN/DG/XRF/%s/%04d", $year, $clientId);
 }
 
 // Fonction pour générer la référence échantillon
 function generateSampleReference($year, $clientId, $sampleCount) {
-    return sprintf("%s%04dS%02d", $year, $clientId, $sampleCount);
+    return sprintf("%s%04dC%02d", $year, $clientId, $sampleCount);
 }
 $techniqueToDepartement = [
-    "Spectrometrie d Absportion Atomic (SAA)" => "TFXE",
-    "Analyseur Direct de Mercure (ADM)" => "TFXE",
-    "Chromatographie Ionique (CI)" => "HI",
-    "Spectrometre Gamma" => "ATN",
-    "Spectrometre alpha" => "ATN",
-    "Fluorescence X a Energie Dispersive (FXDE)" => "TFXE",
-    "Gravimetrie" => "TFXE"
+    "Spectrometrie d'Absportion Atomic (SAA)" => 'TFXE',
+    'Analyseur Direct de Mercure (ADM)' => 'TFXE',
+    'Chromatographie Ionique (CI)' => 'HI',
+    'Spectrometre Gamma' => 'ATN',
+    'Spectrometre alpha' => 'ATN',
+    'Fluorescence X a Energie Dispersive (FXDE)' => 'TFXE',
+    'Gravimetrie' => 'TFXE'
 ];
 
 // Vérifier si une requête POST a été envoyée depuis le formulaire React

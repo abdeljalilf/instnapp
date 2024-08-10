@@ -1,18 +1,34 @@
 <?php
 // validaterapport.php
+require_once '../../routes/login/session_util.php';
+require_once '../../database/db_connection.php';
+
+header('Access-Control-Allow-Origin: *');
+header('Content-Type: application/json');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
+
+
+
+// Get the department parameter from the URL
+$department = isset($_GET['department']) ? $_GET['department'] : '';
+// Get the ID and department from the request
+$id = intval($_GET['id']);
+
+// Vérifiez la session
+$user = checkSession($conn);
+authorize(['bureau'], $user, $department);
 
 // Display PHP errors (not for production)
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
-// Add CORS headers if needed
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
-header('Content-Type: application/json'); // Ensure content is JSON
-
-include '../../database/db_connection.php';
 
 $data = json_decode(file_get_contents('php://input'), true);
 

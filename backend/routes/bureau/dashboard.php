@@ -1,12 +1,26 @@
 <?php
+require_once '../../routes/login/session_util.php';
+require_once '../../database/db_connection.php';
+
+header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
-header("Access-Control-Allow-Origin: *");
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
-// Inclure la connexion à la base de données
-include '../../database/db_connection.php';
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
 
-// Récupérer le département depuis les paramètres URL
-$department = $_GET['department'];
+
+
+
+// Get the department parameter from the URL
+$department = isset($_GET['department']) ? $_GET['department'] : '';
+
+// Vérifiez la session
+$user = checkSession($conn);
+authorize(['bureau'], $user, $department);
 
 // Obtenir les données des demandes, rapports et statistiques
 function getDashboardData($conn, $department) {

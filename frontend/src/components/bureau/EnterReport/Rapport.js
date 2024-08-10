@@ -17,11 +17,16 @@ const Rapport = () => {
   const [remarksState, setRemarksState] = useState({}); // Pour stocker les remarques saisies
   const [N1, setN1] = useState(0);
   const [N2, setN2] = useState(0);
+  const session_id = localStorage.getItem('session_id');
 
 
   useEffect(() => {
     if (id && department) {
-      fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/rapport.php?demande_id=${id}&department=${department}`)
+      fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/rapport.php?demande_id=${id}&department=${department}`, {
+        headers: {
+            Authorization: session_id
+        }
+    })      
         .then((response) => {
           if (!response.ok) {
             throw new Error('Failed to fetch data');
@@ -117,6 +122,7 @@ const Rapport = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: session_id
       },
       body: JSON.stringify(reportData),
     })
@@ -152,6 +158,7 @@ const Rapport = () => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: session_id
       },
       body: JSON.stringify(requestData),
     })

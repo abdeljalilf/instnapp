@@ -1,19 +1,20 @@
 <?php
-// Inclure le fichier de configuration pour la connexion à la base de données
+require_once '../../routes/login/session_util.php';
 require_once '../../database/db_connection.php';
 
-// Set CORS headers
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
-header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    // Handle preflight request
     http_response_code(200);
     exit;
 }
 
+// Vérifiez la session
+$user = checkSession($conn);
+authorize(['finance'], $user);
 // Récupérer toutes les demandes d'analyses validées
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $sql = "SELECT c.id as clientId, c.name, c.address, c.phone, c.email, c.clientReference, c.requestingDate, c.dilevery_delay,
@@ -23,7 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             FROM clients c 
             JOIN echantillons e ON c.id = e.client_id 
             JOIN analyses a ON e.id = a.echantillon_id AND a.validated = 'reception_step_1'
-            LEFT JOIN elementsdinteret ed ON e.id = ed.analysis_id";
+            LEFT JOIN elementsdinteret ed ON e.id = ed.analysis_id
+            ORDER BY c.id DESC";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
