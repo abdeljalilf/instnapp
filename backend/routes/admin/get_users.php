@@ -17,7 +17,7 @@ $user = checkSession($conn);
 authorize(['admin'], $user);
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $sql = "SELECT * FROM users";
+    $sql = "SELECT * FROM users ORDER BY role";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {

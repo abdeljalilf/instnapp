@@ -75,7 +75,7 @@ select:focus {
     border-color: #238443; /* Bordure plus foncée au focus */
 }
 
-button {
+.button-add {
     background-color: #2e8b57; /* Vert */
     color: white;
     border: none;

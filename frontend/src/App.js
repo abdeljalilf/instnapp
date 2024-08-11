@@ -28,7 +28,7 @@ import AnalysisList from './components/laboratory/AnalysisList/AnalysisList'; //
 import Login from './components/Login/Login';
 import ProtectedRoute from './components/Login/ProtectedRoute';
 import AdminPanel from './components/admin/AdminPanel/AdminPanel';
-
+import ChangePassword from './components/Login/ChangePassword';
 
 
 const App = () => {
@@ -37,6 +37,7 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<Login />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/changePassword" element={<ChangePassword />} />
                 <Route path="/finance" element={<ProtectedRoute element={<FinanceMainPage />} roleRequired="finance" />}>
                     <Route index element={<ProtectedRoute element={<FinanceDemandesList />} roleRequired="finance" />} />
                     <Route path="NouvellesDemandes" element={<ProtectedRoute element={<FinanceDemandesList />} roleRequired="finance" />} />
