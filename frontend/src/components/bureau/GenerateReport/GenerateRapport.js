@@ -133,13 +133,7 @@ const GenirateRapport = () => {
                     <p>
                         <strong>Référence de la demande :</strong> {data.clientReference}/{department}
                     </p>
-                    <p>
-                        {department === 'ATN' && data.ref_client_ATN &&(
-                            <>
-                            <strong>Référence du client :</strong> {data.ref_client_ATN}
-                            </> 
-                        )}
-                    </p>
+                    
                     <p className="date-location">
                         <strong>Antananarivo, le</strong>{' '}
                         {new Date().toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}
@@ -156,6 +150,13 @@ const GenirateRapport = () => {
                     </p>
                     <p>
                         <strong>Téléphone :</strong> {data.client_phone}
+                    </p>
+                    <p>
+                        {data.ref_client_ATN &&(
+                            <>
+                            <strong>Référence du client :</strong> {data.ref_client_ATN}
+                            </> 
+                        )}
                     </p>
                     <p className="sample-count">
                         <strong>Nombre d’échantillons :</strong> {uniqueSampleCount} échantillon{uniqueSampleCount > 1 ? 's' : ''}.

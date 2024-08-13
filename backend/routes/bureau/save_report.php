@@ -28,17 +28,6 @@ if (!$data) {
     echo json_encode(['success' => false, 'message' => 'Invalid data']);
     exit;
 }
-// Update the ref_client_ATN in clients table
-if (!empty($data['ReferenceClientATN']) && !empty($data['client_id'])) {
-    $referenceClient = $conn->real_escape_string($data['ReferenceClientATN']);
-    $client_id = intval($data['client_id']);
-
-    $query = "UPDATE clients SET ref_client_ATN = '$referenceClient' WHERE id = $client_id";
-    if (!$conn->query($query)) {
-        echo json_encode(['success' => false, 'message' => 'Error updating ref_client_ATN: ' . $conn->error]);
-        exit;
-    }
-}
 
 // Process usedNormes 
 foreach ($data['usedNormes'] ?? [] as $norme) {
