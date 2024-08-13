@@ -8,8 +8,6 @@ const RequestDetails = () => {
     const [requests, setRequests] = useState([]);
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
     const session_id = localStorage.getItem('session_id');
-    const session_id = localStorage.getItem('session_id');
-
     useEffect(() => {
         fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/getRequestDetails.php?id=${id}&department=${department}`
             , {
