@@ -14,30 +14,37 @@ const AnalysisDetails = () => {
   const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
-    axios.get(`${apiBaseUrl}/instnapp/backend/routes/laboratoire/analysisDetails.php`, {
-      params: { id: analysisId }
-    })
-      .then(response => {
-        setAnalysisDetails(response.data);
-        setElementsResults(response.data.elementsdinteret.map(element => ({
-          id: element.id,
-          element: element.elementDinteret,
-          unite: '', // Default value, will be set based on department
-          valeurMoyenne: '',
-          incertitude: '',
-          limiteDetection: 1, // Default value
-          status: 'détectable' // Default value
-        })));
-        setQualiteResults(response.data.elementsdinteret.map(element => ({
-          id: element.id,
-          element: element.elementDinteret,
-          referenceMateriel: '', // Default value
-          unite: '', // Default value, will be set based on department
-          valeurRecommandee: '',
-          valeurMesuree: ''
-        })));
+    axios
+      .get(`${apiBaseUrl}/instnapp/backend/routes/laboratoire/analysisDetails.php`, {
+        params: { id: analysisId },
       })
-      .catch(error => alert('Error fetching analysis details: ' + error));
+      .then((response) => {
+        setAnalysisDetails(response.data);
+        setElementsResults(
+          response.data.elementsdinteret.map((element) => ({
+            id: element.id,
+            element: element.elementDinteret,
+            unite: '', // Default value, will be set based on department
+            valeurMoyenne: '',
+            incertitude: '',
+            limiteDetection: 1, // Default value
+            status: '', // Default to blank
+            uniteAutre: '' // State for custom unit input
+          }))
+        );
+        setQualiteResults(
+          response.data.elementsdinteret.map((element) => ({
+            id: element.id,
+            element: element.elementDinteret,
+            referenceMateriel: '', // Default value
+            unite: '', // Default value, will be set based on department
+            valeurRecommandee: '',
+            valeurMesuree: '',
+            uniteAutre: '' // State for custom unit input
+          }))
+        );
+      })
+      .catch((error) => alert('Error fetching analysis details: ' + error));
   }, [analysisId, apiBaseUrl]);
 
   const handleFileChange = (event) => {
@@ -46,72 +53,86 @@ const AnalysisDetails = () => {
 
   const handleResultChange = (index, field, value) => {
     const newResults = [...elementsResults];
-    if (field === 'status') {
-      newResults[index][field] = value;
-      if (value === 'non détectable') {
-        newResults[index].valeurMoyenne = 'N/A';
-        newResults[index].incertitude = 'N/A';
-      } else {
-        newResults[index].valeurMoyenne = '';
-        newResults[index].incertitude = '';
-      }
-    } else {
-      newResults[index][field] = value;
-    }
+    newResults[index][field] = value;
     setElementsResults(newResults);
   };
 
-  const handleQualiteChange = (index, field, value) => {
-    const newQualiteResults = [...qualiteResults];
-    newQualiteResults[index][field] = value;
-    setQualiteResults(newQualiteResults);
+  const getValeurMoyenneOptions = (departement, analysisType) => {
+    if (analysisType === 'Qualitative') {
+      if (departement === 'TFXE') {
+        return ['majeur', 'mineur', 'trace'];
+      } else if (departement === 'ATN') {
+        return ['détectable', 'non détectable'];
+      } else if (departement === 'HI') {
+        return ['majeur', 'mineur'];
+      }
+    }
+    return [];
   };
 
   const getUnitOptions = (departement) => {
     if (departement === 'ATN') {
-      return [{ value: 'Bq/Kg', label: 'Bq/Kg' }];
+      return [
+        { value: 'Bq/Kg', label: 'Bq/Kg' },
+        { value: 'other', label: 'Autre (Saisir)' },
+      ];
     } else if (departement === 'HI') {
       return [
-        { value: '', label: '' },
         { value: 'ppm', label: 'ppm' },
         { value: 'mg/L', label: 'mg/L' },
         { value: 'mV', label: 'mV' },
         { value: '%', label: '%' },
         { value: 'meq/L', label: 'meq/L' },
-        { value: 'other', label: 'Autre (Saisir)' }
+        { value: 'other', label: 'Autre (Saisir)' },
       ];
+    }
+      else if (departement === 'TFXE') {
+        return [
+          { value: 'g/Kg', label: 'g/Kg' },
+          { value: 'mg/Kg', label: 'mg/Kg' },
+          { value: 'μg/Kg', label: 'μg/Kg' },
+          { value: 'ng/Kg', label: 'ng/Kg' },
+          { value: 'g/L', label: 'g/L' },
+          { value: 'mg/L', label: 'mg/L' },
+          { value: 'μg/L', label: 'μg/L' },
+          { value: 'ng/L', label: 'ng/L' },
+          { value: 'other', label: 'Autre (Saisir)' },
+        ];
     }
     return [];
   };
 
   const handleSaveResults = () => {
-    const resultsPayload = elementsResults.map(result => ({
+    const resultsPayload = elementsResults.map((result) => ({
       elementsdinteretId: result.id,
       unite: result.unite,
-      valeurMoyenne: result.status === 'non détectable' ? 'non détecté' : result.valeurMoyenne,
-      incertitude: result.status === 'non détectable' ? 'non détecté' : result.incertitude,
-      limiteDetection: result.limiteDetection
+      uniteAutre: result.uniteAutre,
+      valeurMoyenne: result.valeurMoyenne,
+      incertitude: result.incertitude,
+      limiteDetection: result.limiteDetection,
     }));
 
-    const qualitePayload = qualiteResults.map(result => ({
+    const qualitePayload = qualiteResults.map((result) => ({
       elementsdinteretId: result.id,
       referenceMateriel: result.referenceMateriel,
       unite: result.unite,
+      uniteAutre: result.uniteAutre,
       valeurRecommandee: result.valeurRecommandee,
-      valeurMesuree: result.valeurMesuree
+      valeurMesuree: result.valeurMesuree,
     }));
 
-    axios.post(`${apiBaseUrl}/instnapp/backend/routes/laboratoire/analysisDetails.php`, {
-      analysisId: analysisId,
-      analyseTime: analysisDetails.departement === 'ATN' ? analyseTime : null, // Include analyseTime if department is ATN
-      results: resultsPayload,
-      qualite: qualitePayload
-    })
-      .then(response => {
+    axios
+      .post(`${apiBaseUrl}/instnapp/backend/routes/laboratoire/analysisDetails.php`, {
+        analysisId: analysisId,
+        analyseTime: analysisDetails.departement === 'ATN' ? analyseTime : null, // Include analyseTime if department is ATN
+        results: resultsPayload,
+        qualite: qualitePayload,
+      })
+      .then((response) => {
         alert('Résultats validés avec succès');
         navigate('/laboratoire');
       })
-      .catch(error => {
+      .catch((error) => {
         alert('Error saving results: ' + error);
       });
   };
@@ -125,7 +146,7 @@ const AnalysisDetails = () => {
   }
 
   return (
-    <div className='labo-analysis'>
+    <div className="labo-analysis">
       <div className="details-container">
         <h1>Analysis Details</h1>
         <table>
@@ -152,7 +173,7 @@ const AnalysisDetails = () => {
             </tr>
             <tr>
               <td>Elements d'interet: </td>
-              <td>{analysisDetails.elementsdinteret.map(el => el.elementDinteret).join(', ')}</td>
+              <td>{analysisDetails.elementsdinteret.map((el) => el.elementDinteret).join(', ')}</td>
             </tr>
             <tr>
               <td>Sample Type:</td>
@@ -186,7 +207,6 @@ const AnalysisDetails = () => {
                 value={analyseTime}
                 onChange={(e) => setAnalyseTime(e.target.value)}
                 className="duree-analyse-input"
-                
               />
             </div>
           )}
@@ -194,10 +214,10 @@ const AnalysisDetails = () => {
           <table>
             <thead>
               <tr>
-                <th>Element</th>
+                <th>{analysisDetails.parameter}</th>
                 <th>Status</th>
                 <th>Unité</th>
-                <th>Valeur Moyenne</th>
+                <th>Valeur moyenne</th>
                 {analysisDetails.analysisType === 'Quantitative' && <th>Incertitude</th>}
                 <th>Limite Détection</th>
               </tr>
@@ -211,6 +231,7 @@ const AnalysisDetails = () => {
                       value={result.status}
                       onChange={(e) => handleResultChange(index, 'status', e.target.value)}
                     >
+                      <option value="">--Choisissez--</option> {/* Blank by default */}
                       <option value="détectable">détectable</option>
                       <option value="non détectable">non détectable</option>
                     </select>
@@ -220,28 +241,45 @@ const AnalysisDetails = () => {
                       value={result.unite}
                       onChange={(e) => handleResultChange(index, 'unite', e.target.value)}
                     >
-                      {getUnitOptions(analysisDetails.departement).map(option => (
-                        <option key={option.value} value={option.value}>{option.label}</option>
+                      <option value="">--Choisissez une unité--</option>
+                      {getUnitOptions(analysisDetails.departement).map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
                       ))}
                     </select>
                     {result.unite === 'other' && (
                       <input
                         type="text"
-                        value={result.unite === 'other' ? '' : result.unite}
-                        onChange={(e) => handleResultChange(index, 'unite', e.target.value)}
-                        placeholder="Enter unit"
+                        value={result.uniteAutre || ''}
+                        onChange={(e) => handleResultChange(index, 'uniteAutre', e.target.value)}
+                        className="custom-unit-input"
+                        placeholder="Saisir l'unité"
                       />
                     )}
                   </td>
                   <td>
-                    {analysisDetails.analysisType === 'Quantitative' ? (
+                    {analysisDetails.analysisType === 'Qualitative' ? (
+                      <select
+                        value={result.valeurMoyenne}
+                        onChange={(e) => handleResultChange(index, 'valeurMoyenne', e.target.value)}
+                        disabled={result.status === 'non détectable'}
+                      >
+                        <option value="">--Choisissez une valeur--</option>
+                        {getValeurMoyenneOptions(analysisDetails.departement, analysisDetails.analysisType).map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
                       <input
                         type="text"
                         value={result.valeurMoyenne}
                         onChange={(e) => handleResultChange(index, 'valeurMoyenne', e.target.value)}
                         disabled={result.status === 'non détectable'}
                       />
-                    ) : 'N/A'}
+                    )}
                   </td>
                   {analysisDetails.analysisType === 'Quantitative' && (
                     <td>
@@ -258,7 +296,6 @@ const AnalysisDetails = () => {
                       type="number"
                       value={result.limiteDetection}
                       onChange={(e) => handleResultChange(index, 'limiteDetection', e.target.value)}
-                      disabled={result.status === 'non détectable'}
                     />
                   </td>
                 </tr>
@@ -287,24 +324,28 @@ const AnalysisDetails = () => {
                     <input
                       type="text"
                       value={result.referenceMateriel}
-                      onChange={(e) => handleQualiteChange(index, 'referenceMateriel', e.target.value)}
+                      onChange={(e) => handleResultChange(index, 'referenceMateriel', e.target.value)}
                     />
                   </td>
                   <td>
                     <select
                       value={result.unite}
-                      onChange={(e) => handleQualiteChange(index, 'unite', e.target.value)}
+                      onChange={(e) => handleResultChange(index, 'unite', e.target.value)}
                     >
-                      {getUnitOptions(analysisDetails.departement).map(option => (
-                        <option key={option.value} value={option.value}>{option.label}</option>
+                      <option value="">--Choisissez une unité--</option>
+                      {getUnitOptions(analysisDetails.departement).map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
                       ))}
                     </select>
                     {result.unite === 'other' && (
                       <input
                         type="text"
-                        value={result.unite === 'other' ? '' : result.unite}
-                        onChange={(e) => handleQualiteChange(index, 'unite', e.target.value)}
-                        placeholder="Enter unit"
+                        value={result.uniteAutre || ''}
+                        onChange={(e) => handleResultChange(index, 'uniteAutre', e.target.value)}
+                        className="custom-unit-input"
+                        placeholder="Saisir l'unité"
                       />
                     )}
                   </td>
@@ -312,14 +353,14 @@ const AnalysisDetails = () => {
                     <input
                       type="text"
                       value={result.valeurRecommandee}
-                      onChange={(e) => handleQualiteChange(index, 'valeurRecommandee', e.target.value)}
+                      onChange={(e) => handleResultChange(index, 'valeurRecommandee', e.target.value)}
                     />
                   </td>
                   <td>
                     <input
                       type="text"
                       value={result.valeurMesuree}
-                      onChange={(e) => handleQualiteChange(index, 'valeurMesuree', e.target.value)}
+                      onChange={(e) => handleResultChange(index, 'valeurMesuree', e.target.value)}
                     />
                   </td>
                 </tr>
@@ -328,12 +369,13 @@ const AnalysisDetails = () => {
           </table>
         </section>
 
-        <div className="button-section">
-          <button onClick={handleSaveResults}>Enregistrer les résultats</button>
-        </div>
+        <button onClick={handleSaveResults} className="save-button">
+          Sauvegarder les résultats
+        </button>
       </div>
     </div>
   );
 };
 
 export default AnalysisDetails;
+                        
