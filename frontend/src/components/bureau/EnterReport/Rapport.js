@@ -18,7 +18,7 @@ const Rapport = () => {
   const [N1, setN1] = useState(0);
   const [N2, setN2] = useState(0);
   const session_id = localStorage.getItem('session_id');
-  const session_id = localStorage.getItem('session_id');
+  const [showStandardResults, setShowStandardResults] = useState(false);
 
 
   useEffect(() => {
@@ -111,7 +111,6 @@ const Rapport = () => {
       }),
      
       conclusion: conclusion,
-      ReferenceClientATN: ReferenceClientATN,
       client_id: id, // Ajoutez l'ID du client
       departement: department, // Ajoutez le département
       allAnalysisIds: allAnalysisIds,
@@ -211,7 +210,9 @@ const Rapport = () => {
       [analysisKey]: !prevShowRemarkForm[analysisKey],
     }));
   };
-    
+  const toggleStandardResults = () => {
+    setShowStandardResults(prevShow => !prevShow);
+  };  
 
   if (error) {
     return <div className="error-message">Error: {error}</div>;
@@ -253,7 +254,11 @@ const Rapport = () => {
         Valeur_Moyenne: sample.Valeur_Moyenne,
         Limite_Detection: sample.Limite_Detection,
         Incertitude: sample.Incertitude,
+        Valeur_Recommandee: sample.Valeur_Recommandee,
+        Valeur_Mesuree: sample.Valeur_Mesuree,
+        Reference_Materiel: sample.Reference_Materiel,
         element_id: sample.element_id
+        
       });
     });
     return acc;
@@ -288,20 +293,6 @@ const getHeaderText = () => {
         <p><strong>Nombre d'échantillons :</strong> {uniqueSampleCount}</p>
         <p><strong>Date de livraison :</strong> {data.dilevery_delay}</p>
       </div>
-      {/* Condition pour afficher le div seulement si department est "ATN" */}
-      <div>
-      {department === 'ATN' && (
-        <div className="Ref_client-form">
-          <h3>Référence Client</h3>
-          <textarea
-            className="Ref_client-textarea"
-            value={ReferenceClientATN}
-            onChange={(e) => setReferenceClientATN(e.target.value)}
-            placeholder="Entrez La référence client si ça existe..."
-          />
-        </div>
-      )}
-      </div>
       {groupedSamplesArray.map(([sampleReference, { sampleType, sampleDetails, analyses }], index) => (
         <div className="sample-section" key={index}>
           <h3 className="sample-type">Échantillon {index + 1} : {sampleType.toUpperCase()}</h3>
@@ -311,7 +302,7 @@ const getHeaderText = () => {
             <p><strong>Date de Prélèvement:</strong> {sampleDetails.samplingDate}</p>
             <p><strong>Prélevé par:</strong> {sampleDetails.sampledBy}</p>
 
-            {Object.entries(analyses).map(([analysisKey, { analysisType, parameter, technique, elementsdinteret, norme, valeurs, analysis_id,analysis_time }], analysisIndex) => (
+            {Object.entries(analyses).map(([analysisKey, { analysisType, parameter, technique, elementsdinteret, norme, analysis_id,analysis_time,Reference_Materiel,Valeur_Recommandee,Valeur_Mesuree }], analysisIndex) => (
               <div key={analysisKey} className="analysis-section">
                 <h4>Analyse {analysisIndex + 1}: {analysisType} pour {sampleType.toUpperCase()}</h4>
                 {department === 'ATN' && (
@@ -382,6 +373,43 @@ const getHeaderText = () => {
                     ))}
                   </tbody>
                 </table>
+
+                <button className="btn-standard-results" onClick={toggleStandardResults}>
+                {showStandardResults ? 'Fermer' : 'Afficher les résultats standards'}
+               </button>
+  {showStandardResults && (
+    <div className="standard-results-table">
+      
+          <h4>Résultats standards pour l'échantillon {index + 1}</h4>
+          {Object.entries(analyses).map(([analysisKey, { analysisType, elementsdinteret }], analysisIndex) => (
+            <table key={analysisKey} className="standard-results">
+              <thead>
+                <tr>
+                  <th>Materiel de Référence</th>
+                  <th>Élément d'Intérêt</th>
+                  <th>Unité</th>
+                  <th>Valeur Mesurée</th>
+                  <th>Valeur Recomandée</th>
+                </tr>
+              </thead>
+              <tbody>
+                {elementsdinteret.map((element, resultIndex) => (
+                  <tr key={resultIndex}>
+                    <td>{element.Reference_Materiel}</td>
+                    <td>{element.elementDinteret}</td>
+                    <td>{element.Unite}</td>
+                    <td>{element.Valeur_Mesuree}</td>
+                    <td>{element.Valeur_Recommandee}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ))}
+       
+      
+    </div>
+  )}
+
                 {/* Bouton pour demander la révision */}
                 <button className="request-revision-button" onClick={() => toggleRemarkForm(analysisKey)}>
                     Demander révision d'analyse

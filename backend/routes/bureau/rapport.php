@@ -74,7 +74,7 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
         analyses.parameter,
         analyses.technique,
         analyses.Used_norme,
-        analyses.analysis_time,
+        analyses.analyse_time,
         elementsdinteret.id AS element_id,
         elementsdinteret.elementDinteret,
         resultats.Unite,
@@ -83,7 +83,10 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
         resultats.Incertitude,
         resultats.Valeur_Norme_Utlise, 
         resultats.Observation,
-        last_conclusion.conclusion
+        last_conclusion.conclusion,
+        analyse_qualite.Reference_Materiel,
+        analyse_qualite.Valeur_Recommandee,
+        analyse_qualite.Valeur_Mesuree
     FROM clients 
     JOIN echantillons ON clients.id = echantillons.client_id 
     JOIN analyses ON echantillons.id = analyses.echantillon_id 
@@ -107,10 +110,10 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
             GROUP BY client_id, departement
         )
     ) last_conclusion ON clients.id = last_conclusion.client_id AND analyses.departement = last_conclusion.departement
+    LEFT JOIN analyse_qualite ON elementsdinteret.id = analyse_qualite.elementsdinteret_id
     WHERE clients.id = ? AND analyses.departement = ? AND 
     (analyses.validated = 'laboratory' OR analyses.validated = 'office_step_2')
 ";
-
 
     // Préparez et exécutez la requête pour les données du rapport
     if ($stmt = $conn->prepare($sql)) {
@@ -150,7 +153,7 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
                 'parameter' => $row['parameter'],
                 'technique' => $row['technique'],
                 'Used_norme' => $row['Used_norme'],
-                'analysis_time' => $row['analysis_time'],
+                'analyse_time' => $row['analyse_time'],
                 'element_id' => $row['element_id'],
                 'elementDinteret' => $row['elementDinteret'],
                 'Unite' => $row['Unite'],
@@ -158,7 +161,10 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
                 'Valeur_Norme_Utlise' => $row['Valeur_Norme_Utlise'],
                 'Limite_Detection' => $row['Limite_Detection'],
                 'Observation' => $row['Observation'],
-                'Incertitude' => $row['Incertitude']
+                'Incertitude' => $row['Incertitude'],
+                'Reference_Materiel' => $row['Reference_Materiel'],
+                'Valeur_Recommandee' => $row['Valeur_Recommandee'],
+                'Valeur_Mesuree' => $row['Valeur_Mesuree']
             ];
         }
         $stmt->close();

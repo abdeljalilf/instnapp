@@ -22,7 +22,7 @@ const Analyses = () => {
 
   const getStatusMessage = (validated) => {
     if (validated === 'office_step_1') {
-      return 'résultats à analyser';
+      return 'Analyse à effectuer';
     } else if (validated === 'office_reject') {
       return 'résultats à corriger';
     } else {
