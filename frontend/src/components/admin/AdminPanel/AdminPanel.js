@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, Outlet } from 'react-router-dom';
-import { AppBar, Toolbar, Button, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { AppBar, Toolbar, Button } from '@mui/material';
 import axios from 'axios';
 import './AdminPanel.css';
 
@@ -9,6 +9,7 @@ const AdminPanel = () => {
     const [form, setForm] = useState({ email: '', password: '', role: '', department: '' });
     const [isEditing, setIsEditing] = useState(false);
     const [editUserId, setEditUserId] = useState(null);
+    const [resetPassword, setResetPassword] = useState(false); // New state for reset password checkbox
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
     const apiUrl = `${apiBaseUrl}/instnapp/backend/routes/admin`;
     const session_id = localStorage.getItem('session_id');
@@ -40,6 +41,15 @@ const AdminPanel = () => {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setForm({ ...form, [name]: value });
+    };
+
+    const handleCheckboxChange = () => {
+        setResetPassword(!resetPassword);
+        if (!resetPassword) {
+            setForm({ ...form, password: 'instn' }); // Set password to "instn" if checkbox is checked
+        } else {
+            setForm({ ...form, password: '' }); // Clear password if checkbox is unchecked
+        }
     };
 
     const handleLogout = async () => {
@@ -75,6 +85,7 @@ const AdminPanel = () => {
             fetchUsers();
             setForm({ email: '', password: '', role: '', department: '' });
             setIsEditing(false);
+            setResetPassword(false); // Reset checkbox state
         } catch (error) {
             console.error('Error submitting form:', error);
         }
@@ -84,37 +95,63 @@ const AdminPanel = () => {
         setForm({ email: user.email, password: '', role: user.role, department: user.department || '' });
         setIsEditing(true);
         setEditUserId(user.id);
+        scrollToTop();
+    };
+
+    const handleChangePassword = () => {
+        navigate('/changePassword');
     };
 
     const handleDelete = async (id) => {
-        try {
-            await axios.post(`${apiUrl}/delete_user.php`, { id }, {
-                headers: {
-                    Authorization: session_id
-                }
-            });
-            fetchUsers();
-        } catch (error) {
-            console.error('Error deleting user:', error);
+        const confirmDelete = window.confirm(`Est-ce que vous confirmer la supression?`);
+        if (confirmDelete) {
+            try {
+                await axios.post(`${apiUrl}/delete_user.php`, { id }, {
+                    headers: {
+                        Authorization: session_id
+                    }
+                });
+                fetchUsers();
+            } catch (error) {
+                console.error('Error deleting user:', error);
+            }
         }
+    };
+
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     return (
         <div className="admin-panel">
-            <h2 className="form-header">Admin Panel
-            <Button color="inherit" onClick={handleLogout} className="logout-button">
-                        Logout
-                    </Button>
-            </h2>
+            <h2 className="form-header">
+            Admin 
+            <Button color="inherit" onClick={handleLogout} className="logout-button"> Logout
+                <i className="bi bi-box-arrow-right"></i> {/* Bootstrap logout icon */}
+            </Button>
+            <Button color="inherit" onClick={handleChangePassword} className="change-password-button"> Changer mot de passe
+                <i className="bi bi-lock"></i> {/* Bootstrap lock icon */}
+            </Button>
+             </h2>
             <form className="admin-form" onSubmit={handleSubmit}>
                 <label>Email:</label>
                 <input type="email" name="email" value={form.email} onChange={handleInputChange} placeholder="Email" required />
                 
-                {/* Show password field only when editing */}
+                {/* Checkbox for resetting password */}
                 {isEditing && (
                     <>
-                        <label>Mot de passe:</label>
-                        <input type="password" name="password" value={form.password} onChange={handleInputChange} placeholder="Password" />
+                      <div className='checkbox-container'>
+                        <label>
+                            Réinitialiser le mot de passe :
+                        </label>
+                        <input 
+                            type="checkbox" 
+                            className='checkbox-input'
+                            checked={resetPassword} 
+                            onChange={handleCheckboxChange}
+                        />
+                    </div>
+
                     </>
                 )}
 
@@ -140,8 +177,9 @@ const AdminPanel = () => {
                         </select>
                     </>
                 )}
-                
-                <button className="details-button-admin" type="submit">{isEditing ? 'Update User' : 'Add User'}</button>
+                <div className='button-container'>
+                    <button className="details-button-admin" type="submit">{isEditing ? 'Editer utilisateur' : 'Ajouter utilisateur'}</button>
+                </div>
             </form>
 
             <table className="styled-table">
@@ -160,9 +198,9 @@ const AdminPanel = () => {
                                 <td>{user.email}</td>
                                 <td>{user.role}</td>
                                 <td>{user.department || 'N/A'}</td>
-                                <td>
-                                    <button onClick={() => handleEdit(user)}>Edit</button>
-                                    <button onClick={() => handleDelete(user.id)}>Delete</button>
+                                <td className='button-container'>
+                                    <button className='button-admin-edit' onClick={() => handleEdit(user)}>Modifier</button>
+                                    <button className='button-admin-delete' onClick={() => handleDelete(user.id)}>Supprimer</button>
                                 </td>
                             </tr>
                         ))

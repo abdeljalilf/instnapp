@@ -23,11 +23,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $id = $data->id;
         $email = $data->email;
         $role = $data->role;
+        $password = isset($data->password) ? password_hash($data->password, PASSWORD_BCRYPT) : null; // Encrypt password if provided
         $department = isset($data->department) ? $data->department : null;
 
-        $sql = "UPDATE users SET email = ?, role = ?, department = ? WHERE id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param('sssi', $email, $role, $department, $id);
+        // Prepare the SQL statement
+        if ($password) {
+            $sql = "UPDATE users SET email = ?, role = ?, department = ?, password = ? WHERE id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param('ssssi', $email, $role, $department, $password, $id);
+        } else {
+            $sql = "UPDATE users SET email = ?, role = ?, department = ? WHERE id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param('sssi', $email, $role, $department, $id);
+        }
 
         if ($stmt->execute()) {
             echo json_encode(array('success' => true, 'message' => 'User updated successfully'));

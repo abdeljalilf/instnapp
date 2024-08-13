@@ -1,7 +1,10 @@
 <?php
 require_once '../../routes/login/session_util.php';
 require_once '../../database/db_connection.php';
+require_once '../../routes/login/session_util.php';
+require_once '../../database/db_connection.php';
 
+header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');

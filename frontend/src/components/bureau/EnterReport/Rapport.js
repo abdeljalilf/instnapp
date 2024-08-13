@@ -18,6 +18,7 @@ const Rapport = () => {
   const [N1, setN1] = useState(0);
   const [N2, setN2] = useState(0);
   const session_id = localStorage.getItem('session_id');
+  const session_id = localStorage.getItem('session_id');
 
 
   useEffect(() => {
