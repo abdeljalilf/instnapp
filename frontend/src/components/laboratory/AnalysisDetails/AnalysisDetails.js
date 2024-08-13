@@ -57,6 +57,12 @@ const AnalysisDetails = () => {
     setElementsResults(newResults);
   };
 
+  const handleQualiteChange = (index, field, value) => {
+    const newResults = [...qualiteResults];
+    newResults[index][field] = value;
+    setQualiteResults(newResults);
+  };
+
   const getValeurMoyenneOptions = (departement, analysisType) => {
     if (analysisType === 'Qualitative') {
       if (departement === 'TFXE') {
@@ -107,7 +113,7 @@ const AnalysisDetails = () => {
       elementsdinteretId: result.id,
       unite: result.unite,
       uniteAutre: result.uniteAutre,
-      valeurMoyenne: result.valeurMoyenne,
+      valeurMoyenne: result.status === 'non détectable' ? 'non détecté' : result.valeurMoyenne,
       incertitude: result.incertitude,
       limiteDetection: result.limiteDetection,
     }));
@@ -232,8 +238,8 @@ const AnalysisDetails = () => {
                       onChange={(e) => handleResultChange(index, 'status', e.target.value)}
                     >
                       <option value="">--Choisissez--</option> {/* Blank by default */}
-                      <option value="détectable">détectable</option>
-                      <option value="non détectable">non détectable</option>
+                      <option value="détectable">Détectable</option>
+                      <option value="non détectable">Non détectable</option>
                     </select>
                   </td>
                   <td>
@@ -241,44 +247,40 @@ const AnalysisDetails = () => {
                       value={result.unite}
                       onChange={(e) => handleResultChange(index, 'unite', e.target.value)}
                     >
-                      <option value="">--Choisissez une unité--</option>
-                      {getUnitOptions(analysisDetails.departement).map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
+                      <option value="">--Choisissez--</option>
+                      {getUnitOptions(analysisDetails.departement).map((unit) => (
+                        <option key={unit.value} value={unit.value}>
+                          {unit.label}
                         </option>
                       ))}
                     </select>
                     {result.unite === 'other' && (
                       <input
                         type="text"
-                        value={result.uniteAutre || ''}
+                        placeholder="Saisir unité"
+                        value={result.uniteAutre}
                         onChange={(e) => handleResultChange(index, 'uniteAutre', e.target.value)}
-                        className="custom-unit-input"
-                        placeholder="Saisir l'unité"
                       />
                     )}
                   </td>
                   <td>
-                    {analysisDetails.analysisType === 'Qualitative' ? (
+                    {result.status === 'détectable' ? (
                       <select
                         value={result.valeurMoyenne}
                         onChange={(e) => handleResultChange(index, 'valeurMoyenne', e.target.value)}
-                        disabled={result.status === 'non détectable'}
                       >
-                        <option value="">--Choisissez une valeur--</option>
-                        {getValeurMoyenneOptions(analysisDetails.departement, analysisDetails.analysisType).map((option) => (
-                          <option key={option} value={option}>
+                        <option value="">--Choisissez--</option>
+                        {getValeurMoyenneOptions(
+                          analysisDetails.departement,
+                          analysisDetails.analysisType
+                        ).map((option, idx) => (
+                          <option key={idx} value={option}>
                             {option}
                           </option>
                         ))}
                       </select>
                     ) : (
-                      <input
-                        type="text"
-                        value={result.valeurMoyenne}
-                        onChange={(e) => handleResultChange(index, 'valeurMoyenne', e.target.value)}
-                        disabled={result.status === 'non détectable'}
-                      />
+                      <input type="text" value="non détecté" disabled />
                     )}
                   </td>
                   {analysisDetails.analysisType === 'Quantitative' && (
@@ -293,7 +295,7 @@ const AnalysisDetails = () => {
                   )}
                   <td>
                     <input
-                      type="number"
+                      type="text"
                       value={result.limiteDetection}
                       onChange={(e) => handleResultChange(index, 'limiteDetection', e.target.value)}
                     />
@@ -324,28 +326,27 @@ const AnalysisDetails = () => {
                     <input
                       type="text"
                       value={result.referenceMateriel}
-                      onChange={(e) => handleResultChange(index, 'referenceMateriel', e.target.value)}
+                      onChange={(e) => handleQualiteChange(index, 'referenceMateriel', e.target.value)}
                     />
                   </td>
                   <td>
                     <select
                       value={result.unite}
-                      onChange={(e) => handleResultChange(index, 'unite', e.target.value)}
+                      onChange={(e) => handleQualiteChange(index, 'unite', e.target.value)}
                     >
-                      <option value="">--Choisissez une unité--</option>
-                      {getUnitOptions(analysisDetails.departement).map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
+                      <option value="">--Choisissez--</option>
+                      {getUnitOptions(analysisDetails.departement).map((unit) => (
+                        <option key={unit.value} value={unit.value}>
+                          {unit.label}
                         </option>
                       ))}
                     </select>
                     {result.unite === 'other' && (
                       <input
                         type="text"
-                        value={result.uniteAutre || ''}
-                        onChange={(e) => handleResultChange(index, 'uniteAutre', e.target.value)}
-                        className="custom-unit-input"
-                        placeholder="Saisir l'unité"
+                        placeholder="Saisir unité"
+                        value={result.uniteAutre}
+                        onChange={(e) => handleQualiteChange(index, 'uniteAutre', e.target.value)}
                       />
                     )}
                   </td>
@@ -353,14 +354,14 @@ const AnalysisDetails = () => {
                     <input
                       type="text"
                       value={result.valeurRecommandee}
-                      onChange={(e) => handleResultChange(index, 'valeurRecommandee', e.target.value)}
+                      onChange={(e) => handleQualiteChange(index, 'valeurRecommandee', e.target.value)}
                     />
                   </td>
                   <td>
                     <input
                       type="text"
                       value={result.valeurMesuree}
-                      onChange={(e) => handleResultChange(index, 'valeurMesuree', e.target.value)}
+                      onChange={(e) => handleQualiteChange(index, 'valeurMesuree', e.target.value)}
                     />
                   </td>
                 </tr>
@@ -369,13 +370,10 @@ const AnalysisDetails = () => {
           </table>
         </section>
 
-        <button onClick={handleSaveResults} className="save-button">
-          Sauvegarder les résultats
-        </button>
+        <button onClick={handleSaveResults}>Save Results</button>
       </div>
     </div>
   );
 };
 
 export default AnalysisDetails;
-                        
