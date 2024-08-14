@@ -59,7 +59,7 @@ const ChangePassword = () => {
     return (
         <div>
             <div className='instn-background'>
-                <img src={instnbackground} alt="INSTN Background" />
+                {/* <img src={instnbackground} alt="INSTN Background" /> */}
             </div>
             <div className="login-container">
                 <h2>Changer le mot de passe</h2>
@@ -112,7 +112,9 @@ const ChangePassword = () => {
                     </div>
                     {error && <div className="error">{error}</div>}
                     {success && <div className="success">{success}</div>}
-                    <button type="submit">Confirmer</button>
+                    <div className='button-container-login'>
+                        <button type="submit">Confirmer</button>
+                    </div>
                 </form>
             </div>
         </div>

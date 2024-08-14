@@ -255,7 +255,7 @@ const DemandesForm = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form className='reception-form' onSubmit={handleSubmit}>
             <div className="form-header">
                 <h2>Informations personnelles du client</h2>
             </div>

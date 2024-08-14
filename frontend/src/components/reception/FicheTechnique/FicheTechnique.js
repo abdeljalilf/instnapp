@@ -125,55 +125,57 @@ const FicheTechnique = () => {
                                 <div className="form-header-ft">
                                             <h2>Informations sur les échantillons</h2>
                                 </div>
+                                <div className="sample-section-ft">
                                 {demande.echantillons.map((echantillon, echantillonIndex) => (
-                                    <div key={echantillonIndex} className="sample-section">
-                                        <div className='test'>
-                                        <h3>Echantillon {echantillonIndex+1}:</h3>
-                                        <div className="form-group-ft">
-                                            <label> Reference de l'échantillon:</label>
-                                            <p>{echantillon.sampleReference}</p>
-                                        </div>
-                                        <div className="form-group-ft">
-                                            <label>Type d'échantillon:</label>
-                                            <p>{echantillon.sampleType}</p>
-                                        </div>
-                                        <div className="form-group-ft">
-                                            <label>Lieu de prélèvement:</label>
-                                            <p>{echantillon.samplingLocation}</p>
-                                        </div>
-                                        <div className="form-group-ft">
-                                            <label>Date de prélèvement:</label>
-                                            <p>{new Date(echantillon.samplingDate).toLocaleDateString()}</p>
-                                        </div>
-                                        <div className="form-group-ft">
-                                            <label>Prélevé par:</label>
-                                            <p>{echantillon.sampledBy}</p>
-                                        </div>
-                                        <div className="form-group-ft">
-                                            <label>Apporté par:</label>
-                                            <p>{echantillon.broughtBy}</p>
-                                        </div>
-                                        <div className="form-group-ft">
-                                            <label>Quantite de l'echantillon:</label>
-                                            <p>{echantillon.sampleSize}</p>
-                                        </div>
-                                        <div className="form-group-ft">
-                                            <label>Observations:</label>
-                                            <p>{echantillon.sampleObservations}</p>
-                                        </div>
-                                        {echantillon.analyses.map((analyse, analyseIndex) => (
-                                            <div key={analyseIndex} className="analysis-section">
-                                                <div className="form-group-ft">
-                                                    <label>Details sur l'analayse {analyseIndex+1}:</label>
-                                                    <p>Analyse {analyse.analysisType} de {analyse.parameter} par {analyse.technique} pour les elements : {analyse.elementsDinteret.map(e => e.elementDinteret).join(', ')}</p>
-                                                </div>
+                                    <div key={echantillonIndex} >
+                                        <div className='test-ft'>
+                                            <h3>Echantillon {echantillonIndex+1}:</h3>
+                                            <div className="form-group-ft">
+                                                <label> Reference de l'échantillon:</label>
+                                                <p>{echantillon.sampleReference}</p>
                                             </div>
-                                        ))}
+                                            <div className="form-group-ft">
+                                                <label>Type d'échantillon:</label>
+                                                <p>{echantillon.sampleType}</p>
+                                            </div>
+                                            <div className="form-group-ft">
+                                                <label>Lieu de prélèvement:</label>
+                                                <p>{echantillon.samplingLocation}</p>
+                                            </div>
+                                            <div className="form-group-ft">
+                                                <label>Date de prélèvement:</label>
+                                                <p>{new Date(echantillon.samplingDate).toLocaleDateString()}</p>
+                                            </div>
+                                            <div className="form-group-ft">
+                                                <label>Prélevé par:</label>
+                                                <p>{echantillon.sampledBy}</p>
+                                            </div>
+                                            <div className="form-group-ft">
+                                                <label>Apporté par:</label>
+                                                <p>{echantillon.broughtBy}</p>
+                                            </div>
+                                            <div className="form-group-ft">
+                                                <label>Quantite de l'echantillon:</label>
+                                                <p>{echantillon.sampleSize}</p>
+                                            </div>
+                                            <div className="form-group-ft">
+                                                <label>Observations:</label>
+                                                <p>{echantillon.sampleObservations}</p>
+                                            </div>
+                                            {echantillon.analyses.map((analyse, analyseIndex) => (
+                                                <div key={analyseIndex} className="analysis-section">
+                                                    <div className="form-group-ft">
+                                                        <label>Details sur l'analayse {analyseIndex+1}:</label>
+                                                        <p>Analyse {analyse.analysisType} de {analyse.parameter} par {analyse.technique} pour les elements : {analyse.elementsDinteret.map(e => e.elementDinteret).join(', ')}</p>
+                                                    </div>
+                                                </div>
+                                            ))}
                                         </div>
 
                                     </div>
                                     
                                 ))}
+                                </div>
                                 <div className="form-header-ft">
                                             <h2>Delais de livraison</h2>
                                 </div>

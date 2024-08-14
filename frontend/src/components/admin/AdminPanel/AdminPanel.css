@@ -1,13 +1,12 @@
 /* src/components/AdminPanel/AdminPanel.css */
 
 .admin-panel {
-    width: 90%;
-    margin: 50px auto;
+    max-width: 96%;
+    margin: 5px auto;
+    margin-top: 0;
     padding: 20px;
     border: 1px solid #ccc;
-    border-radius: 10px;
     background-color: rgba(255, 255, 255, 0.8); 
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     animation: fadeIn 1s ease-in-out;
 }
 
@@ -15,7 +14,12 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-bottom: 20px;
+    background-color: rgba(255, 255, 255, 0.8); /* Slightly opaque white background */
+    border-radius: 2px; /* Rounded corners */
+    padding: 20px; /* Add some padding for better spacing */
+    margin-bottom: 30px; /* Space below the form */
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.05); /* Subtle shadow for depth */
+    backdrop-filter: blur(5px); /* Slight blur effect for a smoother look */
 }
 
 .admin-form input,
@@ -27,28 +31,100 @@
 }
 
 .admin-panel .styled-table {
-    width: 100%;
+    max-width: 100%;
     border-collapse: collapse;
+    font-family: 'Arial', sans-serif; /* Use a consistent font */
+    background-color: #fff; /* Ensure the table background matches the page */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow to lift the table off the page */
+    border-radius: 8px; /* Rounded corners for a softer look */
+    overflow: hidden; /* Ensures rounded corners apply */
+}
+
+.admin-panel .styled-table thead {
+    background-color: #4CAF50; /* A fresh green color */
+    color: #fff; /* White text for contrast */
+    text-align: left;
+    font-weight: bold;
+    /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02); */
+    border-radius: 8px 8px 0 0; /* Rounded corners at the top */
+}
+
+.admin-panel .styled-table thead th {
+    padding: 16px;
+    font-size: 14px;
+    text-transform: uppercase; /* Make text uppercase for a modern look */
+    letter-spacing: 0.1em; /* Slight spacing between letters for readability */
+    transition: background-color 0.3s ease; /* Smooth background color transition */
+}
+
+.admin-panel .styled-table thead th:hover {
+    background-color: #e9f0fc; /* Slightly darker green on hover */
 }
 
 .admin-panel .styled-table th, .styled-table td {
-    padding: 12px;
-    text-align: left;
     border-bottom: 1px solid #ddd;
 }
 
-.admin-panel .styled-table tbody tr:hover {
-    background-color: rgba(63, 81, 181, 0.2);
-    cursor: pointer;
+.admin-panel .styled-table thead th:first-child {
+    border-top-left-radius: 8px; /* Rounded top-left corner */
+}
+
+.admin-panel .styled-table thead th:last-child {
+    border-top-right-radius: 8px; /* Rounded top-right corner */
+}
+
+
+.admin-panel .styled-table th, .admin-panel .styled-table td {
+    padding: 12px 15px; /* Slightly wider padding for better spacing */
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0; /* Lighten the border color for a more modern look */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition on hover */
 }
 
 .admin-panel .styled-table th {
-    background-color: #f2f2f2;
-    font-weight: bold;
+    background-color: #f9f9f9; /* Slightly lighter background for the header */
+    color: #333; /* Darker text color for better readability */
+    font-weight: 600; /* Bold the header text */
+    text-transform: uppercase; /* Make the header text uppercase */
+    letter-spacing: 0.05em; /* Add some spacing between letters */
     position: sticky;
     top: 0;
     z-index: 1;
 }
+
+.admin-panel .styled-table tbody tr:hover {
+    background-color: rgba(63, 81, 181, 0.1); /* Softer hover effect */
+    cursor: pointer;
+    transform: scale(1.02); /* Slightly enlarge the row on hover */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover effect */
+}
+
+.admin-panel .styled-table tbody tr:nth-child(even) {
+    background-color: #f3f3f3; /* Zebra striping for easier readability */
+}
+
+.admin-panel .styled-table tbody tr {
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transition for rows */
+}
+
+.admin-panel .styled-table td {
+    color: #555; /* Softer text color for readability */
+}
+
+.admin-panel .styled-table tbody tr:active {
+    background-color: rgba(63, 81, 181, 0.3); /* Darken the background on click */
+    transform: scale(0.98); /* Slightly shrink the row on click for feedback */
+    transition: transform 0.1s ease; /* Quick response on click */
+}
+
+.admin-panel .styled-table tbody tr.hover-edit {
+    background-color: rgba(76, 175, 80, 0.2); /* Green for edit hover */
+}
+
+.admin-panel .styled-table tbody tr.hover-delete {
+    background-color: rgba(244, 67, 54, 0.2); /* Red for delete hover */
+}
+
 
 .admin-panel .details-button-admin {
     display: inline-flex;
@@ -73,33 +149,39 @@
 
 .button-admin-edit{
     display: inline-flex;
-    padding: 10px 20px;
+    padding: 10px 30px;
     margin-right: 30px;
     font-size: 16px;
     border: none;
-    border-radius: 5px;
+    border-radius: 90px;
     background-color: #2e8b57;
     color: white;
     cursor: pointer;
     text-align: center;
     white-space: nowrap;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    transition: background-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+.button-admin-edit:hover,
+.button-admin-delete:hover{
+    transform: scale(1.05); /* Slightly enlarge the row on hover */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth hover effect */
 }
 
 .button-admin-delete{
     display: inline-flex;
-    padding: 10px 20px;
-    margin-right: 30px;
+    padding: 10px 30px;
+    margin-left: 30px;
     font-size: 16px;
     border: none;
-    border-radius: 5px;
-    background-color: #f90000;
+    border-radius: 90px;
+    background-color: #de0000c3;
     color: white;
     cursor: pointer;
     text-align: center;
     white-space: nowrap;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -111,6 +193,7 @@
     display: flex;
     align-items: center;
     justify-content: space-around;
+    margin: 0;
 }
 
 /* Styling for the checkbox container to align label and checkbox horizontally */
@@ -140,4 +223,43 @@
 /* Optional: Add some hover effects */
 .checkbox-input:hover {
     border-color: #0056b3; /* Darker shade of the theme color */
+}
+
+
+.edit-users-label{
+    padding: 1px;
+    border-radius: 5px 5px 0 0;
+    height:fit-content;
+    display: flex;
+    justify-content: center;
+    margin-top: -40px;
+    color: #2e8b57;
+}
+
+.details-button-admin:hover{
+    background-color: #1d6f40; /* Darker green for hover effect */
+    transform: scale(1.05);
+}
+
+/* Styles pour la liste déroulante */
+.admin-panel select {
+    border: 1px solid #2e8b57; /* Bordure avec couleur de thème */
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Transition pour la couleur et la transformation */
+    cursor: pointer;
+}
+
+/* Styles pour les options de la liste déroulante */
+.admin-panel option {
+    background-color: #1d6f40; /* Couleur d'arrière-plan pour les options */
+    color: white; /* Couleur du texte des options */
+}
+
+
+/* Effet de survol sur les options */
+.admin-panel select option:hover {
+    background-color: #154229; /* Couleur de survol plus sombre */
+    transform: scale(1.05); /* Effet de zoom lors du survol */
 }

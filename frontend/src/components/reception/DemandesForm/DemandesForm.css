@@ -9,7 +9,7 @@ body {
     background-position: center;
 }
 
-form {
+.reception-form {
     width: 90%;
     /* max-width: 800px; */
     margin: 50px auto;
@@ -50,10 +50,10 @@ label {
     color: #2e8b57; /* Vert */
 }
 
-input[type="text"],
-input[type="email"],
-input[type="date"],
-select {
+.reception-form input[type="text"],
+.reception-form input[type="email"],
+.reception-form input[type="date"],
+.reception-form select {
     width: 100%;
     padding: 8px;
     border: 1px solid #2e8b57; /* Vert */
@@ -62,7 +62,7 @@ select {
     transition: all 0.3s ease;
 }
 
-select {
+.reception-form select {
     appearance: none;
     /* background: url('path/to/dropdown-icon.png') no-repeat right #fff; */
     background-size: 12px;
@@ -70,7 +70,7 @@ select {
     animation: dropdownSlideIn 0.5s ease;
 }
 
-select:focus {
+.reception-form select:focus {
     background-color: #e0f7fa; /* Couleur de fond au focus */
     border-color: #238443; /* Bordure plus foncée au focus */
 }

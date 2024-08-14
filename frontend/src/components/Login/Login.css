@@ -1,111 +1,117 @@
 .instn-background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    /* background: url('../../images/INSTN-background.JPG') no-repeat center center; */
-    background-size: cover;
-    z-index: -1; /* Places the background behind other content */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0; /* Ensures the background covers from left to right */
+  bottom: 0; /* Ensures the background covers from top to bottom */
+  background: url("../../images/Batiment_INSTN-Madagascar.png") no-repeat center
+    center;
+  background-size: cover;
+  z-index: -1;
+  margin-left: -10px;
 }
 
 .login-container {
-    position: relative;
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 2rem;
-    background-color: rgba(247, 247, 247, 0.92); /* Adds a slight transparency */
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    z-index: 1; /* Ensures the login container is above the background */
+  position: relative;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: rgba(247, 247, 247, 0.92); /* Adds a slight transparency */
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1; /* Ensures the login container is above the background */
+  margin-top: 2%;
 }
 
+
 .instn-logo {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
 }
 
 .instn-logo img {
-    width: 100px; /* Adjust size as needed */
-    height: auto;
+  width: 100px; /* Adjust size as needed */
+  height: auto;
 }
 
 .login-container h2 {
-    margin-bottom: 1.5rem;
-    text-align: center;
+  margin-bottom: 1.5rem;
+  text-align: center;
 }
 
 .login-container form {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .login-container form div {
-    margin-bottom: 1rem;
+  margin-bottom: 1rem;
 }
 
 .login-container form label {
-    margin-bottom: 0.5rem;
-    font-weight: bold;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
 }
 
 .login-container form input {
-    padding: 0.5rem;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .login-container form button {
-    background-color: #2e8b57; /* Vert */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-    margin: 10px;
-    margin-bottom: 25px;
-    margin-left: 40%;
-    margin-right:40%;
-    padding: 10px 15px;
-    width: fit-content;
+  background-color: #2e8b57; /* Vert */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  margin: 10px;
+  margin-bottom: 25px;
+  padding: 10px 15px;
+  width: fit-content;
+}
+
+.button-container-login {
+  display: flex;
+  justify-content: center;
 }
 
 .login-container form button:hover {
-    background-color: #256f45;
+  background-color: #256f45;
 }
 
 .error {
-    color: red;
-    margin-top: 0.5rem;
-    text-align: center;
+  color: red;
+  margin-top: 0.5rem;
+  text-align: center;
 }
 
-.form-group-login{
-    width:100%;
+.form-group-login {
+  width: 100%;
 }
 
 .password-input-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .password-input-wrapper input {
-    flex: 1;
-    padding-right: 2rem; /* Space for the icon */
+  flex: 1;
+  padding-right: 2rem; /* Space for the icon */
 }
 
 .password-toggle-icon {
-    position: absolute;
-    right: 10px;
-    cursor: pointer;
-    color: #888; /* Customize the color of the icon */
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+  color: #888; /* Customize the color of the icon */
 }
 
 .password-toggle-icon:hover {
-    color: #333; /* Change color on hover */
+  color: #333; /* Change color on hover */
 }
-

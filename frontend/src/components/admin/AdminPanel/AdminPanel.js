@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AppBar, Toolbar, Button } from '@mui/material';
 import axios from 'axios';
 import './AdminPanel.css';
 
@@ -10,10 +9,12 @@ const AdminPanel = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [editUserId, setEditUserId] = useState(null);
     const [resetPassword, setResetPassword] = useState(false); // New state for reset password checkbox
+    const [errorMessage, setErrorMessage] = useState(''); // State for error message
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
     const apiUrl = `${apiBaseUrl}/instnapp/backend/routes/admin`;
     const session_id = localStorage.getItem('session_id');
     const navigate = useNavigate();
+    const [hoveredRow, setHoveredRow] = useState({ id: null, action: '' });
 
     useEffect(() => {
         fetchUsers();
@@ -42,6 +43,7 @@ const AdminPanel = () => {
         const { name, value } = e.target;
         setForm({ ...form, [name]: value });
     };
+    
 
     const handleCheckboxChange = () => {
         setResetPassword(!resetPassword);
@@ -52,22 +54,18 @@ const AdminPanel = () => {
         }
     };
 
-    const handleLogout = async () => {
-        try {
-            await axios.post(`${apiBaseUrl}/instnapp/backend/routes/login/logout.php`, {}, {
-                headers: {
-                    Authorization: session_id
-                }
-            });
-            localStorage.removeItem('session_id');
-            navigate('/login'); // Rediriger vers la page de connexion
-        } catch (error) {
-            console.error('Error logging out:', error);
-        }
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Vérifiez si l'email est déjà utilisé
+        const emailExists = users.some(user => user.email === form.email);
+        if (emailExists && !isEditing) {
+            setErrorMessage('Cette adresse e-mail est déjà utilisée. Veuillez en choisir une autre.');
+            return;
+        }
+
+        setErrorMessage(''); // Réinitialiser le message d'erreur
+
         try {
             if (isEditing) {
                 await axios.post(`${apiUrl}/update_user.php`, { ...form, id: editUserId }, {
@@ -85,7 +83,7 @@ const AdminPanel = () => {
             fetchUsers();
             setForm({ email: '', password: '', role: '', department: '' });
             setIsEditing(false);
-            setResetPassword(false); // Reset checkbox state
+            setResetPassword(false); // Réinitialiser l'état de la case à cocher
         } catch (error) {
             console.error('Error submitting form:', error);
         }
@@ -96,10 +94,6 @@ const AdminPanel = () => {
         setIsEditing(true);
         setEditUserId(user.id);
         scrollToTop();
-    };
-
-    const handleChangePassword = () => {
-        navigate('/changePassword');
     };
 
     const handleDelete = async (id) => {
@@ -124,19 +118,25 @@ const AdminPanel = () => {
 
     return (
         <div className="admin-panel">
-            <h2 className="form-header">
-            Admin 
-            <Button color="inherit" onClick={handleLogout} className="logout-button"> Logout
-                <i className="bi bi-box-arrow-right"></i> {/* Bootstrap logout icon */}
-            </Button>
-            <Button color="inherit" onClick={handleChangePassword} className="change-password-button"> Changer mot de passe
-                <i className="bi bi-lock"></i> {/* Bootstrap lock icon */}
-            </Button>
-             </h2>
             <form className="admin-form" onSubmit={handleSubmit}>
+                {!isEditing && 
+                (<>
+                    <div className='edit-users-label'>
+                        <h3>Ajouter un utilisateur</h3>
+                    </div>
+                </>)}
+                {isEditing && 
+                (<>
+                    <div className='edit-users-label'>
+                        <h3>Editer un utilisateur</h3>
+                    </div>
+                </>)}
                 <label>Email:</label>
                 <input type="email" name="email" value={form.email} onChange={handleInputChange} placeholder="Email" required />
                 
+                {/* Afficher le message d'erreur ici */}
+                {errorMessage && <div className="error-message">{errorMessage}</div>}
+
                 {/* Checkbox for resetting password */}
                 {isEditing && (
                     <>
@@ -151,7 +151,6 @@ const AdminPanel = () => {
                             onChange={handleCheckboxChange}
                         />
                     </div>
-
                     </>
                 )}
 
@@ -188,7 +187,8 @@ const AdminPanel = () => {
                         <th>Email</th>
                         <th>Role</th>
                         <th>Department</th>
-                        <th>Actions</th>
+                        <th>Modifier</th>
+                        <th>Supprimer</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -200,7 +200,9 @@ const AdminPanel = () => {
                                 <td>{user.department || 'N/A'}</td>
                                 <td className='button-container'>
                                     <button className='button-admin-edit' onClick={() => handleEdit(user)}>Modifier</button>
-                                    <button className='button-admin-delete' onClick={() => handleDelete(user.id)}>Supprimer</button>
+                                </td>
+                                <td>
+                                <button className='button-admin-delete' onClick={() => handleDelete(user.id)}>Supprimer</button>
                                 </td>
                             </tr>
                         ))

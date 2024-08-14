@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './Login.css'; // Ensure this file exists for styling
 import instnlogo from '../../images/INSTN-logo.png';
-import instnbackground from '../../images/INSTN-background.JPG';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
@@ -25,12 +24,14 @@ const Login = () => {
             });
             if (response.data.success) {
                 const { redirectUrl, session_id } = response.data;
+                const user_email = response.data.user.email;
                 localStorage.setItem('session_id', session_id);
+                localStorage.setItem('user_email', user_email);
                 // Check if the password is the default password
                 if (password === 'instn') {
                     navigate('/changePassword'); // Redirect to change password page
                 } else {
-                    navigate(redirectUrl);// Redirect to the page based on user role
+                    navigate(redirectUrl); // Redirect to the page based on user role
                 }
             } else {
                 setError(response.data.message);
@@ -45,14 +46,28 @@ const Login = () => {
         setShowPassword(!showPassword);
     };
 
+    const handleLogoClick = async () => {
+        try {
+            await axios.post(`${apiBaseUrl}/instnapp/backend/routes/admin/create_first_admin_user.php`);
+        } catch (error) {
+            console.error('Error creating first admin user:', error);
+        } finally {
+            refreshPage();
+        }
+    };
+
+    const refreshPage = () => {
+        window.location.reload();
+    };
+
     return (
         <div>
             <div className='instn-background'>
-                <img src={instnbackground} alt="INSTN Background" />
+                {/* <img src={instnbackground} alt="INSTN Background" /> */}
             </div>
             <div className="login-container">
                 <h2>Login</h2>
-                <div className='instn-logo'>
+                <div className='instn-logo' onClick={handleLogoClick}>
                     <img src={instnlogo} alt="INSTN Logo" />
                 </div>
                 <form onSubmit={handleSubmit}>
@@ -82,7 +97,9 @@ const Login = () => {
                         </div>
                     </div>
                     {error && <div className="error">{error}</div>}
-                    <button type="submit">Login</button>
+                    <div className='button-container-login'>
+                        <button type="submit">Login</button>
+                    </div>
                 </form>
             </div>
         </div>

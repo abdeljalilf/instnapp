@@ -29,7 +29,7 @@ import Login from './components/Login/Login';
 import ProtectedRoute from './components/Login/ProtectedRoute';
 import AdminPanel from './components/admin/AdminPanel/AdminPanel';
 import ChangePassword from './components/Login/ChangePassword';
-
+import AdminMainPage from './components/admin/AdminMainPage/AdminMainPage';
 
 const App = () => {
     return (
@@ -72,7 +72,9 @@ const App = () => {
                     <Route path="analyses/:selectedLabo" element={<AnalysisList />} /> {/* New route for AnalysisList */}
                     <Route path="analysis-details/:id" element={<AnalysisDetails />} />
                 </Route>
-                <Route path="/admin" element={<ProtectedRoute element={<AdminPanel />} roleRequired="admin" />} />
+                <Route path="/admin" element={<ProtectedRoute element={<AdminMainPage />} roleRequired="admin" />}>
+                    <Route index element={<ProtectedRoute element={<AdminPanel />} roleRequired="admin" />} />
+                </Route>
             </Routes>
         </Router>
     );
