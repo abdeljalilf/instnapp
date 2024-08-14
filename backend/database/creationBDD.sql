@@ -9,11 +9,10 @@ CREATE TABLE clients (
     phone VARCHAR(20) NOT NULL,
     email VARCHAR(255) NOT NULL,
     clientReference VARCHAR(255),
-    ref_client_ATN VARCHAR(255),
+    cle_client VARCHAR(255),
     dilevery_delay DATE NOT NULL,
     requestingDate DATE NOT NULL
 );
-ALTER TABLE clients ADD ref_client_ATN VARCHAR(155);
 
 CREATE TABLE echantillons (
     id INT AUTO_INCREMENT PRIMARY KEY,

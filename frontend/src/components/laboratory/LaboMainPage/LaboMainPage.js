@@ -16,7 +16,7 @@ const LaboMainPage = () => {
                     <Button color="inherit" variant="h6" className="main-page-title-reception" onClick={() => navigate('/')} >
                         Laboratoire
                     </Button>
-                    <Button color="inherit" onClick={() => navigate('/laboratoire')} className="main-button-finance">
+                    <Button color="inherit" onClick={() => navigate('/loboratoire')} className="main-button-finance">
                         Laboratoire
                     </Button>
                 </Toolbar>

@@ -154,7 +154,7 @@ const GenirateRapport = () => {
                     <p>
                         {data.ref_client_ATN &&(
                             <>
-                            <strong>Référence du client :</strong> {data.ref_client_ATN}
+                            <strong>Référence du client :</strong> {data.cle_client}
                             </> 
                         )}
                     </p>
