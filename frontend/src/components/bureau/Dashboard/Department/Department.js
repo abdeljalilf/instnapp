@@ -1,10 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 import { Bar } from 'react-chartjs-2';
-import 'chart.js/auto'; // Assure que tous les composants de Chart.js sont chargés
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import './Department.css'; // Ensure this is imported
 
-const Dashboard = ({ department }) => {
-    const [data, setData] = useState(null);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+
+const DepartmentDashboard = () => {
+    const { department } = useParams();
+    const [data, setData] = useState({
+        total_requests_3_months: 0,
+        reports_generated_3_months: 0,
+        reports_pending_3_months: 0,
+        sample_statistics_3_months: [],
+        analysis_statistics_3_months: [],
+        total_requests_year: 0,
+        reports_generated_year: 0,
+        reports_pending_year: 0,
+        sample_statistics_year: [],
+        analysis_statistics_year: [],
+        request_status: {}
+    });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const session_id = localStorage.getItem('session_id');
@@ -14,15 +31,14 @@ const Dashboard = ({ department }) => {
         const fetchData = async () => {
             try {
                 const response = await axios.get(`${apiBaseUrl}/instnapp/backend/routes/bureau/dashboard.php`, {
-                    params: { department }
-                }, {
+                    params: { department },
                     headers: {
                         Authorization: session_id
                     }
                 });
-                setData(response.data);
-            } catch (err) {
-                setError(err);
+                setData(response.data || {});
+            } catch (error) {
+                setError(error);
             } finally {
                 setLoading(false);
             }
@@ -31,100 +47,192 @@ const Dashboard = ({ department }) => {
         fetchData();
     }, [department]);
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error.message}</p>;
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error.message}</div>;
 
-    // Assurez-vous que data et ses sous-propriétés sont définies
-    const demandesParMois = data?.dataThreeMonths?.demandesParMois || [];
-    const echantillonsTroisMois = data?.dataThreeMonths?.echantillons || [];
-    const analysesTroisMois = data?.dataThreeMonths?.analyses || [];
-    const echantillonsAnnee = data?.dataYear?.echantillons || [];
-    const analysesAnnee = data?.dataYear?.analyses || [];
-    
-    const graphData = {
-        labels: demandesParMois.map(item => item.month),
+    const getStatusColor = (status, count) => {
+        if (status === 'completed' || status === 'pending_payment') return 'green';
+        if (status === 'awaiting_result_validation' || status === 'pending_office_validation') {
+            if (count < 4) return 'green';
+            if (count >= 5 && count <= 8) return 'orange';
+            return 'red';
+        }
+        if (status === 'in_analysis') return 'blue';
+        if (status === 'awaiting_result_review') return 'gray';
+        return 'white';
+    };
+
+    const statusContainers = [
+        { label: 'Demandes finies', key: 'completed' },
+        { label: 'En attente de paiement', key: 'pending_payment' },
+        { label: 'Rapports en attente', key: 'awaiting_result_validation' },
+        { label: 'En attente Validation bureau', key: 'pending_office_validation' },
+        { label: 'En cours d\'analyse', key: 'in_analysis' },
+        { label: 'En cours de révision', key: 'awaiting_result_review' }
+    ];
+
+    // Prepare data for charts
+    const sampleData = {
+        labels: data.sample_statistics_3_months.map(stat => stat.sampleType),
         datasets: [
             {
-                label: 'Nombre de demandes par mois',
-                data: demandesParMois.map(item => item.count),
+                label: 'Quantité',
+                data: data.sample_statistics_3_months.map(stat => stat.count),
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
+                borderWidth: 1,
             }
         ]
     };
 
-    // Données pour les statistiques
-    const stats = {
-        demandesTroisMois: data?.dataThreeMonths?.demandesTroisMois ?? 0,
-        demandesAnnee: data?.dataYear?.demandesAnnee ?? 0,
-        rapportsGeneresTroisMois: data?.dataThreeMonths?.rapportsGeneres ?? 0,
-        rapportsGeneresAnnee: data?.dataYear?.rapportsGeneres ?? 0,
-        rapportsAttenteTroisMois: data?.dataThreeMonths?.rapportsAttente ?? 0,
-        enAttentePayement: data?.statistics?.enAttentePayement ?? 0,
-        enAttenteValidationBureau: data?.statistics?.enAttenteValidationBureau ?? 0,
-        enCoursAnalyse: data?.statistics?.enCoursAnalyse ?? 0,
-        enAttenteValidationResultats: data?.statistics?.enAttenteValidationResultats ?? 0,
-        finies: data?.statistics?.finies ?? 0
+    const analysisData = {
+        labels: data.analysis_statistics_3_months.map(stat => stat.analysisType),
+        datasets: [
+            {
+                label: 'Quantité',
+                data: data.analysis_statistics_3_months.map(stat => stat.count),
+                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                borderColor: 'rgba(153, 102, 255, 1)',
+                borderWidth: 1,
+            }
+        ]
+    };
+
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false,
+            },
+            tooltip: {
+                callbacks: {
+                    label: (context) => `Quantité: ${context.raw}`,
+                },
+            },
+        },
+        scales: {
+            x: {
+                ticks: {
+                    font: {
+                        size: 10,
+                    },
+                },
+                grid: {
+                    display: false,
+                },
+            },
+            y: {
+                ticks: {
+                    font: {
+                        size: 10,
+                    },
+                },
+                grid: {
+                    display: true,
+                },
+            },
+        },
     };
 
     return (
-        <div className="dashboard">
-            <h1>Tableau de Bord - Département {department}</h1>
+        <div>
+            <h1>Dashboard for {department} Department</h1>
 
-            <section>
-                <h2>Sur les Trois Derniers Mois</h2>
-                <p><strong>Nombre de Demandes Reçues :</strong> {stats.demandesTroisMois}</p>
-                <p><strong>Nombre de Rapports Générés :</strong> {stats.rapportsGeneresTroisMois}</p>
-                <p><strong>Nombre de Rapports en Attente :</strong> {stats.rapportsAttenteTroisMois}</p>
-                <h3>Statistiques sur les Échantillons par Type</h3>
-                <ul>
-                    {echantillonsTroisMois.map((item, index) => (
-                        <li key={index}>{item.sampleType}: {item.count}</li>
-                    ))}
-                </ul>
-                <h3>Statistiques sur les Analyses par Type</h3>
-                <ul>
-                    {analysesTroisMois.map((item, index) => (
-                        <li key={index}>{item.analysisType}: {item.count}</li>
-                    ))}
-                </ul>
+            {/* Request Status Breakdown */}
+            <div className="status-container">
+                {statusContainers.map(({ label, key }) => {
+                    const count = data.request_status[key] || 0;
+                    return (
+                        <div 
+                            key={key}
+                            className="status-item"
+                            style={{ backgroundColor: getStatusColor(key, count) }}
+                        >
+                            <div className="status-label">{label}</div>
+                            <div className="status-count-container">
+                                <div className="status-count">{count}</div>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+
+            <section className="stats-section">
+                <h1>Statistiques Derniers 3 mois</h1>
+                
+                <div className="stats-summary">
+                    <div className="stats-summary-item">
+                        <h2>Nombre Demande Reçue (Derniers 3 mois)</h2>
+                        <div className="stats-count">{data.total_requests_3_months}</div>
+                    </div>
+                    <div className="stats-summary-item">
+                        <h2>Nombre Rapport Généré (Derniers 3 mois)</h2>
+                        <div className="stats-count">{data.reports_generated_3_months}</div>
+                    </div>
+                </div>
+                
+                <div className="stats-group">
+                    <h2>Statistiques sur les Échantillons par Type (Derniers 3 mois)</h2>
+                    <div className="chart-container">
+                        <Bar data={sampleData} options={chartOptions} height={200} />
+                    </div>
+                </div>
+
+                <div className="stats-group">
+                    <h2>Statistiques sur les Analyses par Type (Derniers 3 mois)</h2>
+                    <div className="chart-container">
+                        <Bar data={analysisData} options={chartOptions} height={200} />
+                    </div>
+                </div>
             </section>
 
-            <section>
-                <h2>Sur l'Année</h2>
-                <p><strong>Nombre de Demandes Reçues :</strong> {stats.demandesAnnee}</p>
-                <p><strong>Nombre de Rapports Générés :</strong> {stats.rapportsGeneresAnnee}</p>
-                <h3>Statistiques sur les Échantillons par Type</h3>
-                <ul>
-                    {echantillonsAnnee.map((item, index) => (
-                        <li key={index}>{item.sampleType}: {item.count}</li>
-                    ))}
-                </ul>
-                <h3>Statistiques sur les Analyses par Type</h3>
-                <ul>
-                    {analysesAnnee.map((item, index) => (
-                        <li key={index}>{item.analysisType}: {item.count}</li>
-                    ))}
-                </ul>
-            </section>
+            <section className="stats-section">
+                <h1>Statistiques Annuelles</h1>
+                
+                <div className="stats-summary">
+                    <div className="stats-summary-item">
+                        <h2>Nombre Demande Reçue (Année)</h2>
+                        <div className="stats-count">{data.total_requests_year}</div>
+                    </div>
+                    <div className="stats-summary-item">
+                        <h2>Nombre Rapport Généré (Année)</h2>
+                        <div className="stats-count">{data.reports_generated_year}</div>
+                    </div>
+                    <div className="stats-summary-item">
+                        <h2>Nombre Rapport en Attente (Année)</h2>
+                        <div className="stats-count">{data.reports_pending_year}</div>
+                    </div>
+                </div>
+                
+                <div className="stats-group">
+                    <h2>Statistiques sur les Échantillons par Type (Année)</h2>
+                    <ul className="stats-list">
+                        {Array.isArray(data.sample_statistics_year) && data.sample_statistics_year.length > 0 ? (
+                            data.sample_statistics_year.map((stat, index) => (
+                                <li key={index}>{stat.sampleType}: {stat.count}</li>
+                            ))
+                        ) : (
+                            <li>No data available</li>
+                        )}
+                    </ul>
+                </div>
 
-            <section>
-                <h2>Graphique du Nombre de Demandes par Mois</h2>
-                <Bar data={graphData} options={{ responsive: true, plugins: { legend: { position: 'top' } } }} />
-            </section>
-
-            <section>
-                <h2>Status des Demandes</h2>
-                <ul>
-                    <li><strong>En Attente de Paiement :</strong> {stats.enAttentePayement}</li>
-                    <li><strong>En Attente de Validation Bureau :</strong> {stats.enAttenteValidationBureau}</li>
-                    <li><strong>En Cours d'Analyse :</strong> {stats.enCoursAnalyse}</li>
-                    <li><strong>En Attente de Validation des Résultats :</strong> {stats.enAttenteValidationResultats}</li>
-                    <li><strong>Finies :</strong> {stats.finies}</li>
-                </ul>
+                <div className="stats-group">
+                    <h2>Statistiques sur les Analyses par Type (Année)</h2>
+                    <ul className="stats-list">
+                        {Array.isArray(data.analysis_statistics_year) && data.analysis_statistics_year.length > 0 ? (
+                            data.analysis_statistics_year.map((stat, index) => (
+                                <li key={index}>{stat.analysisType}: {stat.count}</li>
+                            ))
+                        ) : (
+                            <li>No data available</li>
+                        )}
+                    </ul>
+                </div>
             </section>
         </div>
     );
 };
-export default Dashboard;
+
+export default DepartmentDashboard;

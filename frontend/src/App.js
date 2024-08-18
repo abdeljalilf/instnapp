@@ -53,7 +53,7 @@ const App = () => {
                 </Route>
                 <Route path="/bureau" element={<LaboratoryMainPage />} />
                 <Route path="/bureau/:department" element={<LaboratoryMainPage />}>
-                    <Route index element={<Dashboard />} /> {/* Default route */}
+                    <Route index element={<NewRequests />} /> {/* Default route */}
                     <Route path="new-requests" element={<NewRequests />} />
                     <Route path="processed-requests" element={<ProcessedRequests />} />
                     <Route path="dashboard" element={<Dashboard />}>

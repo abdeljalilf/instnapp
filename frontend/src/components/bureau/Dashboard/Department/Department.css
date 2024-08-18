@@ -1,31 +1,83 @@
-.dashboard {
-    padding: 20px;
-    background-color: #f4f4f4;
-}
-
-.dashboard h1 {
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #333;
-}
-
-.chart-container {
+/* Statut des demandes */
+.status-container {
     display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    background-color: white;
+    padding: 10px;
 }
 
-.chart {
+.status-item {
     flex: 1;
-    min-width: 300px;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    margin: 0 5px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Distributes space between items */
 }
 
-.chart h2 {
-    margin-bottom: 15px;
-    font-size: 18px;
-    color: #555;
+.status-label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: white;
+    text-align: center; /* Center the text */
 }
+
+.status-count-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end; /* Align the number container at the bottom */
+}
+
+.status-count {
+    width: 50px;
+    text-align: center;
+    background-color: white;
+    color: black;
+    border-radius: 5px;
+    padding: 5px;
+    font-weight: bold;
+}
+
+/* Section des statistiques */
+.stats-section {
+    margin: 20px 0;
+}
+
+.stats-summary {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+.stats-summary-item {
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f0f0f0;
+    text-align: center;
+    font-weight: bold;
+}
+
+.summary-number {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Styles pour les graphiques */
+.bar-chart-container {
+    width: 100%;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.bar-chart {
+    width: 100%;
+    height: auto;
+}
+
+.chart-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
