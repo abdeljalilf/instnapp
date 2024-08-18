@@ -4,7 +4,11 @@ import { useParams } from 'react-router-dom';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import './Department.css';
+import moment from 'moment';
+import 'moment/locale/fr'; // Import French locale
 
+// Set the locale to French
+moment.locale('fr');
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const DepartmentDashboard = () => {
@@ -20,7 +24,8 @@ const DepartmentDashboard = () => {
         reports_pending_year: 0,
         sample_statistics_year: [],
         analysis_statistics_year: [],
-        request_status: {}
+        request_status: {},
+        monthly_requests: [] // Add this line
     });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -123,6 +128,19 @@ const DepartmentDashboard = () => {
         ]
     };
 
+    const monthlyRequestsData = {
+        labels: data.monthly_requests.map(req => moment(req.month, 'YYYY-MM').format('MMMM YYYY').toUpperCase()),
+        datasets: [
+            {
+                label: 'Nombre de Demandes',
+                data: data.monthly_requests.map(req => req.total_requests),
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1,
+            }
+        ]
+    };
+
     const chartOptions = {
         responsive: true,
         maintainAspectRatio: false,
@@ -132,7 +150,7 @@ const DepartmentDashboard = () => {
             },
             tooltip: {
                 callbacks: {
-                    label: (context) => `Quantité: ${context.raw}`,
+                    label: (context) => `${context.raw}`,
                 },
             },
         },
@@ -140,7 +158,7 @@ const DepartmentDashboard = () => {
             x: {
                 ticks: {
                     font: {
-                        size: 10,
+                        size: 14, // Taille du texte pour les étiquettes des mois en pixels
                     },
                 },
                 grid: {
@@ -150,7 +168,7 @@ const DepartmentDashboard = () => {
             y: {
                 ticks: {
                     font: {
-                        size: 10,
+                        size: 12, // Taille du texte pour les étiquettes des quantités
                     },
                 },
                 grid: {
@@ -161,7 +179,7 @@ const DepartmentDashboard = () => {
     };
 
     return (
-        <div>
+        <div className="departement-dashboard-container">
             <h1>Dashboard for {department} Department</h1>
 
             {/* Request Status Breakdown */}
@@ -169,7 +187,7 @@ const DepartmentDashboard = () => {
                 {statusContainers.map(({ label, key }) => {
                     const count = data.request_status[key] || 0;
                     return (
-                        <div 
+                        <div
                             key={key}
                             className="status-item"
                             style={{ backgroundColor: getStatusColor(key, count) }}
@@ -184,27 +202,27 @@ const DepartmentDashboard = () => {
             </div>
 
             {/* Three-Month Statistics */}
-            <section className="stats-section">
-                <h1>Statistiques Derniers 3 mois</h1>
-                
-                <div className="stats-summary">
-                    <div className="stats-summary-item">
-                        <h2>Nombre Demande Reçue (Derniers 3 mois)</h2>
-                        <div className="stats-count">{data.total_requests_3_months}</div>
+            <section className="stats-trim-section">
+                <h1>Statistiques des 3 derniers mois</h1>
+
+                <div className="stats-trim-summary">
+                    <div className="stats-trim-summary-item">
+                        <h2>Nombre Demande Reçue </h2>
+                        <div className="stats-trim-count">{data.total_requests_3_months}</div>
                     </div>
-                    <div className="stats-summary-item">
-                        <h2>Nombre Rapport Généré (Derniers 3 mois)</h2>
-                        <div className="stats-count">{data.reports_generated_3_months}</div>
+                    <div className="stats-trim-summary-item">
+                        <h2>Nombre Rapport Généré </h2>
+                        <div className="stats-trim-count">{data.reports_generated_3_months}</div>
                     </div>
                 </div>
-                
-                <div className="stats-graphs">
-                    <div className="chart-container-small">
+
+                <div className="stats-trim-graphs">
+                    <div className="chart-trim-container">
                         <h2>Échantillons par Type</h2>
                         <Bar data={sampleData3Months} options={chartOptions} />
                     </div>
 
-                    <div className="chart-container-small">
+                    <div className="chart-trim-container">
                         <h2>Analyses par Type</h2>
                         <Bar data={analysisData3Months} options={chartOptions} />
                     </div>
@@ -214,7 +232,7 @@ const DepartmentDashboard = () => {
             {/* Annual Statistics */}
             <section className="stats-annuelle-section">
                 <h1>Statistiques Annuelles</h1>
-                
+
                 <div className="stats-annuelle-summary">
                     <div className="stats-annuelle-summary-item">
                         <h2>Nombre Demande Reçue (Année)</h2>
@@ -225,17 +243,22 @@ const DepartmentDashboard = () => {
                         <div className="stats-annuelle-count">{data.reports_generated_year}</div>
                     </div>
                 </div>
-                
+
                 <div className="stats-annuelle-graphs">
-                    <div className="chart-container-small">
+                    <div className="chart-annuelle-container">
                         <h2>Échantillons par Type (Année)</h2>
                         <Bar data={sampleDataYear} options={chartOptions} />
                     </div>
 
-                    <div className="chart-container-small">
+                    <div className="chart-annuelle-container">
                         <h2>Analyses par Type (Année)</h2>
                         <Bar data={analysisDataYear} options={chartOptions} />
                     </div>
+                </div>
+                
+                <div className="monthly-requests-graph">
+                    <h2>Nombre des Demandes par Mois</h2>
+                    <Bar data={monthlyRequestsData} options={chartOptions} />
                 </div>
             </section>
         </div>

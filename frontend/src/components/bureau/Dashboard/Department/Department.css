@@ -1,8 +1,25 @@
+.departement-dashboard-container {
+    margin: 0px ;
+    max-width: 100%;
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: auto;
+     display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
 /* Status Container */
 .status-container {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     background-color: white;
     padding: 10px;
 }
@@ -42,81 +59,71 @@
 
 
 /* Statistics Section */
-.stats-trim-section {
-    margin-bottom: 30px;
-    background-color: white;
-}
-
-.stats-summary {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-}
-
-.stats-summary-item {
-    flex: 1;
-    padding: 10px;
-    background-color: #f5f5f5;
-    margin: 0 10px;
-    border-radius: 5px;
-    text-align: center;
-}
-
-.stats-count {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-/* Graphs Side by Side */
-.stats-graphs {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    align-items: flex-start;
-}
-
-.chart-container-small {
-    flex: 1;
-    max-width: 48%;
-    height: 250px; /* Reduced height */
-}
 /* Annual Statistics Section */
-.stats-annuelle-section {
-    margin-bottom: 30px;
+.stats-annuelle-section ,
+.stats-trim-section{
+    display: flex;
+    flex-direction: column;
+    align-items: space-between;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-bottom: 10px;
     background-color: white;
     padding: 20px;
 }
 
-.stats-annuelle-summary {
+.stats-annuelle-summary ,
+.stats-trim-summary{
     display: flex;
     justify-content: space-between;
     margin-bottom: 20px;
 }
 
-.stats-annuelle-summary-item {
+.stats-annuelle-summary-item ,
+.stats-trim-summary-item{
     flex: 1;
-    padding: 10px;
-    background-color: #f5f5f5;
+    padding: 6px;
+    background-color: #2cb185;
     margin: 0 10px;
     border-radius: 5px;
     text-align: center;
 }
 
-.stats-annuelle-count {
+.stats-annuelle-count ,
+.stats-trim-count {
     font-size: 20px;
     font-weight: bold;
 }
 
 /* Graphs Side by Side for Annual Data */
-.stats-annuelle-graphs {
+.stats-annuelle-graphs ,
+.stats-trim-graphs {
     display: flex;
     justify-content: space-between;
-    gap: 20px;
+    gap: 0px;
     align-items: flex-start;
 }
 
-.chart-container-small {
+.chart-annuelle-container ,
+.chart-trim-container{
+    margin-bottom: 60px;
     flex: 1;
     max-width: 48%;
-    height: 250px; /* Reduced height */
+    height: 200px; /* Reduced height */
+}
+
+.monthly-request-section{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0px;
+    margin-bottom: 10px;
+    background-color: white;
+    padding: 10px;
+}
+.chart-monthly-container {
+    flex: 1;
+    margin-bottom: 20px;
+    max-width: 95%;
+    height: 250px;
 }

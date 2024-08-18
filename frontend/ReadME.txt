@@ -1,2 +1,3 @@
 avant de lancer, il faut installer:
-npm install @fortawesome/react-fontawesome @fortawesome/free-sol
+npm install recharts
+npm install moment
