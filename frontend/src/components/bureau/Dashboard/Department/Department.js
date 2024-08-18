@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
-import './Department.css'; // Ensure this is imported
+import './Department.css';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -71,8 +71,7 @@ const DepartmentDashboard = () => {
         { label: 'En cours de révision', key: 'awaiting_result_review' }
     ];
 
-    // Prepare data for charts
-    const sampleData = {
+    const sampleData3Months = {
         labels: data.sample_statistics_3_months.map(stat => stat.sampleType),
         datasets: [
             {
@@ -85,12 +84,38 @@ const DepartmentDashboard = () => {
         ]
     };
 
-    const analysisData = {
+    const analysisData3Months = {
         labels: data.analysis_statistics_3_months.map(stat => stat.analysisType),
         datasets: [
             {
                 label: 'Quantité',
                 data: data.analysis_statistics_3_months.map(stat => stat.count),
+                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                borderColor: 'rgba(153, 102, 255, 1)',
+                borderWidth: 1,
+            }
+        ]
+    };
+
+    const sampleDataYear = {
+        labels: data.sample_statistics_year.map(stat => stat.sampleType),
+        datasets: [
+            {
+                label: 'Quantité',
+                data: data.sample_statistics_year.map(stat => stat.count),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+            }
+        ]
+    };
+
+    const analysisDataYear = {
+        labels: data.analysis_statistics_year.map(stat => stat.analysisType),
+        datasets: [
+            {
+                label: 'Quantité',
+                data: data.analysis_statistics_year.map(stat => stat.count),
                 backgroundColor: 'rgba(153, 102, 255, 0.2)',
                 borderColor: 'rgba(153, 102, 255, 1)',
                 borderWidth: 1,
@@ -158,6 +183,7 @@ const DepartmentDashboard = () => {
                 })}
             </div>
 
+            {/* Three-Month Statistics */}
             <section className="stats-section">
                 <h1>Statistiques Derniers 3 mois</h1>
                 
@@ -172,63 +198,44 @@ const DepartmentDashboard = () => {
                     </div>
                 </div>
                 
-                <div className="stats-group">
-                    <h2>Statistiques sur les Échantillons par Type (Derniers 3 mois)</h2>
-                    <div className="chart-container">
-                        <Bar data={sampleData} options={chartOptions} height={200} />
+                <div className="stats-graphs">
+                    <div className="chart-container-small">
+                        <h2>Échantillons par Type</h2>
+                        <Bar data={sampleData3Months} options={chartOptions} />
                     </div>
-                </div>
 
-                <div className="stats-group">
-                    <h2>Statistiques sur les Analyses par Type (Derniers 3 mois)</h2>
-                    <div className="chart-container">
-                        <Bar data={analysisData} options={chartOptions} height={200} />
+                    <div className="chart-container-small">
+                        <h2>Analyses par Type</h2>
+                        <Bar data={analysisData3Months} options={chartOptions} />
                     </div>
                 </div>
             </section>
 
-            <section className="stats-section">
+            {/* Annual Statistics */}
+            <section className="stats-annuelle-section">
                 <h1>Statistiques Annuelles</h1>
                 
-                <div className="stats-summary">
-                    <div className="stats-summary-item">
+                <div className="stats-annuelle-summary">
+                    <div className="stats-annuelle-summary-item">
                         <h2>Nombre Demande Reçue (Année)</h2>
-                        <div className="stats-count">{data.total_requests_year}</div>
+                        <div className="stats-annuelle-count">{data.total_requests_year}</div>
                     </div>
-                    <div className="stats-summary-item">
+                    <div className="stats-annuelle-summary-item">
                         <h2>Nombre Rapport Généré (Année)</h2>
-                        <div className="stats-count">{data.reports_generated_year}</div>
-                    </div>
-                    <div className="stats-summary-item">
-                        <h2>Nombre Rapport en Attente (Année)</h2>
-                        <div className="stats-count">{data.reports_pending_year}</div>
+                        <div className="stats-annuelle-count">{data.reports_generated_year}</div>
                     </div>
                 </div>
                 
-                <div className="stats-group">
-                    <h2>Statistiques sur les Échantillons par Type (Année)</h2>
-                    <ul className="stats-list">
-                        {Array.isArray(data.sample_statistics_year) && data.sample_statistics_year.length > 0 ? (
-                            data.sample_statistics_year.map((stat, index) => (
-                                <li key={index}>{stat.sampleType}: {stat.count}</li>
-                            ))
-                        ) : (
-                            <li>No data available</li>
-                        )}
-                    </ul>
-                </div>
+                <div className="stats-annuelle-graphs">
+                    <div className="chart-container-small">
+                        <h2>Échantillons par Type (Année)</h2>
+                        <Bar data={sampleDataYear} options={chartOptions} />
+                    </div>
 
-                <div className="stats-group">
-                    <h2>Statistiques sur les Analyses par Type (Année)</h2>
-                    <ul className="stats-list">
-                        {Array.isArray(data.analysis_statistics_year) && data.analysis_statistics_year.length > 0 ? (
-                            data.analysis_statistics_year.map((stat, index) => (
-                                <li key={index}>{stat.analysisType}: {stat.count}</li>
-                            ))
-                        ) : (
-                            <li>No data available</li>
-                        )}
-                    </ul>
+                    <div className="chart-container-small">
+                        <h2>Analyses par Type (Année)</h2>
+                        <Bar data={analysisDataYear} options={chartOptions} />
+                    </div>
                 </div>
             </section>
         </div>

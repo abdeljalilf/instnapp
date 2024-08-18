@@ -1,4 +1,4 @@
-/* Statut des demandes */
+/* Status Container */
 .status-container {
     display: flex;
     justify-content: space-between;
@@ -14,20 +14,20 @@
     border-radius: 5px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Distributes space between items */
+    justify-content: space-between;
 }
 
 .status-label {
     margin-bottom: 5px;
     font-weight: bold;
     color: white;
-    text-align: center; /* Center the text */
+    text-align: center;
 }
 
 .status-count-container {
     display: flex;
     justify-content: center;
-    align-items: flex-end; /* Align the number container at the bottom */
+    align-items: flex-end;
 }
 
 .status-count {
@@ -40,44 +40,83 @@
     font-weight: bold;
 }
 
-/* Section des statistiques */
-.stats-section {
-    margin: 20px 0;
+
+/* Statistics Section */
+.stats-trim-section {
+    margin-bottom: 30px;
+    background-color: white;
 }
 
 .stats-summary {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     margin-bottom: 20px;
 }
 
 .stats-summary-item {
+    flex: 1;
     padding: 10px;
+    background-color: #f5f5f5;
+    margin: 0 10px;
     border-radius: 5px;
-    background-color: #f0f0f0;
     text-align: center;
+}
+
+.stats-count {
+    font-size: 20px;
     font-weight: bold;
 }
 
-.summary-number {
-    font-size: 24px;
-    font-weight: bold;
+/* Graphs Side by Side */
+.stats-graphs {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: flex-start;
 }
 
-/* Styles pour les graphiques */
-.bar-chart-container {
-    width: 100%;
-    height: auto;
+.chart-container-small {
+    flex: 1;
+    max-width: 48%;
+    height: 250px; /* Reduced height */
+}
+/* Annual Statistics Section */
+.stats-annuelle-section {
+    margin-bottom: 30px;
+    background-color: white;
+    padding: 20px;
+}
+
+.stats-annuelle-summary {
+    display: flex;
+    justify-content: space-between;
     margin-bottom: 20px;
 }
 
-.bar-chart {
-    width: 100%;
-    height: auto;
+.stats-annuelle-summary-item {
+    flex: 1;
+    padding: 10px;
+    background-color: #f5f5f5;
+    margin: 0 10px;
+    border-radius: 5px;
+    text-align: center;
 }
 
-.chart-title {
+.stats-annuelle-count {
+    font-size: 20px;
     font-weight: bold;
-    margin-bottom: 10px;
 }
 
+/* Graphs Side by Side for Annual Data */
+.stats-annuelle-graphs {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.chart-container-small {
+    flex: 1;
+    max-width: 48%;
+    height: 250px; /* Reduced height */
+}
