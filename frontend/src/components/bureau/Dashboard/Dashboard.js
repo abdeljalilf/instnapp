@@ -1,21 +1,23 @@
-// src/components/bureau/Dashboard/Dashboard.js
-
 import React from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useParams } from 'react-router-dom';
+import { FaFlask, FaUniversity, FaArchive } from 'react-icons/fa'; // Import the icons
 import './Dashboard.css';
 
 const Dashboard = () => {
+    const { department } = useParams();
+
     return (
         <div className="dashboard-container">
             <div className="sidebar">
                 <ul>
                     <li>
                         <NavLink 
-                            to="department" 
+                            to={department} 
                             className={({ isActive }) => (isActive ? 'active' : '')} 
                             data-tooltip="Department"
                         >
-                            Department
+                            <FaFlask className="icon" />
+                            <span>{department}</span>
                         </NavLink>
                     </li>
                     <li>
@@ -24,16 +26,18 @@ const Dashboard = () => {
                             className={({ isActive }) => (isActive ? 'active' : '')} 
                             data-tooltip="INSTN"
                         >
-                            INSTN
+                            <FaUniversity className="icon" />
+                            <span>INSTN</span>
                         </NavLink>
                     </li>
                     <li>
                         <NavLink 
                             to="archive" 
                             className={({ isActive }) => (isActive ? 'active' : '')} 
-                            data-tooltip="dashboard/Archive"
+                            data-tooltip="Archive"
                         >
-                            Archive
+                            <FaArchive className="icon" />
+                            <span>Archive</span>
                         </NavLink>
                     </li>
                 </ul>

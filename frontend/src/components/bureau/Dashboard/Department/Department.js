@@ -62,8 +62,8 @@ const DepartmentDashboard = () => {
             if (count >= 5 && count <= 8) return 'orange';
             return 'red';
         }
-        if (status === 'in_analysis') return 'blue';
-        if (status === 'awaiting_result_review') return 'gray';
+        if (status === 'in_analysis') return 'green';
+        if (status === 'awaiting_result_review') return 'green';
         return 'white';
     };
 

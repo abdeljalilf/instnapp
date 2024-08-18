@@ -59,7 +59,7 @@ const App = () => {
                     <Route path="dashboard" element={<Dashboard />}>
                         {/* Additional Dashboard Routes */}
                         <Route path="instn" element={<INSTN />} />
-                        <Route path="department" element={<Department />} />
+                        <Route path=":department" element={<Department />} />
                         <Route path="archive" element={<Archive />} />
                     </Route>
                     <Route path="request/:id" element={<RequestDetails />} />

@@ -3,12 +3,16 @@
 .dashboard-container {
   display: flex;
   height: 100vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .sidebar {
-  width: 150px;
-  background-color: #17a142;
+  width: 110px;
+  background-color: #2cb185;
   padding: 2px;
+  padding-top: 20px;
   margin-left: 0px;
   margin-top: 0px;
   box-shadow: 2px 0 5px rgba(0,0,0,0.1);
@@ -25,11 +29,12 @@
 
 .sidebar li a {
   text-decoration: none;
-  color: #333;
-  padding: 10px 15px;
+  color: #063c60; /* Light blue color */
+  padding: 10px 10px;
   display: block;
   border-radius: 4px;
   transition: background-color 0.3s, color 0.3s;
+  font-size: 16px; /* Text size */
 }
 
 .sidebar li a.active {
@@ -38,8 +43,14 @@
   font-weight: bold;
 }
 
+.sidebar li a .icon {
+  margin-right: 8px;
+  font-size: 18px; /* Icon size */
+  vertical-align: middle;
+}
+
 .content {
   flex-grow: 1;
-  padding: 20px;
+  padding: 10px 0px;
   overflow-y: auto;
 }
