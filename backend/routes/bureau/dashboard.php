@@ -1,4 +1,5 @@
 <?php
+require_once '../../routes/login/session_util.php';
 require_once '../../database/db_connection.php';
 
 header('Access-Control-Allow-Origin: *');
@@ -13,6 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 // Get the department parameter from the URL
 $department = isset($_GET['department']) ? $_GET['department'] : '';
+
+// Vérifiez la session
+$user = checkSession($conn);
+authorize(['bureau'], $user, $department);
 
 // Initialize the data array
 $data = [];
