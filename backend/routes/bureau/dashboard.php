@@ -202,7 +202,36 @@ while ($row = $result10->fetch_assoc()) {
 }
 $data['analysis_statistics_year'] = $analysis_statistics_year;
 $stmt10->close();
-// Fetch the number of requests per month for the past year
+
+// Calculate the start date: 13 months ago from the current month
+$startDate = date('Y-m-01', strtotime('-13 months'));
+
+// Get the earliest request date from the database
+$earliestQuery = "
+    SELECT DATE_FORMAT(MIN(requestingDate), '%Y-%m') AS earliest_date
+    FROM clients
+    JOIN echantillons ON clients.id = echantillons.client_id
+    JOIN analyses ON echantillons.id = analyses.echantillon_id 
+    WHERE analyses.departement = ?
+";
+$stmtEarliest = $conn->prepare($earliestQuery);
+$stmtEarliest->bind_param("s", $department);
+$stmtEarliest->execute();
+$earliestResult = $stmtEarliest->get_result();
+$earliestDateRow = $earliestResult->fetch_assoc();
+$earliestDate = $earliestDateRow['earliest_date'];
+$stmtEarliest->close();
+
+// Use the later of the two dates: startDate or earliestDate
+$startDate = max($startDate, $earliestDate);
+
+// Get the current month range
+$currentDate = date('Y-m-d');
+$currentMonthStart = date('Y-m-01');
+$lastMonthStart = date('Y-m-01', strtotime('-1 month', strtotime($currentMonthStart)));
+$lastMonthEnd = date('Y-m-t', strtotime('-1 month', strtotime($currentMonthStart)));
+
+// Fetch the number of requests per month from the calculated start date to the current date
 $query11 = "
     SELECT 
         DATE_FORMAT(requestingDate, '%Y-%m') AS month, 
@@ -211,20 +240,38 @@ $query11 = "
     JOIN echantillons ON clients.id = echantillons.client_id
     JOIN analyses ON echantillons.id = analyses.echantillon_id 
     WHERE analyses.departement = ?
-    AND DATE(requestingDate) >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)
+    AND DATE(requestingDate) BETWEEN ? AND ?
     GROUP BY month
     ORDER BY month
 ";
 $stmt11 = $conn->prepare($query11);
-$stmt11->bind_param("s", $department);
+$stmt11->bind_param("sss", $department, $startDate, $currentDate);
 $stmt11->execute();
 $result11 = $stmt11->get_result();
 $monthly_requests = [];
 while ($row = $result11->fetch_assoc()) {
-    $monthly_requests[] = $row;
+    $monthly_requests[$row['month']] = $row['total_requests'];
 }
-$data['monthly_requests'] = $monthly_requests;
 $stmt11->close();
+
+// Generate a list of months from the start date to the current month, including those with zero requests
+$months = [];
+$start = new DateTime($startDate);
+$end = new DateTime($currentDate);
+$end->modify('+1 day'); // Move the end date to include the last day of the current month
+$interval = DateInterval::createFromDateString('1 month');
+$period = new DatePeriod($start, $interval, $end);
+
+foreach ($period as $date) {
+    $month = $date->format('Y-m');
+    $months[$month] = isset($monthly_requests[$month]) ? $monthly_requests[$month] : 0;
+}
+
+// Prepare the data for output
+$data['monthly_requests'] = array_map(function($month, $total_requests) {
+    return ['month' => $month, 'total_requests' => $total_requests];
+}, array_keys($months), $months);
+
 
 // Fetch request status breakdown
 $query12 = "

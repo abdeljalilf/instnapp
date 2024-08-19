@@ -127,7 +127,6 @@ const DepartmentDashboard = () => {
             }
         ]
     };
-
     const monthlyRequestsData = {
         labels: data.monthly_requests.map(req => moment(req.month, 'YYYY-MM').format('MMMM YYYY').toUpperCase()),
         datasets: [
@@ -140,48 +139,52 @@ const DepartmentDashboard = () => {
             }
         ]
     };
+    
 
     const chartOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
+    responsive: true,
+    maintainAspectRatio: true, // Ensure the chart respects the aspect ratio
+    aspectRatio: 2, // Adjust the aspect ratio (2 means width is twice the height)
+    plugins: {
+        legend: {
+            display: false,
+        },
+        tooltip: {
+            callbacks: {
+                label: (context) => `${context.raw}`,
+            },
+        },
+    },
+    scales: {
+        x: {
+            ticks: {
+                font: {
+                    size: 14, // Taille du texte pour les étiquettes des mois en pixels
+                },
+            },
+            grid: {
                 display: false,
             },
-            tooltip: {
-                callbacks: {
-                    label: (context) => `${context.raw}`,
+        },
+        y: {
+            ticks: {
+                font: {
+                    size: 12, // Taille du texte pour les étiquettes des quantités
                 },
+            },
+            grid: {
+                display: true,
             },
         },
-        scales: {
-            x: {
-                ticks: {
-                    font: {
-                        size: 14, // Taille du texte pour les étiquettes des mois en pixels
-                    },
-                },
-                grid: {
-                    display: false,
-                },
-            },
-            y: {
-                ticks: {
-                    font: {
-                        size: 12, // Taille du texte pour les étiquettes des quantités
-                    },
-                },
-                grid: {
-                    display: true,
-                },
-            },
-        },
-    };
+    },
+};
+
 
     return (
         <div className="departement-dashboard-container">
+            <div className="departement-dashboard-title">
             <h1>Dashboard for {department} Department</h1>
-
+            </div>
             {/* Request Status Breakdown */}
             <div className="status-container">
                 {statusContainers.map(({ label, key }) => {
@@ -203,15 +206,20 @@ const DepartmentDashboard = () => {
 
             {/* Three-Month Statistics */}
             <section className="stats-trim-section">
+                <div className="monthly-requests-title">
                 <h1>Statistiques des 3 derniers mois</h1>
-
+                </div>
                 <div className="stats-trim-summary">
                     <div className="stats-trim-summary-item">
+                    <div className="request-count">
                         <h2>Nombre Demande Reçue </h2>
+                    </div>
                         <div className="stats-trim-count">{data.total_requests_3_months}</div>
                     </div>
                     <div className="stats-trim-summary-item">
-                        <h2>Nombre Rapport Généré </h2>
+                        <div className="request-count"> 
+                            <h2>Nombre Rapport Généré </h2>
+                        </div>
                         <div className="stats-trim-count">{data.reports_generated_3_months}</div>
                     </div>
                 </div>
@@ -231,15 +239,20 @@ const DepartmentDashboard = () => {
 
             {/* Annual Statistics */}
             <section className="stats-annuelle-section">
+                <div className="monthly-requests-title">
                 <h1>Statistiques Annuelles</h1>
-
+                </div>
                 <div className="stats-annuelle-summary">
                     <div className="stats-annuelle-summary-item">
-                        <h2>Nombre Demande Reçue (Année)</h2>
+                        <div className="request-count" >
+                            <h2>Nombre Demande Reçue </h2>
+                        </div>
                         <div className="stats-annuelle-count">{data.total_requests_year}</div>
                     </div>
                     <div className="stats-annuelle-summary-item">
-                        <h2>Nombre Rapport Généré (Année)</h2>
+                    <div className="request-count"> 
+                            <h2>Nombre Rapport Généré </h2>
+                        </div>
                         <div className="stats-annuelle-count">{data.reports_generated_year}</div>
                     </div>
                 </div>
@@ -255,12 +268,16 @@ const DepartmentDashboard = () => {
                         <Bar data={analysisDataYear} options={chartOptions} />
                     </div>
                 </div>
-                
-                <div className="monthly-requests-graph">
-                    <h2>Nombre des Demandes par Mois</h2>
-                    <Bar data={monthlyRequestsData} options={chartOptions} />
-                </div>
-            </section>
+            </section>    
+            <section className="monthly-request-section">
+    <div className="monthly-requests-title">
+        <h1>Nombre des Demandes par Mois</h1>
+    </div>
+    <div className="chart-monthly-container">
+        <Bar data={monthlyRequestsData} options={chartOptions} />
+    </div>
+</section>
+
         </div>
     );
 };
