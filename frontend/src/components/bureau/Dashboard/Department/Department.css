@@ -170,7 +170,6 @@ h1 {
     height: 300px; /* Ensure the chart has a reasonable fixed height */
 }
 
-
 .monthly-requests-title {
     padding: 0;
     background-color: #2e8b57;
@@ -187,3 +186,20 @@ h1 {
     white-space: nowrap; /* Prevents text from wrapping */
 }
 
+.filter-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+}
+
+.filter-container label {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.filter-container select {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}

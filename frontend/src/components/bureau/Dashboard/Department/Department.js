@@ -31,6 +31,7 @@ const DepartmentDashboard = () => {
     const [error, setError] = useState(null);
     const session_id = localStorage.getItem('session_id');
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+    const [monthsToShow, setMonthsToShow] = useState(4); // Default to 4 months
 
     useEffect(() => {
         const fetchData = async () => {
@@ -54,7 +55,9 @@ const DepartmentDashboard = () => {
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error.message}</div>;
-
+    const handleMonthsChange = (event) => {
+        setMonthsToShow(parseInt(event.target.value));
+    };    
     const getStatusColor = (status, count) => {
         if (status === 'completed' || status === 'pending_payment') return 'green';
         if (status === 'awaiting_result_validation' || status === 'pending_office_validation') {
@@ -127,18 +130,21 @@ const DepartmentDashboard = () => {
             }
         ]
     };
-    const monthlyRequestsData = {
-        labels: data.monthly_requests.map(req => moment(req.month, 'YYYY-MM').format('MMMM YYYY').toUpperCase()),
-        datasets: [
-            {
-                label: 'Nombre de Demandes',
-                data: data.monthly_requests.map(req => req.total_requests),
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1,
-            }
-        ]
-    };
+    const filteredMonthlyRequests = data.monthly_requests.slice(-monthsToShow);
+
+const monthlyRequestsData = {
+    labels: filteredMonthlyRequests.map(req => moment(req.month, 'YYYY-MM').format('MMMM YYYY').toUpperCase()),
+    datasets: [
+        {
+            label: 'Nombre de Demandes',
+            data: filteredMonthlyRequests.map(req => req.total_requests),
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1,
+        }
+    ]
+};
+
     
 
     const chartOptions = {
@@ -273,10 +279,22 @@ const DepartmentDashboard = () => {
     <div className="monthly-requests-title">
         <h1>Nombre des Demandes par Mois</h1>
     </div>
+    
+    <div className="filter-container">
+        <label htmlFor="monthsToShow">Afficher les derniers:</label>
+        <select id="monthsToShow" value={monthsToShow} onChange={handleMonthsChange}>
+            <option value={4}>4 mois</option>
+            <option value={8}>8 mois</option>
+            <option value={12}>12 mois</option>
+            <option value={14}>14 mois</option>
+        </select>
+    </div>
+    
     <div className="chart-monthly-container">
         <Bar data={monthlyRequestsData} options={chartOptions} />
     </div>
 </section>
+
 
         </div>
     );
