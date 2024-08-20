@@ -46,6 +46,7 @@ const App = () => {
                 <Route path="/reception" element={<ProtectedRoute element={<MainPage />} roleRequired="reception" />}>
                     <Route index element={<ProtectedRoute element={<Statistiques />} roleRequired="reception" />} />
                     <Route path="Statistiques" element={<ProtectedRoute element={<Statistiques />} roleRequired="reception" />} />
+                    <Route path="Statistiques/:department" element={<ProtectedRoute element={<Statistiques />} roleRequired="reception" />} /> {/* Ajout de la sous-route */}
                     <Route path="DemandesForm" element={<ProtectedRoute element={<DemandesForm />} roleRequired="reception" />} />
                     <Route path="DemandesList" element={<ProtectedRoute element={<DemandeList />} roleRequired="reception" />} />
                     <Route path="DemandesList/:clientId" element={<ProtectedRoute element={<DemandesDetails />} roleRequired="reception" />} />
