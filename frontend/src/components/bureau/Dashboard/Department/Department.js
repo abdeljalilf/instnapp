@@ -36,7 +36,7 @@ const DepartmentDashboard = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`${apiBaseUrl}/instnapp/backend/routes/bureau/dashboard.php`, {
+                const response = await axios.get(`${apiBaseUrl}/instnapp/backend/routes/bureau/DepartementDashboard.php`, {
                     params: { department },
                     headers: {
                         Authorization: session_id

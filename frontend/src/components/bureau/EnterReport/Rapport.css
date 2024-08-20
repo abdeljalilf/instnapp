@@ -180,7 +180,8 @@
 .button-group {
   display: flex;
   justify-content: space-between; /* Align buttons on opposite ends */
-  align-items: center;
+  align-items: space-between;
+  flex-direction: row;
 }
 
 .btn-secondary {
@@ -218,6 +219,9 @@
 
 .analysis-section {
   margin-bottom: 20px; /* Espace sous chaque section d'analyse */
+  width: 100%;
+  justify-content: space-between; /* Align buttons on opposite ends */
+  align-items: space-between;
 }
 
 .analysis-table {
@@ -327,6 +331,7 @@
   cursor: pointer;
   margin: 0px 10px;
   transition: background-color 0.3s ease;
+  float: right; /* Aligner à droite */
 }
 
 .request-revision-button:hover {
