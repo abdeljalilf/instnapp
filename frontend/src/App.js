@@ -15,7 +15,6 @@ import NewRequests from './components/bureau/NewRequests/NewRequests';
 import ProcessedRequests from './components/bureau/ProcessedRequests/ProcessedRequests';
 import Dashboard from './components/bureau/Dashboard/Dashboard';
 import Archive from './components/bureau/Dashboard/Archive/Archive';
-import INSTN from './components/bureau/Dashboard/INSTN/INSTN';
 import Department from './components/bureau/Dashboard/Department/Department';
 import RequestDetails from './components/bureau/RequestDetails/RequestDetails';
 import Rapport from './components/bureau/EnterReport/Rapport';
@@ -59,7 +58,6 @@ const App = () => {
                     <Route path="processed-requests" element={<ProcessedRequests />} />
                     <Route path="dashboard" element={<Dashboard />}>
                         {/* Additional Dashboard Routes */}
-                        <Route path="instn" element={<INSTN />} />
                         <Route path=":department" element={<Department />} />
                         <Route path="archive" element={<Archive />} />
                     </Route>

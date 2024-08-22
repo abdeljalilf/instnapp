@@ -184,22 +184,6 @@
   flex-direction: row;
 }
 
-.btn-secondary {
-  display: inline-block;
-  background-color: #ff4c4c; /* Red color for the "Annuler" button */
-  color: white;
-  padding: 12px 20px;
-  margin: 15px 5px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.btn-secondary:hover {
-  background-color: #e03939;
-}
-
 .validate-button {
   display: inline-block;
   background-color: #2e8b57;

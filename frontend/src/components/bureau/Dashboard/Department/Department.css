@@ -30,12 +30,38 @@ h1 {
     text-align: center;
 }
 /* Status Container */
+.dernier-mois-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    background-color: white;
+    padding: 0px;
+    
+}
+.status-requests-title {
+    padding: 0;
+    background-color: #2e8b57;
+    margin: 5px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 5px;
+    height: 30px;
+    overflow: hidden; /* Ensure text doesn't overflow */
+    white-space: nowrap; /* Prevents text from wrapping */
+}
+
 .status-container {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
     background-color: white;
     padding: 10px;
+    margin: 0px;
 }
 
 .status-item {
@@ -148,7 +174,7 @@ h1 {
 
 .chart-annuelle-container ,
 .chart-trim-container{
-    margin-bottom: 60px;
+    margin-bottom: 73px;
     flex: 1;
     max-width: 48%;
     height: 200px; /* Reduced height */
@@ -168,6 +194,8 @@ h1 {
     flex: 1;
     width: 100%; /* Ensure it takes full width */
     height: 300px; /* Ensure the chart has a reasonable fixed height */
+    margin-bottom: 10px;
+
 }
 
 .monthly-requests-title {

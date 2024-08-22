@@ -257,7 +257,7 @@ const Rapport = () => {
         Valeur_Recommandee: sample.Valeur_Recommandee,
         Valeur_Mesuree: sample.Valeur_Mesuree,
         Reference_Materiel: sample.Reference_Materiel,
-        element_id: sample.element_id
+        
         
       });
     });
@@ -308,7 +308,6 @@ const getHeaderText = () => {
                 {department === 'ATN' && (
                 <p><strong>Durée de mesure :</strong> {analysis_time}</p>
                 )}
-                <p><strong>Analysis ID:</strong> {analysis_id}</p>
                 <table className="analysis-table">
                   <thead>
                     <tr>
@@ -366,9 +365,6 @@ const getHeaderText = () => {
                           />
                         </td>
                         )}
-                        <td>
-                          <strong>Element ID:</strong> {element.element_id}
-                        </td>
                       </tr>
                     ))}
                   </tbody>

@@ -43,6 +43,7 @@ const DepartmentDashboard = () => {
                     }
                 });
                 setData(response.data || {});
+                console.log('API Response:', response.data);
             } catch (error) {
                 setError(error);
             } finally {
@@ -189,9 +190,13 @@ const monthlyRequestsData = {
     return (
         <div className="departement-dashboard-container">
             <div className="departement-dashboard-title">
-            <h1>Dashboard for {department} Department</h1>
+            <h1>Tableau de Bord Pour {department}</h1>
             </div>
             {/* Request Status Breakdown */}
+            <div className="dernier-mois-container">
+               <div className="status-requests-title">
+                    <h2>Statistiques du Dernier Mois </h2>
+                </div>
             <div className="status-container">
                 {statusContainers.map(({ label, key }) => {
                     const count = data.request_status[key] || 0;
@@ -209,7 +214,7 @@ const monthlyRequestsData = {
                     );
                 })}
             </div>
-
+            </div>
             {/* Three-Month Statistics */}
             <section className="stats-trim-section">
                 <div className="monthly-requests-title">

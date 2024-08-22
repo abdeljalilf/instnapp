@@ -1,12 +1,13 @@
 import React from 'react';
 import { AppBar, Toolbar, Button } from '@mui/material';
-import { useNavigate, useParams, Outlet } from 'react-router-dom';
+import { useNavigate, useParams, Outlet, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import "./LaboratoryMainPage.css";
 
 const LaboratoryMainPage = () => {
     const navigate = useNavigate();
     const { department } = useParams(); // Extract department from URL
+    const location = useLocation(); // Get the current location
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
     const session_id = localStorage.getItem('session_id');
 
@@ -18,22 +19,44 @@ const LaboratoryMainPage = () => {
                 }
             });
             localStorage.removeItem('session_id');
-            navigate('/login'); // Rediriger vers la page de connexion
+            navigate('/login'); // Redirect to login page
         } catch (error) {
             console.error('Error logging out:', error);
         }
     };
 
+    // Function to determine if a route is active
+    const isActive = (path) => location.pathname === path;
+
     return (
         <div>
-            <AppBar position="static" sx={{ backgroundColor: '#2e8b57' }}>
+            <AppBar position="static" className="app-bar">
                 <Toolbar>
-                    <Button variant="h6" sx={{ flexGrow: 1 }} onClick={() => navigate('/')}>Bureau {department}</Button>
-                    {/* <Button variant="h6" sx={{ flexGrow: 1 }} onClick={() => navigate('/bureau')}>Choisir le department </Button> */}
-                    <Button color="inherit" onClick={() => navigate(`/bureau/${department}/new-requests`)}>Les nouvelles demandes</Button>
-                    <Button color="inherit" onClick={() => navigate(`/bureau/${department}/processed-requests`)}>Les nouveaux résultats</Button>
-                    <Button color="inherit" onClick={() => navigate(`/bureau/${department}/dashboard`)}>Dashboard et Statistiques</Button>
-                    <Button color="inherit" onClick={handleLogout} className="logout-button">
+                <div className="title">
+                    <h2>Bureau {department} </h2>
+                </div>
+                    <Button 
+                        className={`nav-button ${isActive(`/bureau/${department}/new-requests`) ? 'active' : 'inactive'}`}
+                        onClick={() => navigate(`/bureau/${department}/new-requests`)}
+                    >
+                        Les nouvelles demandes
+                    </Button>
+                    <Button 
+                        className={`nav-button ${isActive(`/bureau/${department}/processed-requests`) ? 'active' : 'inactive'}`}
+                        onClick={() => navigate(`/bureau/${department}/processed-requests`)}
+                    >
+                        Les nouveaux résultats
+                    </Button>
+                    <Button 
+                        className={`nav-button ${isActive(`/bureau/${department}/dashboard`) ? 'active' : 'inactive'}`}
+                        onClick={() => navigate(`/bureau/${department}/dashboard`)}
+                    >
+                        Dashboard et Archive
+                    </Button>
+                    <Button 
+                        className="nav-button logout-button"
+                        onClick={handleLogout}
+                    >
                         Logout
                     </Button>
                 </Toolbar>

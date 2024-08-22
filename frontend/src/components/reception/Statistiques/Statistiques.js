@@ -197,7 +197,7 @@ const Statistiques = () => {
             </div>
             <div className="dernier-mois-container">
                <div className="status-requests-title">
-                    <h2>Statistiques du dernier mois pour {department}</h2>
+                    <h2>Statistiques du Dernier Mois pour {department}</h2>
                 </div>
             <div className="status-container">    
                 {statusContainers.map(({ label, key }) => {

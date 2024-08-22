@@ -22,16 +22,6 @@ const Dashboard = () => {
                     </li>
                     <li>
                         <NavLink 
-                            to="instn" 
-                            className={({ isActive }) => (isActive ? 'active' : '')} 
-                            data-tooltip="INSTN"
-                        >
-                            <FaUniversity className="icon" />
-                            <span>INSTN</span>
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink 
                             to="archive" 
                             className={({ isActive }) => (isActive ? 'active' : '')} 
                             data-tooltip="Archive"
