@@ -270,33 +270,108 @@ $data['monthly_requests'] = array_map(function($month, $total_requests) {
 }, array_keys($months), $months);
 
 // Fetch request status breakdown
-$query12 = "
+// Fetch request status breakdown for pending_payment
+$queryPendingPayment = "
     SELECT 
-        SUM(CASE WHEN status_counts.status = 'pending_payment' THEN 1 ELSE 0 END) AS pending_payment,
-        SUM(CASE WHEN status_counts.status = 'completed' THEN 1 ELSE 0 END) AS completed
-    FROM (
-        SELECT 
-            echantillons.client_id,
-            CASE 
-                WHEN MIN(analyses.validated) = 'reception_step_1' THEN 'pending_payment'
-                WHEN MIN(analyses.validated) = 'office_step_3' THEN 'completed'
-            END AS status
-        FROM clients
-        JOIN echantillons ON clients.id = echantillons.client_id
-        JOIN analyses ON echantillons.id = analyses.echantillon_id
-        WHERE $departmentCondition
-        AND DATE(requestingDate) >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH)
-        GROUP BY echantillons.client_id
-    ) AS status_counts
+        COUNT(DISTINCT echantillons.client_id) AS pending_payment
+    FROM clients
+    JOIN echantillons ON clients.id = echantillons.client_id
+    JOIN analyses ON echantillons.id = analyses.echantillon_id
+    WHERE $departmentCondition
+    AND DATE(clients.requestingDate) >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+    AND echantillons.client_id IN (
+        SELECT client_id
+        FROM (
+            SELECT echantillons.client_id, MIN(analyses.validated) AS min_validated
+            FROM echantillons
+            JOIN analyses ON echantillons.id = analyses.echantillon_id
+            GROUP BY echantillons.client_id
+        ) AS subquery
+        WHERE subquery.min_validated = 'reception_step_1'
+    )
 ";
-$stmt12 = $conn->prepare($query12);
+$stmtPendingPayment = $conn->prepare($queryPendingPayment);
 if ($department !== 'INSTN') {
-    $stmt12->bind_param("s", $department);
+    $stmtPendingPayment->bind_param("s", $department);
 }
-$stmt12->execute();
-$result12 = $stmt12->get_result();
-$data['request_status'] = $result12->fetch_assoc();
-$stmt12->close();
+$stmtPendingPayment->execute();
+$resultPendingPayment = $stmtPendingPayment->get_result();
+$pendingPaymentCount = $resultPendingPayment->fetch_assoc()['pending_payment'] ?? 0;
+$stmtPendingPayment->close();
+
+// Fetch request status breakdown for completed
+if ($department=='INSTN'){
+$queryCompleted = "
+    SELECT 
+        COUNT(DISTINCT clients.id) AS completed
+    FROM clients
+    JOIN echantillons ON clients.id = echantillons.client_id
+    JOIN analyses ON echantillons.id = analyses.echantillon_id
+    WHERE $departmentCondition
+    AND DATE(clients.requestingDate) >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+    AND NOT EXISTS (
+        SELECT 1
+        FROM analyses AS subquery
+        WHERE subquery.echantillon_id = echantillons.id
+        AND subquery.validated != 'office_step_3'
+    )
+";
+$stmtCompleted = $conn->prepare($queryCompleted);
+if ($department !== 'INSTN') {
+    $stmtCompleted->bind_param("s", $department);
+}
+$stmtCompleted->execute();
+$resultCompleted = $stmtCompleted->get_result();
+$completedCount = $resultCompleted->fetch_assoc()['completed'] ?? 0;
+$stmtCompleted->close();
+}
+else {
+    $queryCompleted = "
+    SELECT 
+        COUNT(DISTINCT CONCAT(clients.id, '-', analyses.departement)) AS completed
+    FROM clients
+    JOIN echantillons ON clients.id = echantillons.client_id
+    JOIN analyses ON echantillons.id = analyses.echantillon_id
+    WHERE $departmentCondition
+    AND analyses.validated = 'office_step_3'
+    AND DATE(clients.requestingDate) >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+";
+$stmtCompleted = $conn->prepare($queryCompleted);
+if ($department !== 'INSTN') {
+    $stmtCompleted->bind_param("s", $department);
+}
+$stmtCompleted->execute();
+$resultCompleted = $stmtCompleted->get_result();
+$completedCount = $resultCompleted->fetch_assoc()['completed'] ?? 0;
+$stmtCompleted->close();
+}
+// Fetch request status breakdown for generated_report
+$querygenerated_report = "
+     SELECT 
+        COUNT(DISTINCT CONCAT(clients.id, '-', analyses.departement)) AS generated_report
+    FROM clients
+    JOIN echantillons ON clients.id = echantillons.client_id
+    JOIN analyses ON echantillons.id = analyses.echantillon_id
+    WHERE $departmentCondition
+    AND analyses.validated = 'office_step_3'
+    AND DATE(clients.requestingDate) >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)
+";
+
+$stmtgenerated_report = $conn->prepare($querygenerated_report);
+if ($department !== 'INSTN') {
+    $stmtgenerated_report->bind_param("s", $department);
+}
+$stmtgenerated_report->execute();
+$resultgenerated_report = $stmtgenerated_report->get_result();
+$generated_reportCount = $resultgenerated_report->fetch_assoc()['generated_report'] ?? 0;
+$stmtgenerated_report->close();
+
+// Set the request status data
+$data['request_status'] = [
+    'pending_payment' => $pendingPaymentCount,
+    'completed' => $completedCount,
+    'generated_report' => $generated_reportCount
+];
 
 // Send the JSON response
 echo json_encode($data);

@@ -30,6 +30,30 @@ h1 {
     text-align: center;
 }
 /* Status Container */
+.dernier-mois-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    background-color: white;
+    padding: 10px;
+}
+.status-requests-title {
+    padding: 0;
+    background-color: #2e8b57;
+    margin: 5px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 10px;
+    height: 30px;
+    overflow: hidden; /* Ensure text doesn't overflow */
+    white-space: nowrap; /* Prevents text from wrapping */
+}
+
 .status-container {
     display: flex;
     justify-content: space-between;

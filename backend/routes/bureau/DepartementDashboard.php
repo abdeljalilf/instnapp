@@ -280,29 +280,36 @@ $data['monthly_requests'] = array_map(function($month, $total_requests) {
 
 // Fetch request status breakdown
 $query12 = "
-    SELECT 
-        SUM(CASE WHEN status_counts.status = 'pending_payment' THEN 1 ELSE 0 END) AS pending_payment,
-        SUM(CASE WHEN status_counts.status = 'pending_office_validation' THEN 1 ELSE 0 END) AS pending_office_validation,
-        SUM(CASE WHEN status_counts.status = 'in_analysis' THEN 1 ELSE 0 END) AS in_analysis,
-        SUM(CASE WHEN status_counts.status = 'awaiting_result_review' THEN 1 ELSE 0 END) AS awaiting_result_review,
-        SUM(CASE WHEN status_counts.status = 'awaiting_result_validation' THEN 1 ELSE 0 END) AS awaiting_result_validation,
-        SUM(CASE WHEN status_counts.status = 'completed' THEN 1 ELSE 0 END) AS completed
+    SELECT
+        SUM(IF(pending_payment_count > 0, 1, 0)) AS pending_payment,
+        SUM(IF(pending_office_validation_count > 0, 1, 0)) AS pending_office_validation,
+        SUM(IF(in_analysis_count > 0, 1, 0)) AS in_analysis,
+        SUM(IF(awaiting_result_validation_count > 0, 1, 0)) AS awaiting_result_validation,
+        SUM(IF(completed_count > 0, 1, 0)) AS completed
     FROM (
         SELECT 
             echantillons.client_id,
-            CASE 
-                WHEN MIN(analyses.validated) = 'reception_step_1' THEN 'pending_payment'
-                WHEN MIN(analyses.validated) = 'finance' THEN 'pending_office_validation'
-                WHEN MIN(analyses.validated) = 'office_step_1' THEN 'in_analysis'
-                WHEN MIN(analyses.validated) = 'office_reject' THEN 'awaiting_result_review'
-                WHEN MIN(analyses.validated) IN ('laboratory', 'office_step_2') THEN 'awaiting_result_validation'
-                WHEN MIN(analyses.validated) = 'office_step_3' THEN 'completed'
-            END AS status
+            
+            -- Check if all analyses for this request are in 'reception_step_1'
+            SUM(CASE WHEN analyses.validated = 'reception_step_1' THEN 1 ELSE 0 END) = COUNT(analyses.id) AS pending_payment_count,
+            
+            -- Check if all analyses for this request are in 'finance'
+            SUM(CASE WHEN analyses.validated = 'finance' THEN 1 ELSE 0 END) = COUNT(analyses.id) AS pending_office_validation_count,
+            
+            -- Check if all analyses for this request are in 'office_step_1'
+            SUM(CASE WHEN analyses.validated = 'office_step_1' THEN 1 ELSE 0 END) = COUNT(analyses.id) AS in_analysis_count,
+            
+            -- Check if all analyses for this request are in 'laboratory' or 'office_step_2'
+            SUM(CASE WHEN analyses.validated IN ('laboratory', 'office_step_2') THEN 1 ELSE 0 END) = COUNT(analyses.id) AS awaiting_result_validation_count,
+            
+            -- Check if all analyses for this request are in 'office_step_3'
+            SUM(CASE WHEN analyses.validated = 'office_step_3' THEN 1 ELSE 0 END) = COUNT(analyses.id) AS completed_count
+            
         FROM clients
         JOIN echantillons ON clients.id = echantillons.client_id
         JOIN analyses ON echantillons.id = analyses.echantillon_id
         WHERE analyses.departement = ?
-        AND DATE(requestingDate) >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH)
+        AND DATE(clients.requestingDate) >= DATE_SUB(CURDATE(), INTERVAL 3 MONTH)
         GROUP BY echantillons.client_id
     ) AS status_counts
 ";
@@ -312,6 +319,8 @@ $stmt12->execute();
 $result12 = $stmt12->get_result();
 $data['request_status'] = $result12->fetch_assoc();
 $stmt12->close();
+
+
 
 // Output the final data as JSON
 echo json_encode($data);

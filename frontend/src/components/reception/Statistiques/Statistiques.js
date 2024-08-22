@@ -62,12 +62,13 @@ const Statistiques = () => {
     };
 
     const getStatusColor = (status, count) => {
-        if (status === 'completed' || status === 'pending_payment' ) return 'green';
+        if (status === 'completed' || status === 'pending_payment' || status === 'generated_report' ) return 'green';
         return 'white';
     };
 
     const statusContainers = [
         { label: 'Demandes finies', key: 'completed' },
+        { label: 'Rapports Générés', key: 'generated_report' },
         { label: 'En attente de paiement', key: 'pending_payment' }
     ];
 
@@ -179,10 +180,10 @@ const Statistiques = () => {
     return (
         <div className="departement-dashboard-container">
             <div className="departement-dashboard-title">
-                <h1>Dashboard for {department} Department</h1>
+                <h1>Tableau de Bord Pour {department} </h1>
             </div>
             <div className="filter-container">
-                <label htmlFor="department">Select Department:</label>
+                <label htmlFor="department">Choisissez le département:</label>
                 <select
                     id="department"
                     value={department}
@@ -194,8 +195,11 @@ const Statistiques = () => {
                     <option value="ATN">ATN</option>
                 </select>
             </div>
-
-            <div className="status-container">
+            <div className="dernier-mois-container">
+               <div className="status-requests-title">
+                    <h2>Statistiques du dernier mois pour {department}</h2>
+                </div>
+            <div className="status-container">    
                 {statusContainers.map(({ label, key }) => {
                     const count = data.request_status[key] || 0;
                     return (
@@ -212,11 +216,12 @@ const Statistiques = () => {
                     );
                 })}
             </div>
+            </div>
 
             {/* Three-Month Statistics */}
             <section className="stats-trim-section">
                 <div className="monthly-requests-title">
-                    <h1>Statistiques des 3 derniers mois</h1>
+                    <h2>Statistiques des 3 Derniers Mois pour {department}</h2>
                 </div>
                 <div className="stats-trim-summary">
                     <div className="stats-trim-summary-item">
@@ -249,7 +254,7 @@ const Statistiques = () => {
             {/* Annual Statistics */}
             <section className="stats-annuelle-section">
                 <div className="monthly-requests-title">
-                    <h1>Statistiques Annuelles</h1>
+                    <h2>Statistiques Annuelles pour {department}</h2>
                 </div>
                 <div className="stats-annuelle-summary">
                     <div className="stats-annuelle-summary-item">
@@ -281,7 +286,7 @@ const Statistiques = () => {
 
             <section className="monthly-request-section">
                 <div className="monthly-requests-title">
-                    <h1>Nombre des Demandes par Mois</h1>
+                    <h2>Nombre des Demandes par Mois pour {department}</h2>
                 </div>
 
                 <div className="filter-container">

@@ -61,7 +61,7 @@ const DepartmentDashboard = () => {
     const getStatusColor = (status, count) => {
         if (status === 'completed' || status === 'pending_payment') return 'green';
         if (status === 'awaiting_result_validation' || status === 'pending_office_validation') {
-            if (count < 4) return 'green';
+            if (count <= 4) return 'green';
             if (count >= 5 && count <= 8) return 'orange';
             return 'red';
         }
