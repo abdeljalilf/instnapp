@@ -111,35 +111,54 @@
     const handleSaveResults = () => {
       const resultsPayload = elementsResults.map((result) => ({
         elementsdinteretId: result.id,
-        unite: result.unite === 'other' ? result.uniteAutre : result.unite, // Use the custom unit if 'other' is selected
+        unite: result.unite === 'other' ? result.uniteAutre : result.unite,
         valeurMoyenne: result.status === 'non détectable' ? 'non détecté' : result.valeurMoyenne,
         incertitude: result.incertitude,
         limiteDetection: result.limiteDetection,
       }));
-
+    
       const qualitePayload = qualiteResults.map((result) => ({
         elementsdinteretId: result.id,
         referenceMateriel: result.referenceMateriel,
-        unite: result.unite === 'other' ? result.uniteAutre : result.unite, // Use the custom unit if 'other' is selected
+        unite: result.unite === 'other' ? result.uniteAutre : result.unite,
         valeurRecommandee: result.valeurRecommandee,
         valeurMesuree: result.valeurMesuree,
       }));
-
+    
+      // Préparation des données du formulaire pour le téléchargement du fichier
+      const formData = new FormData();
+      formData.append('analysisId', analysisId);
+      formData.append('analyseTime', analyseTime || ''); // Handle empty analyseTime
+      formData.append('data', JSON.stringify({
+        results: resultsPayload,
+        qualite: qualitePayload,
+      }));
+      if (selectedFile) {
+        formData.append('file', selectedFile);
+      }
+    
       axios
-        .post(`${apiBaseUrl}/instnapp/backend/routes/laboratoire/analysisDetails.php`, {
-          analysisId: analysisId,
-          analyseTime: analysisDetails.departement === 'ATN' ? analyseTime : null, // Include analyseTime if department is ATN
-          results: resultsPayload,
-          qualite: qualitePayload,
+        .post(`${apiBaseUrl}/instnapp/backend/routes/laboratoire/analysisDetails.php`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
         })
         .then((response) => {
-          alert('Résultats validés avec succès');
-          navigate('/laboratoire');
+          console.log('Server response:', response.data);
+          if (response.data.message) {
+            alert(response.data.message);
+            navigate('/laboratoire');
+            // Handle success
+          } else if (response.data.error) {
+            alert('Error: ' + response.data.error);
+          }
         })
         .catch((error) => {
-          alert('Error saving results: ' + error);
+          console.error('Error while saving results:', error);
+          alert('An error occurred while saving results.');
         });
     };
+    
 
     if (!analysisDetails) {
       return <div>Loading...</div>;
@@ -321,7 +340,6 @@
                 <tr>
                   <th>Element</th>
                   <th>Reference Matériel</th>
-                  <th>Unité</th>
                   <th>Valeur Recommandée</th>
                   <th>Valeur Mesurée</th>
                 </tr>
@@ -336,27 +354,6 @@
                         value={result.referenceMateriel}
                         onChange={(e) => handleQualiteChange(index, 'referenceMateriel', e.target.value)}
                       />
-                    </td>
-                    <td>
-                      <select
-                        value={result.unite}
-                        onChange={(e) => handleQualiteChange(index, 'unite', e.target.value)}
-                      >
-                        <option value="">--Choisissez--</option>
-                        {getUnitOptions(analysisDetails.departement).map((unit) => (
-                          <option key={unit.value} value={unit.value}>
-                            {unit.label}
-                          </option>
-                        ))}
-                      </select>
-                      {result.unite === 'other' && (
-                        <input
-                          type="text"
-                          placeholder="Saisir unité"
-                          value={result.uniteAutre}
-                          onChange={(e) => handleQualiteChange(index, 'uniteAutre', e.target.value)}
-                        />
-                      )}
                     </td>
                     <td>
                       <input
