@@ -30,6 +30,16 @@ const Dashboard = () => {
                             <span>Archive</span>
                         </NavLink>
                     </li>
+                    <li>
+                        <NavLink 
+                            to="archive_resultats" 
+                            className={({ isActive }) => (isActive ? 'active' : '')} 
+                            data-tooltip="Archive_Resultats"
+                        >
+                            <FaArchive className="icon" />
+                            <span>Resultats</span>
+                        </NavLink>
+                    </li>
                 </ul>
             </div>
             <div className="content">

@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
         if (move_uploaded_file($fileTmpPath, $filePath)) {
             // Prepare the SQL statement for inserting the file info
             $stmt = $conn->prepare("
-                INSERT INTO fichiers_excel (analysis_id, file_name, file_path)
+                INSERT INTO fichiers_resultats (analysis_id, file_name, file_path)
                 VALUES (?, ?, ?);
             ");
             if ($stmt === false) {

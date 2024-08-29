@@ -15,6 +15,7 @@ import NewRequests from './components/bureau/NewRequests/NewRequests';
 import ProcessedRequests from './components/bureau/ProcessedRequests/ProcessedRequests';
 import Dashboard from './components/bureau/Dashboard/Dashboard';
 import Archive from './components/bureau/Dashboard/Archive/Archive';
+import Archive_resultats from './components/bureau/Dashboard/Archive_resultats/Archive_resultats';
 import Department from './components/bureau/Dashboard/Department/Department';
 import RequestDetails from './components/bureau/RequestDetails/RequestDetails';
 import Rapport from './components/bureau/EnterReport/Rapport';
@@ -51,7 +52,6 @@ const App = () => {
                     <Route path="DemandesList/:clientId" element={<ProtectedRoute element={<DemandesDetails />} roleRequired="reception" />} />
                     <Route path="DemandesList/fiche-technique/:clientId" element={<ProtectedRoute element={<FicheTechnique />} roleRequired="reception" />} />
                 </Route>
-                <Route path="/bureau" element={<ProtectedRoute element={<LaboratoryMainPage />} roleRequired="bureau" />}/>
                 <Route path="/bureau/:department" element={<ProtectedRoute element={<LaboratoryMainPage />} roleRequired="bureau" />}>
                     <Route index element={<ProtectedRoute element={<NewRequests />} roleRequired="bureau" />} /> {/* Default route */}
                     <Route path="new-requests" element={<ProtectedRoute element={<NewRequests />} roleRequired="bureau" />} />
@@ -60,6 +60,7 @@ const App = () => {
                         {/* Additional Dashboard Routes */}
                         <Route path=":department" element={<ProtectedRoute element={<Department />} roleRequired="bureau" />} />
                         <Route path="archive" element={<ProtectedRoute element={<Archive />} roleRequired="bureau" />} />
+                        <Route path="archive_resultats" element={<ProtectedRoute element={<Archive_resultats />} roleRequired="bureau" />} />
                     </Route>
                     <Route path="request/:id" element={<ProtectedRoute element={<RequestDetails />} roleRequired="bureau" />} />
                     <Route path="rapport/:id" element={<ProtectedRoute element={<Rapport />} roleRequired="bureau" />} />

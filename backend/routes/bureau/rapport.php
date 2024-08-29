@@ -61,9 +61,7 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
         last_conclusion.conclusion,
         analyse_qualite.Reference_Materiel,
         analyse_qualite.Valeur_Recommandee,
-        analyse_qualite.Valeur_Mesuree,
-        fichiers_excel.file_name,                
-        fichiers_excel.file_path                 
+        analyse_qualite.Valeur_Mesuree              
     FROM clients 
     JOIN echantillons ON clients.id = echantillons.client_id 
     JOIN analyses ON echantillons.id = analyses.echantillon_id 
@@ -88,7 +86,6 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
         )
     ) last_conclusion ON clients.id = last_conclusion.client_id AND analyses.departement = last_conclusion.departement
     LEFT JOIN analyse_qualite ON elementsdinteret.id = analyse_qualite.elementsdinteret_id
-    LEFT JOIN fichiers_excel ON analyses.id = fichiers_excel.analysis_id  
     WHERE clients.id = ? AND analyses.departement = ? AND 
     (analyses.validated = 'laboratory' OR analyses.validated = 'office_step_2')
 ";
@@ -142,8 +139,6 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
                 'Reference_Materiel' => $row['Reference_Materiel'],
                 'Valeur_Recommandee' => $row['Valeur_Recommandee'],
                 'Valeur_Mesuree' => $row['Valeur_Mesuree'],
-                'file_name' => $row['file_name'],          // Ajout du nom du fichier
-                'file_path' => $row['file_path']           // Ajout du chemin du fichier
             ];
         }
         $stmt->close();
