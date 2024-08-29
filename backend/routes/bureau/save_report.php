@@ -1,4 +1,5 @@
 <?php
+//save_report.php
 require_once '../../routes/login/session_util.php';
 require_once '../../database/db_connection.php';
 
@@ -11,8 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
 }
-
-
 
 
 // Get the department parameter from the URL

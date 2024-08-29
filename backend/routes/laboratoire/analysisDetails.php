@@ -70,7 +70,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
     if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
         $fileTmpPath = $_FILES['file']['tmp_name'];
         $fileName = $_FILES['file']['name'];
-        $filePath = '../../uploads/' . $fileName;
+        $filePath_stocke = 'instnapp/backend/fichiers_resultats/' . $fileName;
+        $filePath = '../../fichiers_resultats/' . $fileName;
 
         // Move the uploaded file to the uploads directory
         if (move_uploaded_file($fileTmpPath, $filePath)) {
@@ -83,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
                 sendErrorResponse('Failed to prepare insert query: ' . $conn->error);
             }
             $analysisId = isset($_POST['analysisId']) ? intval($_POST['analysisId']) : null;
-            $stmt->bind_param("iss", $analysisId, $fileName, $filePath);
+            $stmt->bind_param("iss", $analysisId, $fileName, $filePath_stocke);
             $stmt->execute();
         } else {
             sendErrorResponse('File upload failed');

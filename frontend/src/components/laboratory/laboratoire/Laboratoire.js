@@ -4,26 +4,26 @@ import { useNavigate } from 'react-router-dom';
 import './Laboratoire.css';
 
 const Laboratoire = () => {
-  const labos = ['TFXE', 'ATN', 'HI'];
-  const [selectedLabo, setSelectedLabo] = useState('');
+  const departments = ['TFXE', 'ATN', 'HI'];
+  const [department, setSelecteddepartment] = useState('');
   const navigate = useNavigate();
 
-  const handleLaboChange = (event) => {
-    const labo = event.target.value;
-    setSelectedLabo(labo);
-    navigate(`/laboratoire/analyses/${labo}`);
+  const handledepartmentChange = (event) => {
+    const department = event.target.value;
+    setSelecteddepartment(department);
+    navigate(`/laboratoire/analyses/${department}`);
   };
 
   return (
     <div className="labo-container">
       <div className="labo-header">
-        <h1>Select Labo</h1>
+        <h1>Select department</h1>
       </div>
       <div className="labo-select-group">
-        <select value={selectedLabo} onChange={handleLaboChange} className="labo-select">
-          <option value="" disabled>Select a labo</option>
-          {labos.map(labo => (
-            <option key={labo} value={labo}>{labo}</option>
+        <select value={department} onChange={handledepartmentChange} className="labo-select">
+          <option value="" disabled>Select a department</option>
+          {departments.map(department => (
+            <option key={department} value={department}>{department}</option>
           ))}
         </select>
       </div>

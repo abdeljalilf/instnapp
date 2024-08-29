@@ -12,18 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-
-
-
-// Get the department parameter from the URL
-$department = isset($_GET['department']) ? $_GET['department'] : '';
-
-// Vérifiez la session
-$user = checkSession($conn);
-authorize(['bureau'], $user, $department);
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization');
-
 // Get the department parameter from the URL
 $department = isset($_GET['department']) ? $_GET['department'] : '';
 
@@ -36,13 +24,12 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-
 // Vérifiez si 'demande_id' et 'department' sont définis et valides
 if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET['department'])) {
     $demande_id = intval($_GET['demande_id']);
     $department = $_GET['department']; // Obtenez le département depuis la chaîne de requête
 
-    // Requête pour récupérer les données du rapport
+    // Requête pour récupérer les données du rapport, y compris les fichiers
     $sql = "
     SELECT 
         clients.id AS demande_id, 
@@ -74,7 +61,9 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
         last_conclusion.conclusion,
         analyse_qualite.Reference_Materiel,
         analyse_qualite.Valeur_Recommandee,
-        analyse_qualite.Valeur_Mesuree
+        analyse_qualite.Valeur_Mesuree,
+        fichiers_excel.file_name,                
+        fichiers_excel.file_path                 
     FROM clients 
     JOIN echantillons ON clients.id = echantillons.client_id 
     JOIN analyses ON echantillons.id = analyses.echantillon_id 
@@ -99,6 +88,7 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
         )
     ) last_conclusion ON clients.id = last_conclusion.client_id AND analyses.departement = last_conclusion.departement
     LEFT JOIN analyse_qualite ON elementsdinteret.id = analyse_qualite.elementsdinteret_id
+    LEFT JOIN fichiers_excel ON analyses.id = fichiers_excel.analysis_id  
     WHERE clients.id = ? AND analyses.departement = ? AND 
     (analyses.validated = 'laboratory' OR analyses.validated = 'office_step_2')
 ";
@@ -120,9 +110,8 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
                     'requestingDate' => $row['requestingDate'],
                     'clientReference' => $row['clientReference'],
                     'client_phone' => $row['client_phone'], 
-                    'conclusion' => $row['conclusion'] ?? '' ,
+                    'conclusion' => $row['conclusion'] ?? '',
                     'samples' => []
-                    
                 ];
             }
             $sampleType = strtolower($row['sampleType']);
@@ -152,7 +141,9 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
                 'Incertitude' => $row['Incertitude'],
                 'Reference_Materiel' => $row['Reference_Materiel'],
                 'Valeur_Recommandee' => $row['Valeur_Recommandee'],
-                'Valeur_Mesuree' => $row['Valeur_Mesuree']
+                'Valeur_Mesuree' => $row['Valeur_Mesuree'],
+                'file_name' => $row['file_name'],          // Ajout du nom du fichier
+                'file_path' => $row['file_path']           // Ajout du chemin du fichier
             ];
         }
         $stmt->close();

@@ -299,28 +299,11 @@
   transition: background-color 0.3s ease;
 }
 
-.btn-standard-results {
-  background-color: #45a049;
+.btn-standard-results-close {
+  background-color: #f44336; /* Rouge pour le mode "Fermer" */
 }
 
 
-/* Style for the request revision button */
-.request-revision-button {
-  padding: 8px 12px;
-  font-size: 16px;
-  color: #fff;
-  background-color: #ff6f00;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin: 0px 10px;
-  transition: background-color 0.3s ease;
-  float: right; /* Aligner à droite */
-}
-
-.request-revision-button:hover {
-  background-color: #86b300;
-}
 
 /* Style for the container of the remark form */
 .remark-form-container {
@@ -369,18 +352,33 @@
 }
 
 /* Style for cancel button */
-.cancel-button {
-  padding: 8px 12px;
-  font-size: 14px;
-  color: #fff;
-  background-color: #ce1a1a;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin: 0px 50px;
-  transition: background-color 0.3s ease;
+
+
+.saved-file-section {
+  background-color: white; /* Une légère couleur de fond pour mettre en évidence la section */
+  border: 1px solid #ccc; /* Bordure pour délimiter la section */
+  padding: 10px; /* Espacement interne pour que le contenu respire */
+  margin: 20px 0; /* Espacement externe pour séparer des autres sections */
+  border-radius: 8px; /* Coins arrondis pour un effet visuel plus doux */
+  text-align: center; /* Centrer le texte et le lien */
 }
 
-.cancel-button:hover {
-  background-color: #f90303;
+.saved-file-section h3 {
+  color: white; /* Couleur du texte */
+  font-size: 1.5em; /* Taille du texte */
+  margin-bottom: 10px; /* Espacement sous le titre */
+}
+
+.saved-file-section a {
+  display: inline-block; /* Le lien devient un bloc en ligne pour mieux le styliser */
+  background-color: #2e8b57; /* Couleur de fond du bouton de téléchargement */
+  color: #fff; /* Couleur du texte du lien */
+  padding: 10px 20px; /* Espacement interne du lien */
+  text-decoration: none; /* Enlever la sous-ligne par défaut du lien */
+  border-radius: 5px; /* Coins arrondis pour le bouton */
+  transition: background-color 0.3s ease; /* Transition douce pour le changement de couleur */
+}
+
+.saved-file-section a:hover {
+  background-color: #1bd615; /* Couleur de fond du lien au survol */
 }
