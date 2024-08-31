@@ -53,7 +53,7 @@ if (isset($_GET['file_id'])) {
 
 // Si aucun file_id n'est fourni, récupérer et afficher les données des fichiers
 $sql = "SELECT fr.id, fr.file_name, fr.file_path, fr.uploaded_at, 
-               a.id AS analysis_id, a.parameter, 
+               a.id AS analysis_id, a.parameter, a.analysisType ,a.technique, 
                e.id AS sample_id, e.sampleReference, e.sampleType, 
                c.id AS client_id, c.clientReference
         FROM fichiers_resultats fr

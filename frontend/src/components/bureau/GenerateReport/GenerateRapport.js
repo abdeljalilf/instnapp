@@ -25,7 +25,9 @@ const GenirateRapport = () => {
                         if (data.error) {
                             setError(data.error);
                         } else {
+                            console.log('Data received from API:', data);
                             setData(data.reports[0]);
+                            console.log('Data received from API:', data);
                         }
                     } catch (error) {
                         setError('Failed to parse JSON');
@@ -41,25 +43,25 @@ const GenirateRapport = () => {
 
     const handleDownload = () => {
         const element = document.getElementById('report-container');
+        const sanitizedClientReference = data.clientReference.replace(/\//g, '_');
         const opt = {
-            margin: [35, 10], // 35mm pour le haut et le bas, 10mm pour les côtés
-            filename: `rapport_final_${data.clientReference}.pdf`,
+            margin: [35, 5], // 35mm for top and bottom, 10mm for sides
+            filename: `rapport_final_${sanitizedClientReference}_${department}.pdf`,
             image: { type: 'jpeg', quality: 1 },
             html2canvas: { scale: 2 },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-            pagebreak: { mode: ['avoid-all', 'css', 'legacy'] } // Ajouter des sauts de page si nécessaire
+            pagebreak: { mode: ['avoid-all', 'css', 'legacy'] } // Add page breaks if necessary
         };
-    
         html2pdf().from(element).set(opt).toPdf().get('pdf').then((pdf) => {
             const totalPages = pdf.internal.getNumberOfPages();
             pdf.setPage(1);
     
             for (let i = 1; i <= totalPages; i++) {
                 pdf.setPage(i);
-                pdf.text(`Page ${i} sur ${totalPages}`, 190, 285, { align: 'right' });
+                pdf.text(`Page ${i} sur ${totalPages}`, 190, 265, { align: 'right' });
             }
     
-            pdf.save(`rapport_final_${id}.pdf`);
+            pdf.save(`rapport_final_${sanitizedClientReference}_${department}.pdf`);
         });
     };
     

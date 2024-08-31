@@ -48,7 +48,7 @@ const ArchiveResultats = () => {
     };
 
     return (
-        <div className="table-container">
+        <div className="table-container-archive-resultats">
             <h2>Archive des Résultats</h2>
 
             {/* Barre de recherche */}
@@ -65,31 +65,31 @@ const ArchiveResultats = () => {
             ) : error ? (
                 <div className="error-message">{error}</div>
             ) : (
-                <table className="table">
+                <table className="table-archive-resultats">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Nom du Fichier</th>
-                            <th>Référence Client</th>
+                            <th>Référence de la Demande</th>
                             <th>Type d'Échantillon</th>
-                            <th>Référence de l'Échantillon</th>
+                            <th>Référence d'Échantillon</th>
+                            <th>ID d'Analyse</th>
+                            <th>Description</th>
                             <th>Date de Téléchargement</th>
-                            <th>ID Analyse</th>
-                            <th>Paramètre</th>
+                            <th>Nom du Fichier</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         {filteredFiles.map(file => (
                             <tr key={file.id}>
-                                <td>{file.id}</td>
-                                <td>{file.file_name}</td>
                                 <td>{file.clientReference}</td>
                                 <td>{file.sampleType}</td>
                                 <td>{file.sampleReference}</td>
-                                <td>{new Date(file.uploaded_at).toLocaleString()}</td>
                                 <td>{file.analysis_id}</td>
-                                <td>{file.parameter}</td>
+                                <td>
+                                    <p>Analyse {file.analysisType} de: {file.parameter} par {file.technique}</p>
+                                </td>
+                                <td>{new Date(file.uploaded_at).toLocaleString()}</td>
+                                <td>{file.file_name}</td>
                                 <td>
                                     <a
                                         href={`${apiBaseUrl}/${file.file_path}`}

@@ -1,4 +1,5 @@
-.table-container {
+.table-container-archive-resultats {
+    width: auto;
     margin: 0px;
     max-width: 100%;
     background-color: #f8f9fa;
@@ -11,28 +12,28 @@
     justify-content: space-between;
 }
 
-.table {
-    width: 100%;
+.table-archive-resultats {
+    width: 90%;
     border-collapse: collapse;
     margin-top: 20px;
 }
 
-.table th, .table td {
-    padding: 12px;
+.table-archive-resultats th, .table-archive-resultats td {
+    padding: 5px;
     border: 1px solid #dee2e6;
     text-align: left;
 }
 
-.table th {
+.table-archive-resultats th {
     background-color: #343a40;
     color: white;
 }
 
-.table tr:nth-child(even) {
+.table-archive-resultats tr:nth-child(even) {
     background-color: #f2f2f2;
 }
 
-.table tr:hover {
+.table-archive-resultats tr:hover {
     background-color: #e9ecef;
 }
 
@@ -40,7 +41,7 @@
     background-color: #2e8b57;
     color: white;
     border: none;
-    padding: 5px 10px;
+    padding: 5px 5px;
     cursor: pointer;
     border-radius: 4px;
     text-align: center;

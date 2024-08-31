@@ -98,12 +98,17 @@ const Rapport = () => {
   
   
     
-    const isFieldVisible = (sampleReference, analysisKey, field) => {
-    const analysis = groupedSamples[sampleReference]?.analyses[analysisKey];
-    if (analysis?.analysisType === 'Quantitative') {
-        return field === 'normeUtilisee' || field === 'observations'|| field === 'valeursNormeUtilisee';
+  const isFieldVisible = (sampleReference, analysisKey, field) => {
+    const sample = groupedSamples[sampleReference];
+    const analysis = sample?.analyses[analysisKey];
+    const { analysisType } = analysis;
+    const { sampleType } = sample;
+
+    if (analysisType === 'Quantitative' && sampleType != 'air') {
+        return field === 'normeUtilisee' || field === 'observations' || field === 'valeursNormeUtilisee';
     }
-    // If not Quantitative, only validate the conclusion
+    
+    // If not Quantitative and sampleType is not 'air', only validate the conclusion
     return field === 'conclusion';
 };
 const handleValidateReport = () => {
@@ -330,6 +335,8 @@ const handleValidateReport = () => {
                     parameter: sample.parameter,
                     technique: sample.technique,
                     analysis_time: sample.analysis_time,
+                    file_path : sample.file_path,
+                    file_name : sample.file_name,
                     elementsdinteret: [],
                     norme: '',
                     valeurs: {},
@@ -416,27 +423,29 @@ const handleValidateReport = () => {
                         <p><strong>Date de Prélèvement:</strong> {sampleDetails.samplingDate}</p>
                         <p><strong>Prélevé par:</strong> {sampleDetails.sampledBy}</p>
 
-                        {Object.entries(analyses).map(([analysisKey, { element_id, analysisType, parameter, technique, elementsdinteret, norme, analysis_id, analysis_time, Reference_Materiel, Valeur_Recommandee, Valeur_Mesuree }], analysisIndex) => (
+                        {Object.entries(analyses).map(([analysisKey, { element_id, analysisType, parameter, technique, elementsdinteret, norme, analysis_id, analysis_time, Reference_Materiel, Valeur_Recommandee, Valeur_Mesuree,file_name,file_path }], analysisIndex) => (
                             <div key={analysisKey} className="analysis-section">
                                 <h4>Analyse {analysisIndex + 1}: {analysisType} pour {sampleType.toUpperCase()}</h4>
-                                {sampleType === 'air' ? (
+                                {sampleType === 'air' && (
                                     <>
                                     <h2>Vous trouverez les résultats de cette analyse dans l'archive des résultats de l'air.</h2>
                                     <p>Veuillez les consulter et télécharger la première version <strong>CORRECTE</strong> du rapport sans données client au-dessous pour valider.</p>
-                                    </>                                                                 
-                                    ) : (
-                                <>
+                                    </>    
+                                )}                                                             
                                 {department === 'ATN' && (
                                     <p><strong>Durée de mesure :</strong> {analysis_time}</p>
                                 )}
+                                <div className="analysis-resultas-container">
                                 <table className="analysis-table">
                                     <thead>
                                         <tr>
                                             <th>{parameter}</th>
+                                            <th>Technique Utilisée</th>
+                                            {sampleType !== 'air' && (
+                                                <>
                                             <th>Unité</th>
                                             <th>{getHeaderText()}</th>
                                             <th>Limite de Détection</th>
-                                            <th>Technique Utilisée</th>
                                             {analysisType === 'Quantitative' && (
                                                 <th>
                                                     <input
@@ -451,19 +460,23 @@ const handleValidateReport = () => {
                                             {analysisType === 'Quantitative' && (
                                                 <th>Observations</th>
                                             )}
+                                            </>
+                                            )}
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {elementsdinteret.map((element, resultIndex) => (
                                             <tr key={resultIndex}>
                                                 <td>{element.elementDinteret}</td>
+                                                <td>{technique}</td>
+                                                {sampleType !== 'air' && (
+                                                    <>
                                                 <td>{element.Unite}</td>
                                                 <td>
                                                     {element.Valeur_Moyenne}
                                                     {element.Incertitude && element.Incertitude.trim() !== '' && element.Incertitude !== '0' ? ` ± ${element.Incertitude}` : ''}
                                                 </td>
                                                 <td>{element.Limite_Detection}</td>
-                                                <td>{technique}</td>
                                                 {analysisType === 'Quantitative' && (
                                                   <>
                                                     <td>
@@ -487,10 +500,30 @@ const handleValidateReport = () => {
                                                     </td>
                                                     </>
                                                 )}
+                                                </>
+                                                )}
+                                                    {/* <td>{element.element_id}</td> */}
                                             </tr>
                                         ))}
                                     </tbody>
                                 </table>
+                                {file_name && (
+                                    <>
+                                    <td>
+                                    <a
+                                        href={`${apiBaseUrl}/${file_path}`}
+                                        download={file_name}
+                                        className="btn-primary"
+                                    >
+                                        Télécharger les Resultas
+                                    </a>
+                                    <p className= 'file_name-container'> {file_name}</p>
+                                </td>
+                                    </>    
+                                )} 
+                                </div>
+                                {sampleType !== 'air' && (
+                                    <>
                                 <button
                                   className={`btn-standard-results ${showStandardResults ? 'btn-standard-results-close' : ''}`}
                                   onClick={toggleStandardResults}
@@ -566,9 +599,10 @@ const handleValidateReport = () => {
                     />
                 </div>
             )}
-            {atLeastOneSampleIsAir && (
+            
                 <div className="file-upload-form">
-                    <h2>Uploader les fichiers</h2>
+                    <h2>première Version du Rapport </h2>
+                    <p className='text_file-obligation'> Obligatoire Seulement pour <strong>L'AIR</strong></p>
                     <input
                         key={inputKey} // Utilisez la clé pour forcer le composant à se réinitialiser
                         type="file"
@@ -590,7 +624,6 @@ const handleValidateReport = () => {
                         ))}</p>
                     </div>
                 </div>
-            )}
             {validationError && <div className="validation-error">{validationError}</div>}
             <div className="button-group">
                 <button className="btn-primary" onClick={handleValidateReport}>Valider</button>

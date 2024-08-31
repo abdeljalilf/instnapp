@@ -61,10 +61,21 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
         last_conclusion.conclusion,
         analyse_qualite.Reference_Materiel,
         analyse_qualite.Valeur_Recommandee,
-        analyse_qualite.Valeur_Mesuree              
+        analyse_qualite.Valeur_Mesuree,
+        last_fichiers_resultats.file_name,   
+        last_fichiers_resultats.file_path   
     FROM clients 
     JOIN echantillons ON clients.id = echantillons.client_id 
     JOIN analyses ON echantillons.id = analyses.echantillon_id 
+    LEFT JOIN (
+        SELECT *
+        FROM fichiers_resultats
+        WHERE (analysis_id, id) IN (
+            SELECT analysis_id,  MAX(id)
+            FROM fichiers_resultats
+            GROUP BY analysis_id
+        )
+    ) last_fichiers_resultats ON analyses.id = last_fichiers_resultats.analysis_id 
     JOIN elementsdinteret ON analyses.id = elementsdinteret.analysis_id
     JOIN (
         SELECT resultats.*
@@ -76,6 +87,16 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
         ) latest_result ON resultats.elementsdinteret_id = latest_result.elementsdinteret_id
             AND resultats.id = latest_result.max_id
     ) resultats ON elementsdinteret.id = resultats.elementsdinteret_id
+     JOIN (
+        SELECT analyse_qualite.*
+        FROM analyse_qualite
+        JOIN (
+            SELECT elementsdinteret_id, MAX(id) AS max_id
+            FROM analyse_qualite
+            GROUP BY elementsdinteret_id
+        ) latest_analyse_qualite ON analyse_qualite.elementsdinteret_id = latest_analyse_qualite.elementsdinteret_id
+            AND analyse_qualite.id = latest_analyse_qualite.max_id
+    ) analyse_qualite ON elementsdinteret.id = analyse_qualite.elementsdinteret_id
     LEFT JOIN (
         SELECT *
         FROM conclusions
@@ -85,7 +106,6 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
             GROUP BY client_id, departement
         )
     ) last_conclusion ON clients.id = last_conclusion.client_id AND analyses.departement = last_conclusion.departement
-    LEFT JOIN analyse_qualite ON elementsdinteret.id = analyse_qualite.elementsdinteret_id
     WHERE clients.id = ? AND analyses.departement = ? AND 
     (analyses.validated = 'laboratory' OR analyses.validated = 'office_step_2')
 ";
@@ -139,6 +159,8 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
                 'Reference_Materiel' => $row['Reference_Materiel'],
                 'Valeur_Recommandee' => $row['Valeur_Recommandee'],
                 'Valeur_Mesuree' => $row['Valeur_Mesuree'],
+                'file_path' => $row['file_path'],
+                'file_name' => $row['file_name'],
             ];
         }
         $stmt->close();

@@ -1,8 +1,9 @@
 .rapport-container {
+  align-items: center;
   margin: 20px auto;
-  max-width: 90%;
+  max-width: 94%;
   background-color: #f8f9fa;
-  padding: 30px;
+  padding: 10px;
   border-radius: 10px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -50,31 +51,16 @@
   font-size: 18px;
   color: #ff4c4c;
 }
-.Ref_client-form {
-  margin-top: 10px;
-  padding: 5px;
-  background-color: #ffffff;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
 
-.Ref_client-form h3 {
-  margin-bottom: 5px;
-  font-size: 15px;
-  color: #343a40;
-}
-
-.Ref_client-textarea {
-  width: 30%;
-  min-height: 20px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  padding: 4px;
-  font-size: 13px;
-  resize: vertical;
-  margin-bottom: 4px;
-}
 .sample-section {
+  margin-bottom: 20px; /* Espace sous chaque section d'analyse */
+  width: auto;
+  justify-content: space-between; /* Align buttons on opposite ends */
+  align-items: space-between;
+  display: flex;
+  flex-direction: column;
+  padding: 0 10px;
+  margin-bottom: 10px;
   margin-top: 20px;
 }
 
@@ -102,23 +88,38 @@
   font-size: 16px;
 }
 
-.analysis-table {
+.analysis-section {
+  margin-bottom: 20px; /* Espace sous chaque section d'analyse */
+  width: auto;
+  justify-content: space-between; /* Align buttons on opposite ends */
+  align-items: space-between;
+}
+.analysis-resultas-container {
+  display: flex;
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
+  flex-direction: row;
+  gap: 20px; /* Ajoute un espace de 20px entre les éléments */
 }
 
-.analysis-table th,
+.analysis-table {
+  width: auto;
+  border-collapse: collapse;
+  margin-bottom: 10px; /* Espace sous le tableau */
+}
 .analysis-table td {
-  padding: 12px;
-  border: 1px solid #dee2e6;
+  border: 1px solid #11230f;
+  padding: 8px;
   text-align: left;
   font-size: 15px;
 }
 
 .analysis-table th {
-  background-color: #343a40;
+  background-color: #2e8b57;
   color: white;
+  border: 1px solid #11230f;
+  padding: 8px;
+  text-align: left;
+  font-size: 15px;
 }
 
 .analysis-table tr:nth-child(even) {
@@ -129,100 +130,7 @@
   background-color: #d4edda;
 }
 
-.btn-primary {
-  display: inline-block;
-  background-color: #2e8b57;
-  color: white;
-  padding: 12px 20px;
-  margin: 15px 5px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
 
-.btn-primary:hover {
-  background-color: #1f6848;
-}
-
-.generate-report-button {
-  margin-top: 20px;
-  width: 100%;
-  font-size: 16px;
-}
-
-
-.conclusion-form {
-  margin-top: 30px;
-  padding: 20px;
-  background-color: #ffffff;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.conclusion-form h3 {
-  margin-bottom: 15px;
-  font-size: 18px;
-  color: #343a40;
-}
-
-.conclusion-textarea {
-  width: 100%;
-  min-height: 100px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  padding: 10px;
-  font-size: 16px;
-  resize: vertical;
-  margin-bottom: 20px;
-}
-
-.button-group {
-  display: flex;
-  justify-content: space-between; /* Align buttons on opposite ends */
-  align-items: space-between;
-  flex-direction: row;
-}
-
-.validate-button {
-  display: inline-block;
-  background-color: #2e8b57;
-  color: white;
-  padding: 12px 20px;
-  margin: 15px 5px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.validate-button:hover {
-  background-color: #1f6848;
-}
-
-
-.analysis-section {
-  margin-bottom: 20px; /* Espace sous chaque section d'analyse */
-  width: 100%;
-  justify-content: space-between; /* Align buttons on opposite ends */
-  align-items: space-between;
-}
-
-.analysis-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 10px; /* Espace sous le tableau */
-}
-
-.analysis-table th, .analysis-table td {
-  border: 1px solid #11230f;
-  padding: 8px;
-  text-align: left;
-}
-
-.analysis-table th {
-  background-color: #2e8b57;
-}
 .valeur-norme-input,
 .norme-input,
 .observation-input {
@@ -237,7 +145,17 @@
   border-color: #006400;
   outline: none;
 }
-
+.file_name-container {
+  width: auto;
+  min-height: auto;
+  border: 1.5px solid #006400;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 20px;
+  margin-left: 5px;
+}
 
 /* Container for centering error messages */
 .error-container {
@@ -254,20 +172,6 @@
   z-index: 1000; /* Ensure it appears above other content */
   text-align: center;
   display: none; /* Hidden by default */
-}
-
-/* For general error messages */
-.error-message {
-  color: red;
-  font-weight: bold;
-  margin-top: 10px;
-}
-
-/* For validation errors */
-.validation-error {
-  color: red;
-  font-weight: bold;
-  margin-top: 10px;
 }
 
 .standard-results {
@@ -333,6 +237,88 @@
   display: flex;
   justify-content: space-between; /* Distribute buttons to the left and right */
 }
+.btn-primary {
+  display: inline-block;
+  background-color: #2e8b57;
+  color: white;
+  padding: 12px 20px;
+  margin: 15px 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #1f6848;
+}
+
+.conclusion-form {
+  margin-top: 10px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px; /* Espace sous chaque section d'analyse */
+  width: auto;
+  justify-content: space-between; /* Align buttons on opposite ends */
+  align-items: space-between;
+  display: flex;
+  flex-direction: column;
+}
+
+.conclusion-form h3 {
+  margin-bottom: 15px;
+  font-size: 18px;
+  color: #343a40;
+}
+
+.conclusion-textarea {
+  width: auto;
+  min-height: 100px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  resize: vertical;
+  margin-bottom: 20px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between; /* Align buttons on opposite ends */
+  align-items: space-between;
+  flex-direction: row;
+}
+
+.validate-button {
+  display: inline-block;
+  background-color: #2e8b57;
+  color: white;
+  padding: 12px 20px;
+  margin: 15px 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.validate-button:hover {
+  background-color: #1f6848;
+}
+/* For general error messages */
+.error-message {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* For validation errors */
+.validation-error {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}
 /* Style for file upload */
 .file-upload-form {
   margin-top: 20px;
@@ -359,6 +345,10 @@
 .file-text-error {
   color: red;
   font-weight: bold;
+}
+.text_file-obligation {
+  color: rgb(4, 87, 18);
+  
 }
 
 .remove-file-button {

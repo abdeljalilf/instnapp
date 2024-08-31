@@ -1,11 +1,11 @@
 /* src/components/bureau/Dashboard/Dashboard.css */
 
 .dashboard-container {
-  display: flex;
   height: 100vh;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  overflow: hidden; /* Empêche le défilement */
 }
 
 .sidebar {
@@ -53,4 +53,7 @@
   flex-grow: 1;
   padding: 10px 0px;
   overflow-y: auto;
+  display: flex;
+  justify-content: space-between;
+  /* Empêche le défilement */
 }

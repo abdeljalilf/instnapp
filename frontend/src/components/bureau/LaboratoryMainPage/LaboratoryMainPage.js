@@ -61,7 +61,7 @@ const LaboratoryMainPage = () => {
                     </Button>
                 </Toolbar>
             </AppBar>
-            <div className="content">
+            <div className="bureau-main-page-content">
                 <Outlet /> {/* Display child routes here */}
             </div>
         </div>

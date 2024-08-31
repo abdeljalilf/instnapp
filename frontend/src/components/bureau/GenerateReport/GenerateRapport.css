@@ -5,7 +5,10 @@
     }
     #report-container {
         position: center;
-        margin: 35mm 10mm; /* Marges pour le contenu du rapport */
+         /* Marges pour le contenu du rapport */
+        margin-top: 35mm;
+        margin-bottom: 35mm;
+        margin-inline: 5mm;
         border: none; /* Pas de bordure autour du rapport */
     }
     .report-header, .report-footer {
@@ -38,7 +41,7 @@
         page-break-inside: avoid; /* Éviter les coupures dans les analyses */
     }
     .report-analysis-table {
-        width: 100%;
+        width: 98%;
         border-collapse: collapse;
         margin-bottom: 20px;
     }
@@ -59,6 +62,7 @@
 }
 
 .report-container {
+    position: center;
     width: 100%;
     max-width: 800px;
     font-family: 'Arial', sans-serif;
@@ -78,6 +82,7 @@
 
 .reportsample-section {
     margin-bottom: 20px;
+    width: auto;
     page-break-inside: avoid;
 }
 
@@ -95,20 +100,20 @@
 }
 
 .sample-code {
-    width: 290px; /* Ajuster selon les besoins pour aligner le contenu */
+    width: auto; /* Ajuster selon les besoins pour aligner le contenu */
     text-align: right;
     margin-right: 10px;
 }
 
 .reportanalysis-table {
-    width: 100%;
+    width: 98%;
     border-collapse: collapse;
     margin-bottom: 20px;
 }
 
 .reportanalysis-table th, .reportanalysis-table td {
     border: 1px solid #000;
-    padding: 8px;
+    padding: 5px;
     text-align: left;
 }
 
@@ -120,6 +125,7 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    position: center;
    
     transition: background-color 0.3s ease;
 }
