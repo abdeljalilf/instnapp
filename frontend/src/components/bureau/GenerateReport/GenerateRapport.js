@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import './GenerateRapport.css';
 import html2pdf from 'html2pdf.js';
 import jsPDF from 'jspdf';
+import { FaTimes } from 'react-icons/fa';
 
 const GenirateRapport = () => {
     const { id, department } = useParams();
@@ -10,6 +11,14 @@ const GenirateRapport = () => {
     const [error, setError] = useState(null);
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
     const session_id = localStorage.getItem('session_id');
+    const [files, setFiles] = useState([]);
+    const [fileText, setFileText] = useState('Aucun fichier n\'a été sélectionné');
+    const fileInputRef = useRef(null);
+    const [inputKey, setInputKey] = useState(Date.now()); 
+    const [validationError, setValidationError] = useState('');
+    const [successMessage, setSuccessMessage] = useState(''); // Add state for success message
+
+
 
     useEffect(() => {
         if (id && department) {
@@ -25,9 +34,10 @@ const GenirateRapport = () => {
                         if (data.error) {
                             setError(data.error);
                         } else {
-                            console.log('Data received from API:', data);
                             setData(data.reports[0]);
                             console.log('Data received from API:', data);
+                            console.log('Data received from API:', data.sampleTypes);
+
                         }
                     } catch (error) {
                         setError('Failed to parse JSON');
@@ -40,7 +50,63 @@ const GenirateRapport = () => {
             setError('Invalid demande_id provided');
         }
     }, [id, department]);
+    // Define the atLeastOneSampleIsAir constant
+    const sampleTypes = data?.sampleTypes || []; // Safely access sampleTypes
 
+    // Check if 'air' is in sampleTypes
+    const containsAirSample = sampleTypes.includes('air');
+
+    const handleSaveFinalFileReport = () => {
+        let errorMessage = '';
+        let successMessage = 'Le Rapport a été bien enregistré';
+        
+        if (containsAirSample && files.length === 0) {
+            errorMessage = 'Veuillez uploader au moins un fichier avant de valider.';
+        }
+        
+        if (errorMessage) {
+            setValidationError(errorMessage);
+            return;
+        }
+        
+        // Create FormData object for file upload
+        const formData = new FormData();
+        formData.append('client_id', id);  // Assurez-vous que `id` correspond au client_id correct
+        // Ajouter des fichiers à FormData
+        files.forEach((file, index) => {
+            formData.append(`file${index}`, file);
+        });
+        // Envoyer les données à l'API
+        console.log('Sending report data:', formData);
+    
+        fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/save_final_file_report.php?department=${department}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': session_id
+            },
+            body: formData,
+        })
+        .then((response) => response.text())  // Change to .text() to handle HTML response
+        .then((text) => {
+            console.log('Response from server:', text);
+    
+            try {
+                const data = JSON.parse(text);
+                if (data.success) {
+                    setSuccessMessage(successMessage); // Set success message
+                    setValidationError(''); // Clear any existing validation error
+                } else {
+                    setValidationError(data.message || 'Erreur lors de l\'enregistrement des données.');
+                }
+            } catch (error) {
+                console.error('Error parsing JSON:', error);
+                setValidationError('Erreur lors de l\'enregistrement des données.');
+            }
+        })
+        .catch((error) => {
+            setValidationError('Erreur lors de l\'enregistrement des données.');
+        });
+    };     
     const handleDownload = () => {
         const element = document.getElementById('report-container');
         const sanitizedClientReference = data.clientReference.replace(/\//g, '_');
@@ -127,15 +193,39 @@ const GenirateRapport = () => {
                 return 'Valeur Moyenne'; // Valeur par défaut si aucun des cas ne correspond
         }
     };
+    const handleFileUpload = (e) => {
+        const uploadedFiles = Array.from(e.target.files);
+        if (uploadedFiles.length > 0) {
+            setFiles(prevFiles => [...prevFiles, ...uploadedFiles]);
+            setFileText(''); // Réinitialiser le texte quand des fichiers sont ajoutés
+        }
+        if (uploadedFiles.length === 0) {
+            e.target.value = null; // Effacer la valeur de l'input pour permettre la ré-sélection des mêmes fichiers
+        }
+        
+    };
+
+    const handleRemoveFile = (fileToRemove) => {
+        setFiles(prevFiles => {
+            const newFiles = prevFiles.filter(file => file !== fileToRemove);
+            if (newFiles.length === 0) {
+                setFileText('Aucun fichier n\'a été sélectionné'); // Réinitialiser le texte quand la liste devient vide
+            }
+            return newFiles;
+        });
+
+        // Réinitialiser l'élément d'entrée de fichiers
+        setInputKey(Date.now());
+    };
     return (
         <div className="report-wrapper">
+            <div className="report-container-non-imprime">
             <div className="report-container" id="report-container">
                 <header className="report-header">
                     <h1>RÉSULTATS D'ANALYSES</h1>
                     <p>
                         <strong>Référence de la demande :</strong> {data.clientReference}/{department}
                     </p>
-                    
                     <p className="date-location">
                         <strong>Antananarivo, le</strong>{' '}
                         {new Date().toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}
@@ -245,11 +335,42 @@ const GenirateRapport = () => {
                 ))}
 
             </div>
-
-            <div className="reportbutton-container">
-                <button className="report-download-button" onClick={handleDownload}>
-                    Télécharger le PDF
-                </button>
+            </div>
+            <div className="report-bottom">
+            <div className="finalreport-upload-form">
+                    <h2>Version Final du Rapport Généré Manuellement </h2>
+                    <p className='text_file-obligation'> <strong>Si Elle Existe</strong></p>
+                    <input
+                        key={inputKey} // Utilisez la clé pour forcer le composant à se réinitialiser
+                        type="file"
+                        multiple
+                        onChange={handleFileUpload}
+                        ref={fileInputRef}
+                    />
+                    <div className="file-status">
+                        <p className={fileText ? 'file-text-error' : ''}>{fileText || files.map((file, index) => (
+                            <div key={index} className="file-item">
+                                <span className="file-name">{file.name}</span>
+                                <button
+                                    className="remove-file-button"
+                                    onClick={() => handleRemoveFile(file)}
+                                >
+                                    <FaTimes />
+                                </button>
+                            </div>
+                        ))}</p>
+                    </div>
+                    <div className="button-group">
+                        <button className="btn-primary" onClick={handleSaveFinalFileReport}>Sauvegarder le Rapport</button>
+                     </div>
+                     {validationError && <div className="validation-error">{validationError}</div>}
+                     {successMessage && <div className="success-Message">{successMessage}</div>}
+                </div>
+                <div className="reportbutton-container">
+                    <button className="report-download-button" onClick={handleDownload}>
+                        Télécharger le PDF
+                    </button>
+                </div>
             </div>
         </div>
     );

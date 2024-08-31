@@ -19,8 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 // Get the department parameter from the URL
 $department = isset($_GET['department']) ? $_GET['department'] : '';
 // Get the ID and department from the request
-$id = intval($_GET['id']);
-
 // Vérifiez la session
 $user = checkSession($conn);
 authorize(['bureau'], $user, $department);

@@ -38,10 +38,17 @@
 }
 
 /* Specific styling for logout button */
-.logout-button {
-    background-color: #2e8b57; /* Background color for logout button */
-    color: #fff; /* Text color for logout button */
+.bureau-logout-button {
     margin-left: auto; /* Push logout button to the end */
+    flex-grow: 1;
+    padding: 10px;
+    font-size: 16px;
+    text-transform: uppercase;
+    color: #ffffff; /* Default text color */
+    background-color: transparent; /* Default background color */
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .logout-button:hover {

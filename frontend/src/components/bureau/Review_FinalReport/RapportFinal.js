@@ -107,7 +107,7 @@ const handleGenerateReport = () => {
         samples.forEach((sample) => {
             if (!acc[sample.sampleReference]) {
                 acc[sample.sampleReference] = {
-                    sampleType,
+                    sampleType:sample.sampleType,
                     sampleDetails: sample,
                     analyses: {}
                 };
@@ -179,9 +179,6 @@ const handleGenerateReport = () => {
                             day: 'numeric',
                         })}
                     </p>
-                    <p>
-                        <strong>Prélevé par :</strong> {sampleDetails.sampledBy}
-                    </p>
 
                     {Object.entries(analyses).map(([analysisKey, { analysisType, parameter, technique, elementsdinteret, norme,analysis_time }], analysisIndex) => (
                         <div key={analysisKey} className="analysis-section">
@@ -192,16 +189,20 @@ const handleGenerateReport = () => {
                             <table className="analysis-table">
                                 <thead>
                                     <tr>
-                                        <th>Élément d'Intérêt</th>
-                                        <th>Unité</th>
-                                        <th>Valeur Moyenne</th>
-                                        <th>Limite de Détection</th>
+                                        <th>{parameter}</th>
                                         <th>Technique Utilisée</th>
-                                        {analysisType === 'Quantitative' && (
-                                        <th>{norme}</th>
-                                        )}
-                                        {analysisType === 'Quantitative' && (
-                                        <th>Observation</th>
+                                        {sampleType !== 'air' && (
+                                        <>
+                                            <th>Unité</th>
+                                            <th>Valeur Moyenne</th>
+                                            <th>Limite de Détection</th>
+                                            {analysisType === 'Quantitative' && (
+                                            <th>{norme}</th>
+                                            )}
+                                            {analysisType === 'Quantitative' && (
+                                            <th>Observation</th>
+                                            )}
+                                        </>
                                         )}
                                     </tr>
                                 </thead>
@@ -209,18 +210,22 @@ const handleGenerateReport = () => {
                                     {elementsdinteret.map((element, resultIndex) => (
                                         <tr key={resultIndex}>
                                             <td>{element.elementDinteret}</td>
-                                            <td>{element.Unite}</td>
-                                            <td>
-                                                {element.Valeur_Moyenne}
-                                                {element.Incertitude && element.Incertitude.trim() !== '' && element.Incertitude !== '0' ? ` ± ${element.Incertitude}` : ''}
-                                            </td>
-                                            <td>{element.Limite_Detection}</td>
                                             <td>{technique}</td>
-                                            {analysisType === 'Quantitative' && (
-                                            <td>{element.Valeur_Norme_Utlise}</td>
-                                            )}
-                                            {analysisType === 'Quantitative' && (
-                                            <td>{element.Observation}</td>
+                                            {sampleType !== 'air' && (
+                                            <>
+                                                <td>{element.Unite}</td>
+                                                <td>
+                                                    {element.Valeur_Moyenne}
+                                                    {element.Incertitude && element.Incertitude.trim() !== '' && element.Incertitude !== '0' ? ` ± ${element.Incertitude}` : ''}
+                                                </td>
+                                                <td>{element.Limite_Detection}</td>
+                                                {analysisType === 'Quantitative' && (
+                                                <td>{element.Valeur_Norme_Utlise}</td>
+                                                )}
+                                                {analysisType === 'Quantitative' && (
+                                                <td>{element.Observation}</td>
+                                                )}
+                                            </>
                                             )}
                                         </tr>
                                     ))}

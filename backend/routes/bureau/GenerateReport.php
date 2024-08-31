@@ -1,4 +1,5 @@
 <?php
+//GenerateReport.php
 require_once '../../routes/login/session_util.php';
 require_once '../../database/db_connection.php';
 
@@ -15,8 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
 }
-
-
 
 
 // Get the department parameter from the URL
@@ -85,7 +84,7 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
         )
     ) last_conclusion ON clients.id = last_conclusion.client_id AND analyses.departement = last_conclusion.departement
     WHERE clients.id = ? AND analyses.departement = ? AND 
-    (analyses.validated = 'office_step_2' OR analyses.validated = 'office_step_3')
+    analyses.validated = 'office_step_3' AND echantillons.sampleType !='air'
 ";
 
 
@@ -143,6 +142,27 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
         echo json_encode(['error' => 'Failed to prepare SQL statement']);
         exit;
     }
+    // Requête pour récupérer les types de tous les échantillons de la demande récupérée
+    $sampleTypesSql = "
+        SELECT DISTINCT sampleType
+        FROM echantillons
+        WHERE client_id = ?
+    ";
+
+    $sampleTypes = [];
+    if ($stmt = $conn->prepare($sampleTypesSql)) {
+        $stmt->bind_param("i", $demande_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        while ($row = $result->fetch_assoc()) {
+            $sampleTypes[] = strtolower($row['sampleType']);
+        }
+        $stmt->close();
+    } else {
+        echo json_encode(['error' => 'Failed to prepare sample types SQL statement']);
+        exit;
+    }
 
     // Requête pour compter les analyses N1 et N2 pour ce client et ce département
     $countSql = "
@@ -167,10 +187,12 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
 
     $N1 = $counts['N1'];
     $N2 = $counts['N2'];
+    
 
     // Inclure les résultats dans la réponse JSON
     $response = [
         'reports' => array_values($reports),
+        'sampleTypes' => $sampleTypes,
         'N1' => $N1,
         'N2' => $N2
     ];

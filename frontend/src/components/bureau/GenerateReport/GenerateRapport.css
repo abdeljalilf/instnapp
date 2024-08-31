@@ -60,7 +60,30 @@
         display: none; /* Masquer le bouton de téléchargement lors de l'impression */
     }
 }
-
+.report-wrapper {
+    display: flex;
+    align-items: space-between;
+    flex-direction: column;
+    position: center;
+    width: 100%;
+    max-width: 880px;
+    font-family: 'Arial', sans-serif;
+    color: #000;
+    background-color: #fff;
+    margin: 0 auto;
+    padding: 10px;
+}
+.report-container-non-imprime{
+    border: 1px solid #000;
+    position: center;
+    width: 100%;
+    max-width: 820px;
+    font-family: 'Arial', sans-serif;
+    color: #000;
+    background-color: #fff;
+    margin: 0 auto;
+    padding: 0px;
+}
 .report-container {
     position: center;
     width: 100%;
@@ -129,3 +152,76 @@
    
     transition: background-color 0.3s ease;
 }
+.report-bottom {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-between; 
+    position: center;
+    width: 100%;
+    max-width: 800px;
+    font-family: 'Arial', sans-serif;
+    color: #000;
+    background-color: #fff;
+    margin: 0 auto;
+    padding: 10px;
+}
+/* Style for file upload */
+.finalreport-upload-form {
+    position: center;
+    border: 1px solid #000;
+    padding: 15px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Align buttons on opposite ends */
+    align-items: space-between;
+    width: 100%;
+  }
+  
+  .file-status {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    gap: 10px;
+  }
+  
+  .file-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  
+  .file-name {
+    flex: 1;
+  }
+  .file-text-error {
+    color: red;
+    font-weight: bold;
+  }
+  .text_file-obligation {
+    color: rgb(4, 87, 18);
+    
+  }
+  
+  .remove-file-button {
+    background: none;
+    border: none;
+    color: red;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 10px;
+  }
+  /* For validation errors */
+.validation-error {
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  /* For validation errors */
+.success-Message {
+    color: rgb(11, 98, 18);
+    font-weight: bold;
+    margin-top: 10px;
+  }

@@ -421,7 +421,6 @@ const handleValidateReport = () => {
                         <p><strong>Référence Échantillon:</strong> {sampleReference}</p>
                         <p><strong>Lieu de Prélèvement:</strong> {sampleDetails.samplingLocation}</p>
                         <p><strong>Date de Prélèvement:</strong> {sampleDetails.samplingDate}</p>
-                        <p><strong>Prélevé par:</strong> {sampleDetails.sampledBy}</p>
 
                         {Object.entries(analyses).map(([analysisKey, { element_id, analysisType, parameter, technique, elementsdinteret, norme, analysis_id, analysis_time, Reference_Materiel, Valeur_Recommandee, Valeur_Mesuree,file_name,file_path }], analysisIndex) => (
                             <div key={analysisKey} className="analysis-section">
