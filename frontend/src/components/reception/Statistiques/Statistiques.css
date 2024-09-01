@@ -57,9 +57,12 @@ h1 {
 .status-container {
     display: flex;
     justify-content: space-between;
+    align-items: space-between;
     margin-bottom: 10px;
     background-color: white;
     padding: 10px;
+    flex-direction: row;
+    width: 99%;
 }
 
 .status-item {

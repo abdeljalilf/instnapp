@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Outlet, useParams } from 'react-router-dom';
-import { FaFlask, FaUniversity, FaArchive } from 'react-icons/fa'; // Import the icons
+import { FaFlask, FaArchive, FaFileAlt, FaClipboard  } from 'react-icons/fa'; // Import the icons
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -36,8 +36,18 @@ const Dashboard = () => {
                             className={({ isActive }) => (isActive ? 'active' : '')} 
                             data-tooltip="Archive_Resultats"
                         >
-                            <FaArchive className="icon" />
+                            <FaFileAlt className="icon" />
                             <span>Resultats</span>
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink 
+                            to="archive_rapports" 
+                            className={({ isActive }) => (isActive ? 'active' : '')} 
+                            data-tooltip="Archive_Rapports"
+                        >
+                            <FaClipboard className="icon" />
+                            <span>Rapports</span>
                         </NavLink>
                     </li>
                 </ul>

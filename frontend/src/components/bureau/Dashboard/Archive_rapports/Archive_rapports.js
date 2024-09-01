@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './Archive_resultats.css';
+import './Archive_rapports.css';
 
 const ArchiveResultats = () => {
     const [files, setFiles] = useState([]);
@@ -12,7 +12,7 @@ const ArchiveResultats = () => {
     useEffect(() => {
         const fetchFiles = async () => {
             try {
-                const response = await fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/Archive_resultats.php`);
+                const response = await fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/Archive_rapports.php`);
                 const data = await response.json();
                 console.log('Response from server:', data);
 
@@ -42,7 +42,6 @@ const ArchiveResultats = () => {
             const filtered = files.filter(file =>
                 file.file_name.toLowerCase().includes(term.toLowerCase()) ||
                 file.clientReference.toLowerCase().includes(term.toLowerCase()) ||
-                file.parameter.toLowerCase().includes(term.toLowerCase()) ||
                 file.sampleReference.toLowerCase().includes(term.toLowerCase())
             );
             setFilteredFiles(filtered);
@@ -50,7 +49,7 @@ const ArchiveResultats = () => {
     };
 
     return (
-        <div className="table-container-archive-resultats">
+        <div className="table-container-archive-rapports">
             <h2>Archive des Résultats</h2>
 
             {/* Barre de recherche */}
@@ -67,14 +66,12 @@ const ArchiveResultats = () => {
             ) : error ? (
                 <div className="error-message">{error}</div>
             ) : (
-                <table className="table-archive-resultats">
+                <table className="table-archive-rapports">
                     <thead>
                         <tr>
                             <th>Référence de la Demande</th>
                             <th>Type d'Échantillon</th>
                             <th>Référence d'Échantillon</th>
-                            <th>ID d'Analyse</th>
-                            <th>Description</th>
                             <th>Date de Téléchargement</th>
                             <th>Nom du Fichier</th>
                             <th>Action</th>
@@ -86,10 +83,6 @@ const ArchiveResultats = () => {
                                 <td>{file.clientReference}</td>
                                 <td>{file.sampleType}</td>
                                 <td>{file.sampleReference}</td>
-                                <td>{file.analysis_id}</td>
-                                <td>
-                                    <p>Analyse {file.analysisType} de: {file.parameter} par {file.technique}</p>
-                                </td>
                                 <td>{new Date(file.uploaded_at).toLocaleString()}</td>
                                 <td>{file.file_name}</td>
                                 <td>

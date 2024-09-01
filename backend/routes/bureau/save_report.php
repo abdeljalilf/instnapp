@@ -36,13 +36,14 @@ if (isset($_POST['client_id'])) {
             foreach ($_FILES as $fileKey => $file) {
                 if ($file['error'] === UPLOAD_ERR_OK) {
                     $file_name = basename($file['name']);
+                    $filePath_stocke = 'instnapp/backend/fichiers_rapports/' . $fileName;
                     $file_path = '../../fichiers_rapports/' . $file_name;
 
                     if (move_uploaded_file($file['tmp_name'], $file_path)) {
                         $file_name = $conn->real_escape_string($file_name);
                         $file_path = $conn->real_escape_string($file_path);
 
-                        $query = "INSERT INTO fichiers_rapports (client_id, file_name, file_path) VALUES ($client_id, '$file_name', '$file_path')";
+                        $query = "INSERT INTO fichiers_rapports (client_id, file_name, file_path) VALUES ($client_id, '$file_name', '$filePath_stocke')";
                         if (!$conn->query($query)) {
                             echo json_encode(['success' => false, 'message' => 'Error inserting file record: ' . $conn->error]);
                             exit;

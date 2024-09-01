@@ -71,7 +71,7 @@ $requests = array_values($requests);
 
 // Add the status field
 foreach ($requests as &$request) {
-    $request['status'] = $request['all_validated'] ? 'Pas encore validée' : 'Validée';
+    $request['status'] = $request['all_validated'] ? 'Pas encore validée' : 'Déjà Validée';
 }
 
 echo json_encode($requests);

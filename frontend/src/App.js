@@ -16,6 +16,7 @@ import ProcessedRequests from './components/bureau/ProcessedRequests/ProcessedRe
 import Dashboard from './components/bureau/Dashboard/Dashboard';
 import Archive from './components/bureau/Dashboard/Archive/Archive';
 import Archive_resultats from './components/bureau/Dashboard/Archive_resultats/Archive_resultats';
+import Archive_rapports from './components/bureau/Dashboard/Archive_rapports/Archive_rapports';
 import Department from './components/bureau/Dashboard/Department/Department';
 import RequestDetails from './components/bureau/RequestDetails/RequestDetails';
 import Rapport from './components/bureau/EnterReport/Rapport';
@@ -61,6 +62,7 @@ const App = () => {
                         <Route path=":department" element={<ProtectedRoute element={<Department />} roleRequired="bureau" />} />
                         <Route path="archive" element={<ProtectedRoute element={<Archive />} roleRequired="bureau" />} />
                         <Route path="archive_resultats" element={<ProtectedRoute element={<Archive_resultats />} roleRequired="bureau" />} />
+                        <Route path="archive_rapports" element={<ProtectedRoute element={<Archive_rapports />} roleRequired="bureau" />} />
                     </Route>
                     <Route path="request/:id" element={<ProtectedRoute element={<RequestDetails />} roleRequired="bureau" />} />
                     <Route path="rapport/:id" element={<ProtectedRoute element={<Rapport />} roleRequired="bureau" />} />

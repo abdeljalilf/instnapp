@@ -47,16 +47,24 @@ const Archive = () => {
     }, [department]); // Fetch data whenever the department changes
 
     const handleSearch = (event) => {
-        const term = event.target.value;
+        const term = event.target.value.trim().toLowerCase();
         setSearchTerm(term);
+    
         if (term) {
-            // Filtrer les demandes par clientReference
-            const filtered = requests.filter(request => request.clientReference.includes(term));
+            // Filter requests by multiple fields
+            const filtered = requests.filter(request => {
+                return (
+                    request.demande_id.toString().toLowerCase().includes(term) ||
+                    request.clientReference.toLowerCase().includes(term) ||
+                    request.dilevery_delay.toLowerCase().includes(term) ||
+                    request.status.toLowerCase().includes(term)
+                );
+            });
             setFilteredRequests(filtered);
         } else {
-            setFilteredRequests(requests); // Réinitialiser les demandes filtrées si la recherche est vide
+            setFilteredRequests(requests); // Reset filtered requests if the search is empty
         }
-    };
+    };    
 
     if (loading) {
         return <div>Loading...</div>; // Afficher un message de chargement si les données ne sont pas encore chargées
@@ -72,7 +80,7 @@ const Archive = () => {
             {/* Ajouter la case de recherche */}
             <input 
                 type="text"
-                placeholder="Rechercher par Numéro de la demande"
+                placeholder="Rechercher par ID de la demande, Référence de la demande, Date de livraison ou Statut"      
                 value={searchTerm}
                 onChange={handleSearch}
                 className="search-input"

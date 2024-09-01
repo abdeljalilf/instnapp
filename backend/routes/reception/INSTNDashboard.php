@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // Get the department parameter from the URL
-$department = isset($_GET['department']) ? $_GET['department'] : '';
+$department = isset($_GET['department']) ? $_GET['department'] : 'INSTN';
 
 // Initialize the data array
 $data = [];

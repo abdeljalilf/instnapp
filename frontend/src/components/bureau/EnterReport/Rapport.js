@@ -246,7 +246,7 @@ const handleValidateReport = () => {
             office_remark: remark,
         };
 
-        fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/request_revision.php`, {
+        fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/request_revision.php?department=${department}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -257,9 +257,12 @@ const handleValidateReport = () => {
             .then((response) => response.json())
             .then((data) => {
                 console.log('Response from server:', data);
-                if (data.success) {
+                if (data.success && N1 > 1) {
                     setValidationError('');
                     window.location.reload();
+                } else if (data.success && N1 <= 1) {
+                    setValidationError('');
+                    navigate(`/bureau/${department}/processed-requests`);
                 } else {
                     setValidationError(data.message);
                 }
