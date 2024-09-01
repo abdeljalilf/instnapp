@@ -237,22 +237,6 @@
   display: flex;
   justify-content: space-between; /* Distribute buttons to the left and right */
 }
-.btn-primary {
-  display: inline-block;
-  background-color: #2e8b57;
-  color: white;
-  padding: 12px 20px;
-  margin: 15px 5px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.btn-primary:hover {
-  background-color: #1f6848;
-}
-
 .conclusion-form {
   margin-top: 10px;
   padding: 20px;
@@ -289,6 +273,21 @@
   justify-content: space-between; /* Align buttons on opposite ends */
   align-items: space-between;
   flex-direction: row;
+}
+.btn-primary {
+  display: inline-block;
+  background-color: #2e8b57;
+  color: white;
+  padding: 12px 20px;
+  margin: 15px 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #1f6848;
 }
 
 .validate-button {

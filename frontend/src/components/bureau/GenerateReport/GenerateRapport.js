@@ -361,16 +361,14 @@ const GenirateRapport = () => {
                         ))}</p>
                     </div>
                     <div className="button-group">
-                        <button className="btn-primary" onClick={handleSaveFinalFileReport}>Sauvegarder le Rapport</button>
+                        <button className="upload-finalreport-button" onClick={handleSaveFinalFileReport}>Sauvegarder le Rapport</button>
                      </div>
                      {validationError && <div className="validation-error">{validationError}</div>}
                      {successMessage && <div className="success-Message">{successMessage}</div>}
                 </div>
-                <div className="reportbutton-container">
                     <button className="report-download-button" onClick={handleDownload}>
-                        Télécharger le PDF
+                        Télécharger le Rapport
                     </button>
-                </div>
             </div>
         </div>
     );

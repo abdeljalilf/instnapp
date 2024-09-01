@@ -54,7 +54,7 @@ const LaboratoryMainPage = () => {
                         Dashboard et Archive
                     </Button>
                     <Button 
-                        className="nav-button bureau-logout-button"
+                        className="bureau-logout-button"
                         onClick={handleLogout}
                     >
                         Logout
