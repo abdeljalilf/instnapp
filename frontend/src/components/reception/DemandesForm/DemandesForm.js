@@ -12,6 +12,7 @@ const DemandesForm = () => {
     const [personalInfo, setPersonalInfo] = useState({
         name: '',
         address: '',
+        cleClient:'',
         phone: '',
         email: '',
         broughtBy:'',
@@ -175,7 +176,7 @@ const DemandesForm = () => {
 
         
         // Réinitialiser le formulaire après soumission
-        setPersonalInfo({ name: '', address: '', phone: '', email: '' , broughtBy:''});
+        setPersonalInfo({ name: '', address: '', phone: '', email: '' , broughtBy:'', cleClient:""});
         setSamples([{
             sampleType: '',
             samplingLocation: '',
@@ -277,6 +278,15 @@ const DemandesForm = () => {
         <form className='reception-form' onSubmit={handleSubmit}>
             <div className="form-header">
                 <h2>Informations personnelles du client</h2>
+            </div>
+            <div className="form-group">
+                <label>Référence du client:</label>
+                <input
+                    type="text"
+                    name="cleClient"
+                    value={personalInfo.cleClient}
+                    onChange={handlePersonalInfoChange}
+                />
             </div>
             <div className="form-group">
                 <label>Nom du client:</label>
