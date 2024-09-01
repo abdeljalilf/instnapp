@@ -59,6 +59,7 @@ const App = () => {
                     <Route path="processed-requests" element={<ProtectedRoute element={<ProcessedRequests />} roleRequired="bureau" />} />
                     <Route path="dashboard" element={<ProtectedRoute element={<Dashboard />} roleRequired="bureau" />}>
                         {/* Additional Dashboard Routes */}
+                        <Route index element={<ProtectedRoute element={<Department />} roleRequired="bureau" />} /> {/* Default route */}
                         <Route path=":department" element={<ProtectedRoute element={<Department />} roleRequired="bureau" />} />
                         <Route path="archive" element={<ProtectedRoute element={<Archive />} roleRequired="bureau" />} />
                         <Route path="archive_resultats" element={<ProtectedRoute element={<Archive_resultats />} roleRequired="bureau" />} />

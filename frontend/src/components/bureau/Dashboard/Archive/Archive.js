@@ -115,7 +115,7 @@ const Archive = () => {
                             </td>
                             <td>
                                 <Link 
-                                    to={`/bureau/${department}/${request.status === 'Validée' ? 'GenerateRapport' : 'rapportfinal'}/${request.demande_id}`} 
+                                    to={`/bureau/${department}/${request.status === 'Déjà Validée' ? 'GenerateRapport' : 'rapportfinal'}/${request.demande_id}`} 
                                     className="btn-primary"
                                 >
                                     Générer le Rapport

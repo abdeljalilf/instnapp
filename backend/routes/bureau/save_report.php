@@ -40,7 +40,7 @@ if (isset($_POST['client_id'])) {
                     $file_path = '../../fichiers_rapports/' . $file_name;
 
                     if (move_uploaded_file($file['tmp_name'], $file_path)) {
-                        $file_name = $conn->real_escape_string($file_name);
+                        $file_name = $conn->real_escape_string('premiere_version_'.$file_name);
                         $file_path = $conn->real_escape_string($file_path);
 
                         $query = "INSERT INTO fichiers_rapports (client_id, file_name, file_path) VALUES ($client_id, '$file_name', '$filePath_stocke')";

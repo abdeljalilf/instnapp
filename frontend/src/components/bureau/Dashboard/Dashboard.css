@@ -9,7 +9,8 @@
 }
 
 .sidebar {
-  width: 120px;
+  flex: auto;
+  width: 125px ;
   background-color: #2cb185;
   padding: 2px;
   padding-top: 20px;
@@ -30,7 +31,7 @@
 .sidebar li a {
   text-decoration: none;
   color: #063c60; /* Light blue color */
-  padding: 10px 10px;
+  padding: 15px 5px;
   display: block;
   border-radius: 4px;
   transition: background-color 0.3s, color 0.3s;
@@ -44,13 +45,13 @@
 }
 
 .sidebar li a .icon {
-  margin-right: 8px;
-  font-size: 18px; /* Icon size */
+  margin-right: 5px;
+  font-size: 16px; /* Icon size */
   vertical-align: middle;
 }
 
 .content {
-  flex-grow: 1;
+  flex: auto;
   padding: 10px 0px;
   overflow-y: auto;
   display: flex;

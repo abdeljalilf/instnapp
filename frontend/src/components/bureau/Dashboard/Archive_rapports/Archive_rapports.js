@@ -55,7 +55,7 @@ const ArchiveResultats = () => {
             {/* Barre de recherche */}
             <input
                 type="text"
-                placeholder="Rechercher par Référence de demande, Nom de fichier, Référence d'échantillon ou Paramètre"
+                placeholder="Rechercher par Référence de demande, Nom de fichier, Référence d'échantillon"
                 value={searchTerm}
                 onChange={handleSearch}
                 className="search-input"
