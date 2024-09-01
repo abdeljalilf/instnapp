@@ -14,6 +14,7 @@ const DemandesForm = () => {
         address: '',
         phone: '',
         email: '',
+        broughtBy:'',
         requestingDate:getCurrentDate(),
         dilevery_delay:getCurrentDate()
     });
@@ -21,12 +22,15 @@ const DemandesForm = () => {
     const [samples, setSamples] = useState([
         {
             sampleType: '',
+            midacNumber:'',
             samplingLocation: '',
             samplingDate: getCurrentDate(),
+            samplingTime:'',
             sampledBy: '',
-            broughtBy:'',
             sampleSize:'',
             sampleObservations:'',
+            clientSampleRefrence:'',
+            quantiteDenree:'',
             analysisDetails: [
                 {
                     analysisType: '',
@@ -106,11 +110,15 @@ const DemandesForm = () => {
         setSamples([...samples, {
             sampleType: '',
             samplingLocation: '',
+            midacNumber:'',
             samplingDate: getCurrentDate(),
+            samplingTime:'',
             sampledBy: '',
-            broughtBy:'',
+            
             sampleSize:'',
             sampleObservations:'',
+            clientSampleRefrence:'',
+            quantiteDenree:'',
             analysisDetails: [
                 {
                     analysisType: '',
@@ -167,15 +175,18 @@ const DemandesForm = () => {
 
         
         // Réinitialiser le formulaire après soumission
-        setPersonalInfo({ name: '', address: '', phone: '', email: '' });
+        setPersonalInfo({ name: '', address: '', phone: '', email: '' , broughtBy:''});
         setSamples([{
             sampleType: '',
             samplingLocation: '',
+            midacNumber:'',
             samplingDate: getCurrentDate(),
+            samplingTime:'',
             sampledBy: '',
-            broughtBy:'',
             sampleSize:'',
             sampleObservations:'',
+            clientSampleRefrence:'',
+            quantiteDenree:'',
             analysisDetails: [
                 {
                     analysisType: '',
@@ -190,10 +201,10 @@ const DemandesForm = () => {
     const getParameterOptions = (sampleType) => {
         switch (sampleType) {
             case 'eau':
-                return ['Metaux', 'Hg', 'Anion', 'Cation', 'Elements radioactif'];
+                return ['Metaux', 'Mercure', 'Anion', 'Cation', 'Elements radioactif', 'Paramètres physiques', 'Alcalinite Total'];
             case 'sol':
             case 'minerais':
-                return ['Metaux', 'Hg', 'Elements radioactif'];
+                return ['Metaux', 'Mercure', 'Elements radioactif'];
             case 'denree':
                 return ['Metaux', 'Metaux lourds', 'Elements nutritif', 'Elements radioactif'];
             case 'air':
@@ -227,8 +238,12 @@ const DemandesForm = () => {
                 return ["PM"];
             case 'Randon':
                 return ["Randon"];
-            case 'Hg':
+            case 'Mercure':
                 return ["Hg"];
+            case 'Alcalinite Total':
+                return ["Alcalinite Total"]
+            case 'Paramètres physiques':
+                return ["pH", "Solide Dissous Totaux (SDT)", "Température (T)", "Oxygène dissous (OD)", "Potentiel Redox (eH)", "Salinite"]
             default:
                 return [];
         }
@@ -237,7 +252,7 @@ const DemandesForm = () => {
     const getTechniqueOptions = (sampleType, parameter) => {
         if (parameter === 'Metaux' && (sampleType === 'eau' || sampleType === 'denree')) {
             return ["Spectrometrie d'Absportion Atomic (SAA)"];
-        } else if (parameter === 'Hg') {
+        } else if (parameter === 'Mercure') {
             return ['Analyseur Direct de Mercure (ADM)'];
         } else if (parameter === 'Anion' || parameter === 'Cation') {
             return ['Chromatographie Ionique (CI)'];
@@ -250,6 +265,10 @@ const DemandesForm = () => {
             return ['Gravimetrie'];
         } else if ((parameter === 'Metaux' || parameter === 'Randon') && sampleType === 'air') {
             return ['Fluorescence X a Energie Dispersive (FXDE)'];
+        } else if ((parameter === 'Paramètres physiques') && sampleType === 'eau') {
+            return ['Multi-paramètres'];
+        } else if ((parameter === 'Alcalinite Total') && sampleType === 'eau') {
+            return ['Titration Digitale'];
         }
         return [];
     };
@@ -299,14 +318,44 @@ const DemandesForm = () => {
                     required
                 />
             </div>
-
+            <div className="form-group">
+                        <label>Echantillon apporté par:</label>
+                        <input
+                            type="text"
+                            name="broughtBy"
+                            value={personalInfo.broughtBy}
+                            onChange={handlePersonalInfoChange}
+                            required
+                        />
+                    </div>
             {samples.map((sample, index) => (
                 <div key={index} className="sample-group">
                     <div className="form-header">
-                        <h2>Informations sur les échantillons {index + 1}</h2>
+                        <h2>Informations sur la demande</h2>
                     </div>
                     
                     <h3>Informations sur l'échantillon {index + 1}</h3>
+
+                    <div className="form-group">
+                        <label>Référence du client de l'échantillon :</label>
+                        <input
+                            type="text"
+                            name="clientSampleRefrence"
+                            value={sample.clientSampleRefrence}
+                            onChange={(e) => handleSamplesChange(index, e)}
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label>Numéro MIDAC:</label>
+                        <input
+                            type="text"
+                            name="midacNumber"
+                            value={sample.midacNumber}
+                            onChange={(e) => handleSamplesChange(index, e)}
+                        />
+                    </div>
+
                     <div className="form-group">
                         <label>Type d'échantillon:</label>
                         <select
@@ -343,6 +392,29 @@ const DemandesForm = () => {
                             required
                         />
                     </div>
+                    {sample.sampleType === 'denree' && (
+                        <div className="form-group">
+                            <label>Quantité du denrée alimentaire:</label>
+                            <input
+                                type="text"
+                                name="quantiteDenree"
+                                value={sample.quantiteDenree}
+                                onChange={(e) => handleSamplesChange(index, e)}
+                            />
+                        </div>
+                    )}
+
+                    {sample.sampleType === 'eau' && (
+                        <div className="form-group">
+                            <label>Temps du prélèvement:</label>
+                            <input
+                                type="time"
+                                name="samplingTime"
+                                value={sample.samplingTime}
+                                onChange={(e) => handleSamplesChange(index, e)}
+                            />
+                        </div>
+                    )}
                     <div className="form-group">
                         <label>Prélevé par:</label>
                         <input
@@ -353,16 +425,7 @@ const DemandesForm = () => {
                             required
                         />
                     </div>
-                    <div className="form-group">
-                        <label>Apporté par:</label>
-                        <input
-                            type="text"
-                            name="broughtBy"
-                            value={sample.broughtBy}
-                            onChange={(e) => handleSamplesChange(index, e)}
-                            required
-                        />
-                    </div>
+                    
                     <div className="form-group">
                         <label>Quantite de l'echantillon:</label>
                         <input
@@ -452,16 +515,6 @@ const DemandesForm = () => {
                             
                         </div>
                     ))}
-                    <div className="form-group">
-                            <label>Delai de livraison:</label>
-                                <input
-                                    type="date"
-                                    name="dilevery_delay"
-                                    value={personalInfo.dilevery_delay}
-                                    onChange={(e) => handlePersonalInfoChange(e)}
-                                    required
-                                />
-                    </div>
                     <div className='analysis-buttons'>
                     <button type="button" onClick={() => addAnalysis(index)} className='button-add'>
                         Ajouter une analyse
@@ -479,6 +532,16 @@ const DemandesForm = () => {
             <button type="button" onClick={deleteSample} className='button-delete'>
                 Supprimer un échantillon
             </button>
+            </div>
+            <div className="form-group">
+                            <label>Delai de livraison:</label>
+                                <input
+                                    type="date"
+                                    name="dilevery_delay"
+                                    value={personalInfo.dilevery_delay}
+                                    onChange={(e) => handlePersonalInfoChange(e)}
+                                    required
+                                />
             </div>
             <button type="submit" className='submit-button'>Soumettre</button>
         </form>

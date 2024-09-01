@@ -9,22 +9,26 @@ CREATE TABLE clients (
     phone VARCHAR(20) NOT NULL,
     email VARCHAR(255) NOT NULL,
     clientReference VARCHAR(255),
-    cle_client VARCHAR(255),
+    cleclient VARCHAR(255),
     dilevery_delay DATE NOT NULL,
-    requestingDate DATE NOT NULL
+    requestingDate DATE NOT NULL,
+    broughtBy VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE echantillons (
     id INT AUTO_INCREMENT PRIMARY KEY,
     client_id INT,
+    clientSampleRefrence VARCHAR(255),
+    midacNumber VARCHAR(255),
     sampleType VARCHAR(50) NOT NULL,
     samplingLocation VARCHAR(255) NOT NULL,
     samplingDate DATE NOT NULL,
+    samplingTime TIME DEFAULT 0,
     sampledBy VARCHAR(255) NOT NULL,
     sampleReference VARCHAR(255) NOT NULL,
     sampleSize VARCHAR(255) NOT NULL,
     sampleObservations VARCHAR(255) NOT NULL,
-    broughtBy VARCHAR(255) NOT NULL,
+    quantiteDenree VARCHAR(255),
     FOREIGN KEY (client_id) REFERENCES clients(id)
 );
 
