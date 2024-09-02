@@ -11,6 +11,7 @@ const DemandesList = () => {
     const [search, setSearch] = useState('');
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
     const session_id = localStorage.getItem('session_id');
+
     useEffect(() => {
         const fetchDemandes = async () => {
             try {
@@ -42,9 +43,9 @@ const DemandesList = () => {
     if (error) return <div className="error">{error}</div>;
 
     return (
-        <div className="demandes-container">
-            <div className="form-header">
-                <h2>Liste des Demandes d'Analyses</h2>
+        <div className="reception-form">
+            <div className="demandes-form-header">
+                <p>Liste des Demandes d'Analyses</p>
             </div>
             <div className="toolbar">
                 <label htmlFor="search" className="search-label">Rechercher :</label>
@@ -67,24 +68,30 @@ const DemandesList = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredDemandes.map((demande) =>
-                        demande.echantillons.map((echantillon) =>
-                            echantillon.analyses.map((analyse) => (
-                                <tr key={analyse.analysisId}>
-                                    <td>{demande.clientReference}</td>
-                                    <td>
-                                        Analyse {analyse.analysisType} de {analyse.parameter} par {analyse.technique} <br />
-                                        Éléments d'intérêt: {analyse.elementsDinteret.map(e => e.elementDinteret).join(', ')}
-                                    </td>
-                                    <td>
-                                        <Link to={`/reception/DemandesList/${demande.clientId}`}>
-                                            <button className="details-button">Voir les détails</button>
-                                        </Link>
-                                    </td>
-                                </tr>
-                            ))
-                        )
-                    )}
+                    {filteredDemandes.map((demande) => {
+                        // Combiner tous les échantillons et analyses en une seule chaîne de texte
+                        const serviceDetails = demande.echantillons.map((echantillon) =>
+                            echantillon.analyses.map((analyse) =>
+                                <>
+                                    Analyse {analyse.analysisType} de {analyse.parameter} par {analyse.technique} (Éléments d'intérêt: {analyse.elementsDinteret.map(e => e.elementDinteret).join(', ')})
+                                    <br />
+                                </>
+                            )
+                        );
+                        
+
+                        return (
+                            <tr key={demande.clientId}>
+                                <td>{demande.clientReference}</td>
+                                <td>{serviceDetails}</td>
+                                <td>
+                                    <Link to={`/reception/DemandesList/${demande.clientId}`}>
+                                        <button className="details-button">Voir les détails</button>
+                                    </Link>
+                                </td>
+                            </tr>
+                        );
+                    })}
                 </tbody>
             </table>
         </div>

@@ -18,14 +18,29 @@ authorize(['reception'], $user);
 
 
 // Fonction pour générer la référence client
-function generateClientReference($clientId, $year) {
-    return sprintf("INSTN/DG/XRF/%s/%04d", $year, $clientId);
+function generateClientReference($clientId, $year, $month) {
+    // Formater l'année en 2 chiffres
+    $shortYear = substr($year, -2);
+    // Formater le nombre de demande avec des zéros en tête pour avoir 4 chiffres
+    $formattedClientCount = str_pad($clientId, 4, '0', STR_PAD_LEFT);
+    
+    // Générer la référence client au format : DS{YYMM}-A{clientCount}
+    return sprintf("DS%s%s/A%s", $shortYear, str_pad($month, 2, '0', STR_PAD_LEFT), $formattedClientCount);
 }
 
 // Fonction pour générer la référence échantillon
-function generateSampleReference($year, $clientId, $sampleCount) {
-    return sprintf("%s%04dC%02d", $year, $clientId, $sampleCount);
+function generateSampleReference($year, $month, $clientCount, $sampleNumber) {
+    // Formater l'année en 2 chiffres
+    $shortYear = substr($year, -2);
+    // Formater le nombre de demande avec des zéros en tête pour avoir 4 chiffres
+    $formattedClientCount = str_pad($clientCount, 4, '0', STR_PAD_LEFT);
+    // Formater le numéro d'échantillon avec des zéros en tête pour avoir 2 chiffres
+    $formattedSampleNumber = str_pad($sampleNumber, 2, '0', STR_PAD_LEFT);
+    
+    // Générer la référence échantillon au format : {YYMM}-A{clientCount}-E{sampleNumber}
+    return sprintf("%s%s/A%s/E%s", $shortYear, str_pad($month, 2, '0', STR_PAD_LEFT), $formattedClientCount, $formattedSampleNumber);
 }
+
 $techniqueToDepartement = [
     "Spectrometrie d'Absportion Atomic (SAA)" => 'TFXE',
     'Analyseur Direct de Mercure (ADM)' => 'TFXE',
@@ -33,7 +48,9 @@ $techniqueToDepartement = [
     'Spectrometre Gamma' => 'ATN',
     'Spectrometre alpha' => 'ATN',
     'Fluorescence X a Energie Dispersive (FXDE)' => 'TFXE',
-    'Gravimetrie' => 'TFXE'
+    'Gravimetrie' => 'TFXE',
+    'Multi-paramètres' => 'HI',
+    'Titration Digitale' => 'HI',
 ];
 
 // Vérifier si une requête POST a été envoyée depuis le formulaire React
@@ -50,15 +67,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $address = $conn->real_escape_string($personalInfo['address']);
     $phone = $conn->real_escape_string($personalInfo['phone']);
     $email = $conn->real_escape_string($personalInfo['email']);
+    $cleClient = $conn->real_escape_string($personalInfo['cleClient']);
     $requestingDate = $conn->real_escape_string($personalInfo['requestingDate']);
     $dilevery_delay = $conn->real_escape_string($personalInfo['dilevery_delay']);
-
+    $broughtBy = $conn->real_escape_string($personalInfo['broughtBy']);
     // Commencer une transaction
     $conn->begin_transaction();
 
     try {
         // Insérer le client sans la référence client pour obtenir l'ID du client
-        $sqlInsertClient = "INSERT INTO clients (name, address, phone, email, dilevery_delay, requestingDate) VALUES ('$name', '$address', '$phone', '$email', '$dilevery_delay', '$requestingDate')";
+        $sqlInsertClient = "INSERT INTO clients (name, address, phone, email, dilevery_delay, requestingDate, broughtBy, cle_Client) VALUES ('$name', '$address', '$phone', '$email', '$dilevery_delay', '$requestingDate', '$broughtBy', '$cleClient')";
         if (!$conn->query($sqlInsertClient)) {
             throw new Exception('Erreur lors de l\'insertion du client: ' . $conn->error);
         }
@@ -67,7 +85,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Générer la référence client
         $year = date('y');
-        $clientReference = generateClientReference($clientId, $year);
+        $month = date('m');
+        $clientReference = generateClientReference($clientId, $year, $month);
 
         // Mettre à jour la référence client
         $sqlUpdateClientReference = "UPDATE clients SET clientReference='$clientReference' WHERE id='$clientId'";
@@ -80,22 +99,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Exemple d'insertion des données dans la base de données (à adapter selon votre structure de base de données)
         foreach ($samples as $sample) {
+            $midacNumber = $conn->real_escape_string($sample['midacNumber']);
             $sampleType = $conn->real_escape_string($sample['sampleType']);
             $samplingLocation = $conn->real_escape_string($sample['samplingLocation']);
             $samplingDate = $conn->real_escape_string($sample['samplingDate']);
+            $samplingTime = $conn->real_escape_string($sample['samplingTime']);
             $sampledBy = $conn->real_escape_string($sample['sampledBy']);
-            $broughtBy = $conn->real_escape_string($sample['broughtBy']);
+            $quantiteDenree = $conn->real_escape_string($sample['quantiteDenree']);
             $sampleSize = $conn->real_escape_string($sample['sampleSize']);
             $sampleObservations = $conn->real_escape_string($sample['sampleObservations']);
-
+            $clientSampleRefrence = $conn->real_escape_string($sample['clientSampleRefrence']);
             // Incrémenter le compteur d'échantillons
             $sampleCount++;
 
             // Générer la référence échantillon
-            $sampleReference = generateSampleReference($year, $clientId, $sampleCount);
+            $sampleReference = generateSampleReference($year, $month, $clientId, $sampleCount);
 
             // Insertion dans la table des échantillons (exemple)
-            $sqlInsertSample = "INSERT INTO echantillons (client_id, sampleType, samplingLocation, samplingDate, sampledBy, sampleReference, broughtBy, sampleSize, sampleObservations) VALUES ('$clientId', '$sampleType', '$samplingLocation', '$samplingDate', '$sampledBy', '$sampleReference', '$broughtBy', '$sampleSize', '$sampleObservations')";
+            $sqlInsertSample = "INSERT INTO echantillons (client_id, sampleType, samplingLocation, samplingDate, sampledBy, sampleReference, sampleSize, sampleObservations, midacNumber, samplingTime, quantiteDenree, clientSampleRefrence) VALUES ('$clientId', '$sampleType', '$samplingLocation', '$samplingDate', '$sampledBy', '$sampleReference', '$sampleSize', '$sampleObservations', '$midacNumber', '$samplingTime', '$quantiteDenree', '$clientSampleRefrence')";
             if (!$conn->query($sqlInsertSample)) {
                 throw new Exception('Erreur lors de l\'insertion de l\'échantillon: ' . $conn->error);
             }

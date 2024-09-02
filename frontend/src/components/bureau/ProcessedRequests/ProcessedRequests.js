@@ -29,6 +29,7 @@ const ProcessedRequests = () => {
                     }
                 })
                 .then(data => {
+                    console.log('Response from server:', data);
                     // Trier les demandes par ordre décroissant de clientReference
                     data.sort((a, b) => b.clientReference.localeCompare(a.clientReference));
                     setRequests(data);
@@ -55,6 +56,7 @@ const ProcessedRequests = () => {
                             <th>Date de livraison</th>
                             <th>Description</th>
                             <th>Nombre d'analyses finis</th> {/* Nouvelle colonne */}
+                            <th>Autres départements</th> {/* Nouvelle colonne */}
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -80,6 +82,17 @@ const ProcessedRequests = () => {
                                         <span className={`analyses-summary ${isRed ? 'red' : 'green'}`}>
                                             {request.analyses_summary}
                                         </span>
+                                    </td>
+                                    <td> {/* Nouvelle colonne */}
+                                        {request.other_departments.length > 0 ? (
+                                            <ul>
+                                                {request.other_departments.map((dept, index) => (
+                                                    <li key={index}>{dept}</li>
+                                                ))}
+                                            </ul>
+                                        ) : (
+                                            <span>Aucun autre département</span>
+                                        )}
                                     </td>
                                     <td>
                                         <Link to={`/bureau/${department}/rapport/${request.demande_id}`} className="btn-primary">

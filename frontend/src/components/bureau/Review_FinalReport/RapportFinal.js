@@ -177,8 +177,27 @@ const handleGenerateReport = () => {
                             year: 'numeric',
                             month: 'long',
                             day: 'numeric',
-                        })}
+                        })} {' '}
+                        {sampleDetails.samplingTime &&(
+                            <>
+                             {sampleDetails.samplingTime}
+                            </>
+                        )}
                     </p>
+                    <p>
+                        {sampleDetails.quantiteDenree &&(
+                            <>
+                            <strong>quantiteDenree :</strong> {sampleDetails.quantiteDenree}
+                            </> 
+                        )}
+                        </p>
+                        <p>
+                        {sampleDetails.midacNumber &&(
+                            <>
+                            <strong>Numéro Midac :</strong> {sampleDetails.midacNumber}
+                            </> 
+                        )}
+                        </p>
 
                     {Object.entries(analyses).map(([analysisKey, { analysisType, parameter, technique, elementsdinteret, norme,analysis_time }], analysisIndex) => (
                         <div key={analysisKey} className="analysis-section">

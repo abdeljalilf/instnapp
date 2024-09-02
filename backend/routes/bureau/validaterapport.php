@@ -44,7 +44,7 @@ if (isset($data['demande_id']) && isset($data['newValidatedValue'])) {
             FROM echantillons e
             JOIN clients c ON e.client_id = c.id
             WHERE c.id = ?
-        )
+        ) AND analyses.departement = ?
     ";
 
     // Prepare the query
@@ -57,7 +57,7 @@ if (isset($data['demande_id']) && isset($data['newValidatedValue'])) {
     }
 
     // Bind parameters and execute the query
-    $stmt->bind_param('si', $newValidatedValue, $client_id);
+    $stmt->bind_param('sis', $newValidatedValue, $client_id, $department);
 
     // Execute the query and check for success
     if ($stmt->execute()) {

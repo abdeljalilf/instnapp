@@ -99,10 +99,34 @@ const Rapport = () => {
   
     
   const isFieldVisible = (sampleReference, analysisKey, field) => {
-    const sample = groupedSamples[sampleReference];
-    const analysis = sample?.analyses[analysisKey];
-    const { analysisType } = analysis;
-    const { sampleType } = sample;
+// Ensure you are using the correct key
+const sample = groupedSamples[sampleReference];
+
+if (!sample) {
+    console.error(`Sample with reference ${sampleReference} not found.`);
+    // Handle the missing sample case appropriately
+    return;
+}
+
+// Access analyses safely
+const analyses = sample.analyses || {};
+const analysis = analyses[analysisKey];
+
+if (!analysis) {
+    console.error(`Analysis with key ${analysisKey} not found for sample ${sampleReference}.`);
+    // Handle the missing analysis case appropriately
+    return;
+}
+
+// Safe destructuring of properties
+const { analysisType } = analysis || {}; // Default to empty object if analysis is undefined
+const { sampleType } = sample || {}; // Default to empty object if sample is undefined
+
+// Continue with your logic
+console.log("Analysis Type:", analysisType);
+console.log("Sample Type:", sampleType);
+
+    
 
     if (analysisType === 'Quantitative' && sampleType != 'air') {
         return field === 'normeUtilisee' || field === 'observations' || field === 'valeursNormeUtilisee';
@@ -423,8 +447,27 @@ const handleValidateReport = () => {
                     <div className="sample-details">
                         <p><strong>Référence Échantillon:</strong> {sampleReference}</p>
                         <p><strong>Lieu de Prélèvement:</strong> {sampleDetails.samplingLocation}</p>
-                        <p><strong>Date de Prélèvement:</strong> {sampleDetails.samplingDate}</p>
-
+                        <p><strong>Date de Prélèvement:</strong> {sampleDetails.samplingDate} 
+                            {' '} {sampleDetails.samplingTime &&(
+                                <>
+                                 {sampleDetails.samplingTime}
+                                </>
+                            )}
+                        </p>
+                        <p>
+                        {sampleDetails.quantiteDenree &&(
+                            <>
+                            <strong>quantiteDenree :</strong> {sampleDetails.quantiteDenree}
+                            </> 
+                        )}
+                        </p>
+                        <p>
+                        {sampleDetails.midacNumber &&(
+                            <>
+                            <strong>Numéro Midac :</strong> {sampleDetails.midacNumber}
+                            </> 
+                        )}
+                        </p>
                         {Object.entries(analyses).map(([analysisKey, { element_id, analysisType, parameter, technique, elementsdinteret, norme, analysis_id, analysis_time, Reference_Materiel, Valeur_Recommandee, Valeur_Mesuree,file_name,file_path }], analysisIndex) => (
                             <div key={analysisKey} className="analysis-section">
                                 <h4>Analyse {analysisIndex + 1}: {analysisType} pour {sampleType.toUpperCase()}</h4>

@@ -1,5 +1,6 @@
 <?php
 // Archive_resultats.php
+require_once '../../routes/login/session_util.php';
 require_once '../../database/db_connection.php'; // Inclure la connexion à la base de données
 
 // En-têtes CORS
@@ -7,11 +8,14 @@ header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
-
 // Gérer les requêtes OPTIONS
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     exit;
 }
+$department = isset($_GET['department']) ? $_GET['department'] : '';
+// Vérifiez la session
+$user = checkSession($conn);
+authorize(['bureau'], $user, $department);
 
 // Vérifier si un file_id est fourni pour le téléchargement
 if (isset($_GET['file_id'])) {
