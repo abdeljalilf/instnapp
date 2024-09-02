@@ -1,16 +1,32 @@
 <?php
-header("Access-Control-Allow-Origin: *");
+require_once '../../routes/login/session_util.php';
+require_once '../../database/db_connection.php';
+
+header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
-include '../../database/db_connection.php';
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
 
-// Obtenez le paramètre 'department' de l'URL
-$department = isset($_GET['department']) ? $_GET['department'] : 'TFXE'; // Valeur par défaut si non spécifié
+
+
+
+// Get the department parameter from the URL
+$department = isset($_GET['department']) ? $_GET['department'] : '';
+
+// Vérifiez la session
+$user = checkSession($conn);
+authorize(['bureau'], $user, $department);
 
 // Préparez et exécutez la requête
 $query = "
     SELECT clients.id AS demande_id, 
            clients.dilevery_delay, 
+           clients.clientReference,
            echantillons.sampleType, 
            analyses.analysisType,
            (
@@ -69,6 +85,7 @@ foreach ($data as $row) {
         $groupedData[$demande_id] = [
             'demande_id' => $demande_id,
             'dilevery_delay' => $row['dilevery_delay'],
+            'clientReference' => $row['clientReference'],
             'samples' => [],
             'N1' => $N1,
             'N2' => $N2

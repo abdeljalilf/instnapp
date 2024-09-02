@@ -1,12 +1,31 @@
 <?php
-include '../../database/db_connection.php';
+require_once '../../routes/login/session_util.php';
+require_once '../../database/db_connection.php';
+require_once '../../routes/login/session_util.php';
+require_once '../../database/db_connection.php';
 
-header("Access-Control-Allow-Origin: *");
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
-// Get the ID and department from the request
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
+
+
+
+// Get the department parameter from the URL
+$department = isset($_GET['department']) ? $_GET['department'] : '';
+
+// Vérifiez la session
+$user = checkSession($conn);
+authorize(['bureau'], $user, $department);
+
 $id = intval($_GET['id']);
-$department = isset($_GET['department']) ? $_GET['department'] : 'TFXE'; // Valeur par défaut si non spécifié
 
 // Prepare the SQL query to update the analyses table based on the client ID and department
 $sql = "
