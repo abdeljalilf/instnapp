@@ -10,11 +10,15 @@ const DemandesList = () => {
     const [error, setError] = useState(null);
     const [search, setSearch] = useState('');
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
-
+    const session_id = localStorage.getItem('session_id');
     useEffect(() => {
         const fetchDemandes = async () => {
             try {
-                const response = await axios.get(`${apiBaseUrl}/instnapp/backend/routes/reception/demandesList.php`);
+                const response = await axios.get(`${apiBaseUrl}/instnapp/backend/routes/reception/demandesList.php`, {
+                    headers: {
+                        Authorization: session_id
+                    }
+                });
                 if (response.data.success) {
                     setDemandes(response.data.demandes);
                 } else {

@@ -4,27 +4,30 @@
   import './analysisdetails.css';
 
   const AnalysisDetails = () => {
-    const { id: analysisId } = useParams();
+    const { id: analysisId, departement: department } = useParams(); // Fetch department from params
     const navigate = useNavigate();
     const [analysisDetails, setAnalysisDetails] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
     const [elementsResults, setElementsResults] = useState([]);
     const [qualiteResults, setQualiteResults] = useState([]);
-    const [analyseTime, setAnalyseTime] = useState(''); // New state for durée d'analyse
+    const [analyseTime, setAnalyseTime] = useState(''); // State for durée d'analyse
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
-
+    const session_id = localStorage.getItem('session_id');
+  
     useEffect(() => {
-      axios
-        .get(`${apiBaseUrl}/instnapp/backend/routes/laboratoire/analysisDetails.php`, {
-          params: { id: analysisId },
-        })
-        .then((response) => {
-          setAnalysisDetails(response.data);
+      fetch(`${apiBaseUrl}/instnapp/backend/routes/laboratoire/analysisDetails.php?id=${analysisId}&department=${department}`, {
+        headers: {
+          Authorization: session_id, // Use session ID for authorization
+        },
+      })
+        .then((response) => response.json()) // Convert the response to JSON
+        .then((data) => {
+          setAnalysisDetails(data); // Set the analysis details with the fetched data
           setElementsResults(
-            response.data.elementsdinteret.map((element) => ({
+            data.elementsdinteret.map((element) => ({
               id: element.id,
               element: element.elementDinteret,
-              unite: '', // Default value, will be set based on department
+              unite: '', // Default value, set based on department
               valeurMoyenne: '',
               incertitude: '',
               limiteDetection: 1, // Default value
@@ -33,11 +36,11 @@
             }))
           );
           setQualiteResults(
-            response.data.elementsdinteret.map((element) => ({
+            data.elementsdinteret.map((element) => ({
               id: element.id,
               element: element.elementDinteret,
               referenceMateriel: '', // Default value
-              unite: '', // Default value, will be set based on department
+              unite: '', // Default value, set based on department
               valeurRecommandee: '',
               valeurMesuree: '',
               uniteAutre: '' // State for custom unit input
@@ -45,7 +48,9 @@
           );
         })
         .catch((error) => alert('Error fetching analysis details: ' + error));
-    }, [analysisId, apiBaseUrl]);
+    }, [analysisId, department, apiBaseUrl, session_id]);
+    
+  
 
     const handleFileChange = (event) => {
       setSelectedFile(event.target.files[0]);
@@ -111,35 +116,54 @@
     const handleSaveResults = () => {
       const resultsPayload = elementsResults.map((result) => ({
         elementsdinteretId: result.id,
-        unite: result.unite === 'other' ? result.uniteAutre : result.unite, // Use the custom unit if 'other' is selected
+        unite: result.unite === 'other' ? result.uniteAutre : result.unite,
         valeurMoyenne: result.status === 'non détectable' ? 'non détecté' : result.valeurMoyenne,
         incertitude: result.incertitude,
         limiteDetection: result.limiteDetection,
       }));
-
+    
       const qualitePayload = qualiteResults.map((result) => ({
         elementsdinteretId: result.id,
         referenceMateriel: result.referenceMateriel,
-        unite: result.unite === 'other' ? result.uniteAutre : result.unite, // Use the custom unit if 'other' is selected
+        unite: result.unite === 'other' ? result.uniteAutre : result.unite,
         valeurRecommandee: result.valeurRecommandee,
         valeurMesuree: result.valeurMesuree,
       }));
-
+    
+      // Préparation des données du formulaire pour le téléchargement du fichier
+      const formData = new FormData();
+      formData.append('analysisId', analysisId);
+      formData.append('analyseTime', analyseTime || ''); // Handle empty analyseTime
+      formData.append('data', JSON.stringify({
+        results: resultsPayload,
+        qualite: qualitePayload,
+      }));
+      if (selectedFile) {
+        formData.append('file', selectedFile);
+      }
+    
       axios
-        .post(`${apiBaseUrl}/instnapp/backend/routes/laboratoire/analysisDetails.php`, {
-          analysisId: analysisId,
-          analyseTime: analysisDetails.departement === 'ATN' ? analyseTime : null, // Include analyseTime if department is ATN
-          results: resultsPayload,
-          qualite: qualitePayload,
+        .post(`${apiBaseUrl}/instnapp/backend/routes/laboratoire/analysisDetails.php`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
         })
         .then((response) => {
-          alert('Résultats validés avec succès');
-          navigate('/laboratoire');
+          console.log('Server response:', response.data);
+          if (response.data.message) {
+            alert(response.data.message);
+            navigate('/laboratoire');
+            // Handle success
+          } else if (response.data.error) {
+            alert('Error: ' + response.data.error);
+          }
         })
         .catch((error) => {
-          alert('Error saving results: ' + error);
+          console.error('Error while saving results:', error);
+          alert('An error occurred while saving results.');
         });
     };
+    
 
     if (!analysisDetails) {
       return <div>Loading...</div>;
@@ -321,7 +345,6 @@
                 <tr>
                   <th>Element</th>
                   <th>Reference Matériel</th>
-                  <th>Unité</th>
                   <th>Valeur Recommandée</th>
                   <th>Valeur Mesurée</th>
                 </tr>
@@ -336,27 +359,6 @@
                         value={result.referenceMateriel}
                         onChange={(e) => handleQualiteChange(index, 'referenceMateriel', e.target.value)}
                       />
-                    </td>
-                    <td>
-                      <select
-                        value={result.unite}
-                        onChange={(e) => handleQualiteChange(index, 'unite', e.target.value)}
-                      >
-                        <option value="">--Choisissez--</option>
-                        {getUnitOptions(analysisDetails.departement).map((unit) => (
-                          <option key={unit.value} value={unit.value}>
-                            {unit.label}
-                          </option>
-                        ))}
-                      </select>
-                      {result.unite === 'other' && (
-                        <input
-                          type="text"
-                          placeholder="Saisir unité"
-                          value={result.uniteAutre}
-                          onChange={(e) => handleQualiteChange(index, 'uniteAutre', e.target.value)}
-                        />
-                      )}
                     </td>
                     <td>
                       <input
@@ -378,7 +380,7 @@
             </table>
           </section>
 
-          <button onClick={handleSaveResults}>Save Results</button>
+          <button className="result_button" onClick={handleSaveResults}>Save Results</button>
         </div>
       </div>
     );

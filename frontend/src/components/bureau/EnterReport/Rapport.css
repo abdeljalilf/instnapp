@@ -1,0 +1,379 @@
+.rapport-container {
+  align-items: center;
+  margin: 20px auto;
+  max-width: 94%;
+  background-color: #f8f9fa;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 20px;
+  margin-bottom: 10px;
+}
+
+.header-top .date {
+  font-size: 16px;
+  color: #000000;
+}
+
+.analysis-count p {
+  color: var(--text-color, black); /* Utilise une variable CSS pour la couleur ou une couleur par défaut */
+  font-size: 20px; /* Ajustez la taille du texte selon vos besoins */
+  font-weight: bold; /* Applique le style gras */
+}
+
+.header h1 {
+  margin-bottom: 0px;
+  color: #343a40;
+}
+
+.header p {
+  font-size: 16px;
+  color: #011309;
+}
+
+.error-message,
+.loading-message {
+  text-align: center;
+  font-size: 18px;
+  color: #ff4c4c;
+}
+
+.sample-section {
+  margin-bottom: 20px; /* Espace sous chaque section d'analyse */
+  width: auto;
+  justify-content: space-between; /* Align buttons on opposite ends */
+  align-items: space-between;
+  display: flex;
+  flex-direction: column;
+  padding: 0 10px;
+  margin-bottom: 10px;
+  margin-top: 20px;
+}
+
+.sample-section h3 {
+  background-color: #2e8b57;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.sample-type {
+  text-transform: uppercase;
+}
+
+.sample-details {
+  margin-bottom: 20px;
+  background-color: #e9ecef;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.sample-details p {
+  margin: 5px 0;
+  font-size: 16px;
+}
+
+.analysis-section {
+  margin-bottom: 20px; /* Espace sous chaque section d'analyse */
+  width: auto;
+  justify-content: space-between; /* Align buttons on opposite ends */
+  align-items: space-between;
+}
+.analysis-resultas-container {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  gap: 20px; /* Ajoute un espace de 20px entre les éléments */
+}
+
+.analysis-table {
+  width: auto;
+  border-collapse: collapse;
+  margin-bottom: 10px; /* Espace sous le tableau */
+}
+.analysis-table td {
+  border: 1px solid #11230f;
+  padding: 8px;
+  text-align: left;
+  font-size: 15px;
+}
+
+.analysis-table th {
+  background-color: #2e8b57;
+  color: white;
+  border: 1px solid #11230f;
+  padding: 8px;
+  text-align: left;
+  font-size: 15px;
+}
+
+.analysis-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.analysis-table tr:hover {
+  background-color: #d4edda;
+}
+
+
+.valeur-norme-input,
+.norme-input,
+.observation-input {
+  border: 1px solid #ccc;
+  padding: 5px;
+  width: 100%;
+}
+
+.valeur-norme-input:focus,
+.norme-input:focus,
+.observation-input:focus {
+  border-color: #006400;
+  outline: none;
+}
+.file_name-container {
+  width: auto;
+  min-height: auto;
+  border: 1.5px solid #006400;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 20px;
+  margin-left: 5px;
+}
+
+/* Container for centering error messages */
+.error-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 5px;
+  color: #721c24;
+  font-weight: bold;
+  z-index: 1000; /* Ensure it appears above other content */
+  text-align: center;
+  display: none; /* Hidden by default */
+}
+
+.standard-results {
+  width: 80%;
+  border-collapse: collapse;
+  margin-top: 0px;
+  margin-bottom: 10px; /* Espace sous le tableau */
+}
+
+.standard-results th, .standard-results td {
+  border: 1px solid #11230f;
+  padding: 8px;
+  text-align: left;
+}
+
+.standard-results th {
+  background-color: #2e8b57;
+}
+
+.btn-standard-results {
+  padding: 8px 12px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 0px 10px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-standard-results-close {
+  background-color: #f44336; /* Rouge pour le mode "Fermer" */
+}
+
+
+
+/* Style for the container of the remark form */
+.remark-form-container {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #241414;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Style for the text area in the remark form */
+.remark-textarea {
+  width: 95%; /* Adjust to fit container width */
+  height: 60px; /* Reduced height */
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  resize: none;
+  margin-bottom: 10px;
+}
+
+/* Style for the buttons container */
+.remark-form-buttons {
+  display: flex;
+  justify-content: space-between; /* Distribute buttons to the left and right */
+}
+.btn-primary {
+  display: inline-block;
+  background-color: #2e8b57;
+  color: white;
+  padding: 12px 20px;
+  margin: 15px 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #1f6848;
+}
+
+.conclusion-form {
+  margin-top: 10px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px; /* Espace sous chaque section d'analyse */
+  width: auto;
+  justify-content: space-between; /* Align buttons on opposite ends */
+  align-items: space-between;
+  display: flex;
+  flex-direction: column;
+}
+
+.conclusion-form h3 {
+  margin-bottom: 15px;
+  font-size: 18px;
+  color: #343a40;
+}
+
+.conclusion-textarea {
+  width: auto;
+  min-height: 100px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  resize: vertical;
+  margin-bottom: 20px;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-between; /* Align buttons on opposite ends */
+  align-items: space-between;
+  flex-direction: row;
+}
+
+.validate-button {
+  display: inline-block;
+  background-color: #2e8b57;
+  color: white;
+  padding: 12px 20px;
+  margin: 15px 5px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.validate-button:hover {
+  background-color: #1f6848;
+}
+/* For general error messages */
+.error-message {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* For validation errors */
+.validation-error {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}
+/* Style for file upload */
+.file-upload-form {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.file-status {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  gap: 10px;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.file-name {
+  flex-grow: 1;
+}
+.file-text-error {
+  color: red;
+  font-weight: bold;
+}
+.text_file-obligation {
+  color: rgb(4, 87, 18);
+  
+}
+
+.remove-file-button {
+  background: none;
+  border: none;
+  color: red;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 10px;
+}
+/* Style for validate button */
+.validate-button {
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #fff;
+  background-color: #28a745;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 0px 20px;
+  transition: background-color 0.3s ease;
+}
+
+.validate-button:hover {
+  background-color: #218838;
+}
+
+/* Style for cancel button */

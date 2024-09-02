@@ -1,40 +1,229 @@
-.statistics-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    margin: 20px;
-}
-
-.stat-card {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
+.departement-dashboard-container {
+    margin: 0px ;
+    max-width: 100%;
+    background-color: #f8f9fa;
+    padding: 10px;
     border-radius: 8px;
-    width: 200px;
-    height: 150px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+}
+.departement-dashboard-title {
+    padding: 0;
+    background-color: #2e8b57;
+    margin: 0px;
+    border-radius: 5px;
+    display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin: 10px;
-    margin-left: 100px;
-    margin-right: 100px;
+    text-align: center;
+    text-decoration-color: rgb(208, 194, 194);
+    width: 100%;
+    margin-bottom: 10px;
+    height: 60px;
+    overflow: hidden; /* Ensure text doesn't overflow */
+    white-space: nowrap; /* Prevents text from wrapping */
 }
 
-.stat-number {
-    font-size: 36px;
+h1 {
+    text-align: center;
+}
+/* Status Container */
+.dernier-mois-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    background-color: white;
+    padding: 10px;
+}
+.status-requests-title {
+    padding: 0;
+    background-color: #2e8b57;
+    margin: 5px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 10px;
+    height: 30px;
+    overflow: hidden; /* Ensure text doesn't overflow */
+    white-space: nowrap; /* Prevents text from wrapping */
+}
+
+.status-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    background-color: white;
+    padding: 10px;
+}
+
+.status-item {
+    flex: 1;
+    padding: 10px;
+    margin: 0 5px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.status-label {
+    margin-bottom: 5px;
     font-weight: bold;
-}
-
-.stat-description {
-    font-size: 16px;
-    color: #555;
+    color: white;
     text-align: center;
 }
 
-.chart-container {
-    width: 99%;
-    height: 400px;
-    margin-top: 20px;
+.status-count-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.status-count {
+    width: 50px;
+    text-align: center;
+    background-color: white;
+    color: black;
+    border-radius: 5px;
+    padding: 5px;
+    font-weight: bold;
+}
+
+
+/* Statistics Section */
+/* Annual Statistics Section */
+.stats-annuelle-section ,
+.stats-trim-section{
+    display: flex;
+    flex-direction: column;
+    align-items: space-between;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: white;
+    padding-right: 10px;
+    padding-left: 10px;
+    
+}
+
+.stats-annuelle-summary ,
+.stats-trim-summary{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+.stats-annuelle-summary-item,
+.stats-trim-summary-item {
+    display: flex;
+    flex-direction: column;
+    padding: 6px;
+    background-color: #2cb185;
+    margin: 5px;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 10px;
+    height: 50px;
+    overflow: hidden; /* Ensure text doesn't overflow */
+    white-space: nowrap; /* Prevents text from wrapping */
+}
+
+.request-count h2 {
+    margin: 2px;
+    padding: 0;
+    font-size: 18px;
+    line-height: 1; /* Adjust the line height to reduce space */
+    color: white;
+}
+
+.stats-annuelle-count,
+.stats-trim-count {
+    width: 50px;
+    height: auto;
+    display: flex;
+    justify-content: center; /* Center text horizontally */
+    align-items: center; /* Center text vertically */
+    text-align: center;
+    background-color: white;
+    color: black;
+    border-radius: 5px;
+    padding: 5px;
+    font-weight: bold;
+    margin-top: 2px; /* Minimize space between the count and the title */
+}
+
+
+/* Graphs Side by Side for Annual Data */
+.stats-annuelle-graphs ,
+.stats-trim-graphs {
+    display: flex;
+    justify-content: space-between;
+    gap: 0px;
+    align-items: flex-start;
+}
+
+.chart-annuelle-container ,
+.chart-trim-container{
+    margin-bottom: 60px;
+    flex: 1;
+    max-width: 48%;
+    height: 200px; /* Reduced height */
+}
+.monthly-request-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: white;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.chart-monthly-container {
+    flex: 1;
+    width: 100%; /* Ensure it takes full width */
+    height: 300px; /* Ensure the chart has a reasonable fixed height */
+}
+
+.monthly-requests-title {
+    padding: 0;
+    background-color: #2e8b57;
+    margin: 5px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    margin-bottom: 10px;
+    height: 30px;
+    overflow: hidden; /* Ensure text doesn't overflow */
+    white-space: nowrap; /* Prevents text from wrapping */
+}
+
+.filter-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+}
+
+.filter-container label {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.filter-container select {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }

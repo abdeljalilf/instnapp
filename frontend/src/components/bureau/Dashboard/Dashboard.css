@@ -1,0 +1,59 @@
+/* src/components/bureau/Dashboard/Dashboard.css */
+
+.dashboard-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  overflow: hidden; /* Empêche le défilement */
+}
+
+.sidebar {
+  width: 110px;
+  background-color: #2cb185;
+  padding: 2px;
+  padding-top: 20px;
+  margin-left: 0px;
+  margin-top: 0px;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  margin-bottom: 10px;
+}
+
+.sidebar li a {
+  text-decoration: none;
+  color: #063c60; /* Light blue color */
+  padding: 10px 10px;
+  display: block;
+  border-radius: 4px;
+  transition: background-color 0.3s, color 0.3s;
+  font-size: 16px; /* Text size */
+}
+
+.sidebar li a.active {
+  background-color: #3498db;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.sidebar li a .icon {
+  margin-right: 8px;
+  font-size: 18px; /* Icon size */
+  vertical-align: middle;
+}
+
+.content {
+  flex-grow: 1;
+  padding: 10px 0px;
+  overflow-y: auto;
+  display: flex;
+  justify-content: space-between;
+  /* Empêche le défilement */
+}

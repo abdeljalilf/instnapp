@@ -1,4 +1,3 @@
-// src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import DemandesForm from './components/reception/DemandesForm/DemandesForm';
@@ -10,52 +9,80 @@ import Statistiques from './components/reception/Statistiques/Statistiques';
 import FinanceDemandesList from './components/finance/FinanceDemandeList/FinanceDemandesList';
 import FinanceMainPage from './components/finance/FinanceMainPage/FinanceMainPage';
 import FinanceDemandesDetails from './components/finance/FinanceDemandesDetails/FinanceDemandesDetails';
+import AnalysisDetails from './components/laboratory/AnalysisDetails/AnalysisDetails';
 import LaboratoryMainPage from './components/bureau/LaboratoryMainPage/LaboratoryMainPage';
 import NewRequests from './components/bureau/NewRequests/NewRequests';
 import ProcessedRequests from './components/bureau/ProcessedRequests/ProcessedRequests';
 import Dashboard from './components/bureau/Dashboard/Dashboard';
+import Archive from './components/bureau/Dashboard/Archive/Archive';
+import Archive_resultats from './components/bureau/Dashboard/Archive_resultats/Archive_resultats';
+import Department from './components/bureau/Dashboard/Department/Department';
 import RequestDetails from './components/bureau/RequestDetails/RequestDetails';
-import Rapport from './components/bureau/Rapport/Rapport';
-import RapportFinal from './components/bureau/RapportFinal/RapportFinal'; 
-import Shoose_departement from './components/bureau/Shoose_departement/Shoose_departement'; 
-import WelcomePage from './components/welcomePage/WelcomePage';
-import AnalysisDetails from './components/laboratory/AnalysisDetails/AnalysisDetails';
+import Rapport from './components/bureau/EnterReport/Rapport';
+import RapportFinal from './components/bureau/Review_FinalReport/RapportFinal'; 
+import Shoose_departement from './components/bureau/Shoose_departement/Shoose_departement';
+import GenerateRapport from './components/bureau/GenerateReport/GenerateRapport'; 
 import Laboratoire from './components/laboratory/laboratoire/Laboratoire';
 import LaboMainPage from './components/laboratory/LaboMainPage/LaboMainPage';
 import AnalysisList from './components/laboratory/AnalysisList/AnalysisList'; // Import the AnalysisList component
+import Login from './components/Login/Login';
+import ProtectedRoute from './components/Login/ProtectedRoute';
+import AdminPanel from './components/admin/AdminPanel/AdminPanel';
+import ChangePassword from './components/Login/ChangePassword';
+import AdminMainPage from './components/admin/AdminMainPage/AdminMainPage';
 
 const App = () => {
     return (
         <Router>
             <Routes>
-                <Route path="/" element={<WelcomePage />} />
-                <Route path="/finance" element={<FinanceMainPage />}>
-                    <Route index element={<FinanceDemandesList />} />
-                    <Route path="/finance/NouvellesDemandes" element={<FinanceDemandesList />} />
-                    <Route path="/finance/DetailesDemandes/:clientId" element={<FinanceDemandesDetails />} />
+                <Route path="/" element={<Login />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/changePassword" element={<ChangePassword />} />
+                
+                {/* Finance Routes */}
+                <Route path="/finance" element={<ProtectedRoute element={<FinanceMainPage />} roleRequired="finance" />}>
+                    <Route index element={<ProtectedRoute element={<FinanceDemandesList />} roleRequired="finance" />} />
+                    <Route path="NouvellesDemandes" element={<ProtectedRoute element={<FinanceDemandesList />} roleRequired="finance" />} />
+                    <Route path="DetailesDemandes/:clientId" element={<ProtectedRoute element={<FinanceDemandesDetails />} roleRequired="finance" />} />
                 </Route>
-                <Route path="/reception" element={<MainPage />}>
-                    <Route index element={<Statistiques />} /> {/* Route par défaut */}
-                    <Route path="Statistiques" element={<Statistiques />} />
-                    <Route path="DemandesForm" element={<DemandesForm />} />
-                    <Route path="DemandesList" element={<DemandeList />} />
-                    <Route path="DemandesList/:clientId" element={<DemandesDetails />} />
-                    <Route path="DemandesList/fiche-technique/:clientId" element={<FicheTechnique />} />
+                
+                {/* Reception Routes */}
+                <Route path="/reception" element={<ProtectedRoute element={<MainPage />} roleRequired="reception" />}>
+                    <Route index element={<ProtectedRoute element={<Statistiques />} roleRequired="reception" />} />
+                    <Route path="Statistiques" element={<ProtectedRoute element={<Statistiques />} roleRequired="reception" />} />
+                    <Route path="Statistiques/:department" element={<ProtectedRoute element={<Statistiques />} roleRequired="reception" />} />
+                    <Route path="DemandesForm" element={<ProtectedRoute element={<DemandesForm />} roleRequired="reception" />} />
+                    <Route path="DemandesList" element={<ProtectedRoute element={<DemandeList />} roleRequired="reception" />} />
+                    <Route path="DemandesList/:clientId" element={<ProtectedRoute element={<DemandesDetails />} roleRequired="reception" />} />
+                    <Route path="DemandesList/fiche-technique/:clientId" element={<ProtectedRoute element={<FicheTechnique />} roleRequired="reception" />} />
                 </Route>
-                <Route path="/bureau" element={<Shoose_departement />} />
-                <Route path="/bureau/:department" element={<LaboratoryMainPage />}>
-                    <Route index element={<Dashboard />} /> {/* Default route */}
-                    <Route path="new-requests" element={<NewRequests />} />
-                    <Route path="processed-requests" element={<ProcessedRequests />} />
-                    <Route path="dashboard" element={<Dashboard />} />
-                    <Route path="request/:id" element={<RequestDetails />} />
-                    <Route path="rapport/:id" element={<Rapport />} />
-                    <Route path="rapportfinal/:id" element={<RapportFinal />} />
+
+                {/* Bureau Routes */}
+                <Route path="/bureau/:department" element={<ProtectedRoute element={<LaboratoryMainPage />} roleRequired="bureau" />}>
+                    <Route index element={<ProtectedRoute element={<NewRequests />} roleRequired="bureau" />} />
+                    <Route path="new-requests" element={<ProtectedRoute element={<NewRequests />} roleRequired="bureau" />} />
+                    <Route path="processed-requests" element={<ProtectedRoute element={<ProcessedRequests />} roleRequired="bureau" />} />
+                    <Route path="dashboard" element={<ProtectedRoute element={<Dashboard />} roleRequired="bureau" />}>
+                        <Route path=":department" element={<ProtectedRoute element={<Department />} roleRequired="bureau" />} />
+                        <Route path="archive" element={<ProtectedRoute element={<Archive />} roleRequired="bureau" />} />
+                        <Route path="archive_resultats" element={<ProtectedRoute element={<Archive_resultats />} roleRequired="bureau" />} />
+                    </Route>
+                    <Route path="request/:id" element={<ProtectedRoute element={<RequestDetails />} roleRequired="bureau" />} />
+                    <Route path="rapport/:id" element={<ProtectedRoute element={<Rapport />} roleRequired="bureau" />} />
+                    <Route path="rapportfinal/:id" element={<ProtectedRoute element={<RapportFinal />} roleRequired="bureau" />} />
+                    <Route path="GenerateRapport/:id" element={<ProtectedRoute element={<GenerateRapport />} roleRequired="bureau" />} />
                 </Route>
-                <Route path="/laboratoire" element={<LaboMainPage />}>
-                    <Route index element={<Laboratoire />} />
-                    <Route path="analyses/:selectedLabo" element={<AnalysisList />} /> {/* New route for AnalysisList */}
-                    <Route path="analysis-details/:id" element={<AnalysisDetails />} />
+                
+                {/* Laboratory Routes */}
+                <Route path="/laboratoire/:departement" element={<ProtectedRoute element={<LaboMainPage />} roleRequired="laboratoire" />}>
+                <Route index element={<ProtectedRoute element={<AnalysisList />} roleRequired="laboratoire" />} />
+                <Route path="new-analysis" element={<ProtectedRoute element={<AnalysisList />} roleRequired="laboratoire" />} />
+                <Route path="analysis-details/:id" element={<ProtectedRoute element={<AnalysisDetails />} roleRequired="laboratoire" />} />
+                </Route>
+
+                {/* Admin Routes */}
+                <Route path="/admin" element={<ProtectedRoute element={<AdminMainPage />} roleRequired="admin" />}>
+                    <Route index element={<ProtectedRoute element={<AdminPanel />} roleRequired="admin" />} />
                 </Route>
             </Routes>
         </Router>

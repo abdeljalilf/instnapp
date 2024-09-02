@@ -1,26 +1,56 @@
-/* LaboratoryMainPage.css */
-.main-page-container {
-    text-align: center;
-    margin-top: 70px;
+.title {
+    margin-inline: 20px; /* Adjust margin as needed */
+}
+/* Ensure AppBar color is set correctly */
+.app-bar {
+    background-color: #2e8b57 !important; /* Force color if overridden */
 }
 
-.button-container {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-}
-
-.main-button {
-    padding: 20px 40px;
-    font-size: 19px;
-    background-color: #007bff;
-    color: #fff;
+/* Styles for the navigation buttons */
+.nav-button {
+    flex-grow: 1;
+    padding: 10px;
+    font-size: 16px;
+    text-transform: uppercase;
+    color: #ffffff; /* Default text color */
+    background-color: transparent; /* Default background color */
     border: none;
-    border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.main-button:hover {
-    background-color: #0056b3;
+/* Styling for active button */
+.nav-button.active {
+    color: #ffffff; /* Text color for active button */
+    background-color: #0f29ec; /* Background color for active button */
+}
+
+/* Styling for inactive button */
+.nav-button.inactive {
+    color: #dcdcdc; /* Text color for inactive button */
+    background-color: transparent; /* Background color for inactive button */
+}
+
+/* Hover effect for buttons */
+.nav-button:hover {
+    background-color: #48ebda; /* Darker background on hover */
+    color: #ffffff; /* Text color on hover */
+}
+
+/* Specific styling for logout button */
+.bureau-logout-button {
+    margin-left: auto; /* Push logout button to the end */
+    flex-grow: 1;
+    padding: 10px;
+    font-size: 16px;
+    text-transform: uppercase;
+    color: #ffffff; /* Default text color */
+    background-color: transparent; /* Default background color */
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.logout-button:hover {
+    background-color: #cc0000; /* Darker background on hover */
 }
