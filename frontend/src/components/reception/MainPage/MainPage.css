@@ -21,3 +21,36 @@
 .main-button-reception:hover {
     background-color: #2e8b57;
 }
+
+.main-button-reception {
+    color: white;
+    position: relative;
+}
+
+.main-button-reception.active::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 2px; /* Adjust thickness */
+    background-color: white;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.menu-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.dropdown-menu-admin {
+    display: none;
+    /* other styles */
+}
+
+.dropdown-menu-admin.show {
+    display: block;
+    /* other styles */
+}
+

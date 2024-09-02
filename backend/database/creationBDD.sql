@@ -3,7 +3,7 @@ CREATE DATABASE laboratoire;
 USE laboratoire;
 
 CREATE TABLE clients (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     address VARCHAR(255) NOT NULL,
     phone VARCHAR(20) NOT NULL,
@@ -11,22 +11,33 @@ CREATE TABLE clients (
     clientReference VARCHAR(255),
     cle_client VARCHAR(255),
     dilevery_delay DATE NOT NULL,
-    requestingDate DATE NOT NULL
+    requestingDate DATE NOT NULL,
+    broughtBy VARCHAR(255) NOT NULL
 );
+ALTER TABLE clients ADD broughtBy VARCHAR(255) NOT NULL;
 
 CREATE TABLE echantillons (
     id INT AUTO_INCREMENT PRIMARY KEY,
     client_id INT,
+    clientSampleRefrence VARCHAR(255),
+    midacNumber VARCHAR(255),
     sampleType VARCHAR(50) NOT NULL,
     samplingLocation VARCHAR(255) NOT NULL,
     samplingDate DATE NOT NULL,
+    samplingTime TIME,
     sampledBy VARCHAR(255) NOT NULL,
     sampleReference VARCHAR(255) NOT NULL,
     sampleSize VARCHAR(255) NOT NULL,
     sampleObservations VARCHAR(255) NOT NULL,
-    broughtBy VARCHAR(255) NOT NULL,
+    quantiteDenree VARCHAR(255),
     FOREIGN KEY (client_id) REFERENCES clients(id)
 );
+ALTER TABLE echantillons ADD quantiteDenree VARCHAR(255);
+ALTER TABLE echantillons ADD midacNumber VARCHAR(255);
+ALTER TABLE echantillons ADD samplingTime TIME;
+ALTER TABLE echantillons ADD clientSampleRefrence VARCHAR(255);
+
+
 
 CREATE TABLE analyses (
     id INT AUTO_INCREMENT PRIMARY KEY,

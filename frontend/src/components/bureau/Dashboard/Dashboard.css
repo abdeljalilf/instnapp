@@ -1,22 +1,20 @@
-/* src/components/bureau/Dashboard/Dashboard.css */
-
 .dashboard-container {
   height: 100vh;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  overflow: hidden; /* Empêche le défilement */
+  overflow: hidden; /* Prevent scrolling */
 }
 
 .sidebar {
-  flex: auto;
-  width: 125px ;
+  width: 125px; /* Set a fixed width */
   background-color: #2cb185;
   padding: 2px;
   padding-top: 20px;
   margin-left: 0px;
   margin-top: 0px;
   box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
 .sidebar ul {
@@ -51,10 +49,9 @@
 }
 
 .content {
-  flex: auto;
+  flex-grow: 1; /* Allow content area to grow and fill remaining space */
   padding: 10px 0px;
   overflow-y: auto;
   display: flex;
   justify-content: space-between;
-  /* Empêche le défilement */
 }

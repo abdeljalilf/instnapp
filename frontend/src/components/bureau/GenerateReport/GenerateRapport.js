@@ -244,7 +244,7 @@ const GenirateRapport = () => {
                         <strong>Téléphone :</strong> {data.client_phone}
                     </p>
                     <p>
-                        {data.ref_client_ATN &&(
+                        {data.cle_client &&(
                             <>
                             <strong>Référence du client :</strong> {data.cle_client}
                             </> 
@@ -256,6 +256,9 @@ const GenirateRapport = () => {
                     <div className="sample-list">
                         {sampleList}
                     </div>
+                    <p>
+                        <strong>Aporté par :</strong> {data.broughtBy}
+                    </p>
                     <p>
                         <strong>Date d'arrivée :</strong> {new Date(data.requestingDate).toLocaleDateString()}
                     </p>
@@ -278,17 +281,35 @@ const GenirateRapport = () => {
                             <strong>Lieu de Prélèvement :</strong> {sampleDetails.samplingLocation}
                         </p>
                         <p>
+                        {sampleDetails.clientSampleRefrence &&(
+                            <>
+                            <strong> Référence Echantillon du Client :</strong> {sampleDetails.clientSampleRefrence}
+                            </> 
+                        )}
+                        </p>
+                        <p>
                             <strong>Date de Prélèvement :</strong>{' '}
                             {new Date(sampleDetails.samplingDate).toLocaleDateString('fr-FR', {
                                 year: 'numeric',
                                 month: 'long',
                                 day: 'numeric'
-                            })}
+                            })} {' '}
+                            {sampleDetails.samplingTime &&(
+                                <>
+                                 {sampleDetails.samplingTime}
+                                </>
+                            )}
                         </p>
                         <p>
                             <strong>Prélevé par :</strong> {sampleDetails.sampledBy}
                         </p>
-
+                        <p>
+                        {sampleDetails.quantiteDenree &&(
+                            <>
+                            <strong>quantiteDenree :</strong> {sampleDetails.quantiteDenree}
+                            </> 
+                        )}
+                        </p>
                         {Object.entries(analyses).map(([analysisKey, { analysisType, parameter, technique, elementsdinteret, norme,analysis_time }], analysisIndex) => (
                             <div key={analysisKey} className="reportanalysis-section">
                                 <h4>Analyse {analysisIndex + 1}: {analysisType} pour {sampleType.toUpperCase()}</h4>

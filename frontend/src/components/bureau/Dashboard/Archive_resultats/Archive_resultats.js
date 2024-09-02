@@ -1,18 +1,25 @@
 import React, { useEffect, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import './Archive_resultats.css';
 
 const ArchiveResultats = () => {
+    const { department } = useParams(); // Get the department from the URL
     const [files, setFiles] = useState([]);
     const [filteredFiles, setFilteredFiles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+    const session_id = localStorage.getItem('session_id');
 
     useEffect(() => {
         const fetchFiles = async () => {
             try {
-                const response = await fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/Archive_resultats.php`);
+                const response = await fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/Archive_resultats.php?department=${department}`, {
+                    headers: {
+                        Authorization: session_id
+                    }
+                });
                 const data = await response.json();
                 console.log('Response from server:', data);
 

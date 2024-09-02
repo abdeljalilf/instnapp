@@ -92,6 +92,7 @@ const Archive = () => {
                         <th>Date de livraison</th>
                         <th>Description</th>
                         <th>Statut</th> {/* Ajout de la colonne de statut */}
+                        <th>Statut des autres départements</th> {/* Nouvelle colonne pour les autres départements */}
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -113,6 +114,16 @@ const Archive = () => {
                                     {request.status}
                                 </span>
                             </td>
+                            <td>
+                            {request.departments_status && Object.keys(request.departments_status).length > 0 ? (
+                                Object.entries(request.departments_status).map(([department, status], index) => (
+                                    <div key={index}>{department}: {status}</div>
+                                ))
+                            ) : (
+                                <div>Aucun autre département</div>
+                            )}
+                            </td>
+
                             <td>
                                 <Link 
                                     to={`/bureau/${department}/${request.status === 'Déjà Validée' ? 'GenerateRapport' : 'rapportfinal'}/${request.demande_id}`} 
