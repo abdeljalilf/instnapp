@@ -67,6 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $address = $conn->real_escape_string($personalInfo['address']);
     $phone = $conn->real_escape_string($personalInfo['phone']);
     $email = $conn->real_escape_string($personalInfo['email']);
+    $cleClient = $conn->real_escape_string($personalInfo['cleClient']);
     $requestingDate = $conn->real_escape_string($personalInfo['requestingDate']);
     $dilevery_delay = $conn->real_escape_string($personalInfo['dilevery_delay']);
     $broughtBy = $conn->real_escape_string($personalInfo['broughtBy']);
@@ -75,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         // Insérer le client sans la référence client pour obtenir l'ID du client
-        $sqlInsertClient = "INSERT INTO clients (name, address, phone, email, dilevery_delay, requestingDate, broughtBy) VALUES ('$name', '$address', '$phone', '$email', '$dilevery_delay', '$requestingDate', '$broughtBy')";
+        $sqlInsertClient = "INSERT INTO clients (name, address, phone, email, dilevery_delay, requestingDate, broughtBy, cle_Client) VALUES ('$name', '$address', '$phone', '$email', '$dilevery_delay', '$requestingDate', '$broughtBy', '$cleClient')";
         if (!$conn->query($sqlInsertClient)) {
             throw new Exception('Erreur lors de l\'insertion du client: ' . $conn->error);
         }

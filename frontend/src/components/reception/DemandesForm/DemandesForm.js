@@ -104,6 +104,7 @@ const DemandesForm = () => {
             updatedSamples[sampleIndex].analysisDetails.pop();
         }
         setSamples(updatedSamples);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     
@@ -137,6 +138,7 @@ const DemandesForm = () => {
             updatedSamples.pop();
         }
         setSamples(updatedSamples);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
     
     const handleSubmit = async (e) => {
@@ -273,11 +275,10 @@ const DemandesForm = () => {
         }
         return [];
     };
-
     return (
         <form className='reception-form' onSubmit={handleSubmit}>
-            <div className="form-header">
-                <h2>Informations personnelles du client</h2>
+            <div className="demandes-form-header">
+                <p>Informations personnelles du client</p>
             </div>
             <div className="form-group">
                 <label>Référence du client:</label>
@@ -340,11 +341,11 @@ const DemandesForm = () => {
                     </div>
             {samples.map((sample, index) => (
                 <div key={index} className="sample-group">
-                    <div className="form-header">
-                        <h2>Informations sur la demande</h2>
+                    <div className="demandes-form-header">
+                        <p>Informations sur la demande</p>
                     </div>
                     
-                    <h3>Informations sur l'échantillon {index + 1}</h3>
+                    <h3 className='sample-info'>Informations sur l'échantillon {index + 1}</h3>
 
                     <div className="form-group">
                         <label>Référence du client de l'échantillon :</label>
@@ -457,8 +458,8 @@ const DemandesForm = () => {
                         />
                     </div>
                     {sample.analysisDetails.map((analysis, analysisIndex) => (
-                        <div key={analysisIndex} className="analysis-group">
-                            <h3>Détails des analyses {analysisIndex + 1} sur l'échantillon {index + 1}</h3>
+                        <div key={analysisIndex} className="sample-group">
+                            <h3 className='sample-info'>Détails des analyses {analysisIndex + 1} sur l'échantillon {index + 1}</h3>
                             <div className="form-group">
                                 <label>Type d'analyse:</label>
                                 <select
@@ -526,20 +527,20 @@ const DemandesForm = () => {
                         </div>
                     ))}
                     <div className='analysis-buttons'>
-                    <button type="button" onClick={() => addAnalysis(index)} className='button-add'>
-                        Ajouter une analyse
-                    </button>
-                    <button type="button" onClick={() => deleteAnalysis(index)} className='button-delete'>
-                        Supprimer une analyse
-                    </button>
+                        <button type="button" onClick={() => addAnalysis(index)} className='button-add-form'>
+                            Ajouter une analyse
+                        </button>
+                        <button type="button" onClick={() => deleteAnalysis(index)} className='button-delete-form'>
+                            Supprimer une analyse
+                        </button>
                     </div>
                 </div>
             ))}
             <div className='analysis-buttons'>
-            <button type="button" onClick={addSample} className='button-add'>
+            <button type="button" onClick={addSample} className='button-add-form'>
                 Ajouter un échantillon
             </button>
-            <button type="button" onClick={deleteSample} className='button-delete'>
+            <button type="button" onClick={deleteSample} className='button-delete-form'>
                 Supprimer un échantillon
             </button>
             </div>
@@ -553,7 +554,9 @@ const DemandesForm = () => {
                                     required
                                 />
             </div>
-            <button type="submit" className='submit-button'>Soumettre</button>
+            <div className='submit-button-container'>
+                <button type="submit" className='submit-button'>Soumettre</button>
+            </div>
         </form>
     );
 };

@@ -9,7 +9,7 @@ CREATE TABLE clients (
     phone VARCHAR(20) NOT NULL,
     email VARCHAR(255) NOT NULL,
     clientReference VARCHAR(255),
-    cleclient VARCHAR(255),
+    cle_client VARCHAR(255),
     dilevery_delay DATE NOT NULL,
     requestingDate DATE NOT NULL,
     broughtBy VARCHAR(255) NOT NULL
