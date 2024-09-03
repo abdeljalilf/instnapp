@@ -8,7 +8,7 @@
          /* Marges pour le contenu du rapport */
         margin-top: 35mm;
         margin-bottom: 35mm;
-        margin-inline: 15mm;
+        margin-inline: 5mm;
         border: none; /* Pas de bordure autour du rapport */
     }
     .report-header, .report-footer {
@@ -18,7 +18,6 @@
         padding-bottom: 0px; /* Espace en dessous de l'en-tête */
         padding-top: 0px; /* Espace au-dessus du pied de page */
     }
-    
     .report-footer {
         border-top: none; /* Pas de bordure supérieure pour le pied de page */
         margin-top: 20px; /* Marge au-dessus du pied de page */
@@ -34,11 +33,6 @@
         display: block;
         border-top: 1.5px solid #000;
         margin-top: 10px;
-    }
-    .results-header-container h1 {
-        color: #000; /* Assurez-vous que le texte est noir */
-        display: block; /* Assurez-vous que l'élément est affiché */
-        text-align: center; /* Centre le texte */
     }
     .report-sample-section {
         page-break-inside: auto; /* Éviter les coupures dans les échantillons */
@@ -103,77 +97,30 @@
 
 .report-header, .report-footer {
     margin-bottom: 30px;
-
 }
-.date-location-ref-demande {
-    display: flex;
-    align-items: center; /* Aligne les éléments verticalement au centre */
-    justify-content: space-between; /* Distribue l'espace entre les éléments */
-    flex-direction: row; /* Définit la direction des éléments (par défaut, row) */
-    width: 100%;
-    max-width: 790px;
-    font-family: 'Arial', sans-serif;
-    margin: 0px;
-    margin-bottom: 10px;
-    padding: 0px;
-}
-
-.date-location {
-    margin: 0; /* Supprime les marges par défaut autour du paragraphe */
-}
-.ref-demande {
-    margin: 0; /* Supprime les marges par défaut autour du paragraphe */
-}
-
-.results-header-container {
-    display: inline-block; /* Ajuste la largeur du conteneur au contenu */
-    text-align: center; /* Centre le texte horizontalement */
-    margin: 0px 0; /* Espace au-dessus et en-dessous du conteneur */
-    padding: 5px 15px; /* Espacement interne du conteneur */
-    background-color: transparent; /* Couleur de fond du conteneur */
-    border-radius: 0; /* Coins arrondis */
-    border: 2px solid #000; /* Bordure solide de 1px */
-}
-
-.results-header-container h1 {
-    font-size: 24px; /* Taille de la police du titre */
-    color: #000; /* Couleur du texte */
-    margin: 0; /* Supprime la marge par défaut du titre */
-}
-
 .client-info {
+    display: table;
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 0px;
+    border-spacing: 0 10px; /* Espacement entre les lignes */
 }
 
-.client-info-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 0px;
+.client-info p {
+    display: table-row;
 }
 
-.client-info-table td {
-    padding: 2px;
-    text-align: left;
+.client-info strong {
+    display: table-cell;
+    width: 200px; /* Largeur fixe pour les labels */
     vertical-align: top;
+    padding-right: 0px;
 }
 
-.client-info-table td:first-child {
-    font-weight: bold;
-    width: 30%;
+.client-info span {
+    display: table-cell;
+    word-wrap: break-word; /* Permet de couper les lignes longues */
 }
 
-.client-info-table td:last-child {
-    width: 70%;
-}
-.client-info h2, .reportconclusion-section h2, .reportresults-section h2 {
-    font-size: 18px;
-    text-decoration: underline;
-    margin-bottom: 10px;
-}
-
-.reportconclusion-section, .final-reportresults-section {
+.reportconclusion-section, .reportresults-section {
     margin-bottom: 20px;
 }
 
@@ -186,29 +133,6 @@
 .sample-count {
     margin-bottom: 10px;
 }
-.sample-info-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 0px;
-    table-layout: auto; /* Ajuste automatiquement la largeur des colonnes */
-}
-
-.sample-info-table td {
-    padding: 2px;
-    text-align: left;
-    vertical-align: top;
-}
-
-.sample-info-table td:first-child {
-    font-weight: bold;
-    width: 33%; /* Largeur proportionnelle pour la première colonne */
-    min-width: 150px; /* Largeur minimale pour éviter que la colonne ne devienne trop étroite */
-}
-
-.sample-info-table td:last-child {
-    width: 67%; /* La colonne des données occupe le reste de l'espace disponible */
-}
-
 
 .reportanalysis-table {
     width: 98%;

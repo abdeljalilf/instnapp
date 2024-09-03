@@ -111,7 +111,7 @@ const GenirateRapport = () => {
         const element = document.getElementById('report-container');
         const sanitizedClientReference = data.clientReference.replace(/\//g, '_');
         const opt = {
-            margin: [35, 15], // 35mm for top and bottom, 10mm for sides
+            margin: [35, 5], // 35mm for top and bottom, 10mm for sides
             filename: `rapport_final_${sanitizedClientReference}_${department}.pdf`,
             image: { type: 'jpeg', quality: 1 },
             html2canvas: { scale: 2 },
@@ -124,7 +124,7 @@ const GenirateRapport = () => {
     
             for (let i = 1; i <= totalPages; i++) {
                 pdf.setPage(i);
-                pdf.text(`Page ${i} sur ${totalPages}`, 17, 272, { align: 'left' });
+                pdf.text(`Page ${i} sur ${totalPages}`, 190, 268, { align: 'right' });
             }
     
             pdf.save(`rapport_final_${sanitizedClientReference}_${department}.pdf`);
@@ -173,15 +173,12 @@ const GenirateRapport = () => {
         });
         return acc;
     }, {});
-    const capitalizeFirstLetter = (string) => {
-        if (!string) return '';
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    };
+
     const groupedSamplesArray = Object.entries(groupedSamples);
     const uniqueSampleCount = groupedSamplesArray.length;
     const sampleList = groupedSamplesArray.map(([sampleReference, {sampleType}], index) => (
         <div key={index} >
-            <p> &nbsp;&nbsp;<b> Code {sampleReference}&nbsp;:</b> &nbsp;{capitalizeFirstLetter(sampleType)} </p>
+            <p><b>Code {sampleReference}:</b>{sampleType} </p>
         </div>
     ));
     // Déterminer le texte du <th> en fonction du département
@@ -225,110 +222,96 @@ const GenirateRapport = () => {
             <div className="report-container-non-imprime">
             <div className="report-container" id="report-container">
                 <header className="report-header">
-                    <div className="date-location-ref-demande">
-                    <p className="ref-demande">
+                    <h1>RÉSULTATS D'ANALYSES</h1>
+                    <p>
                         <strong>Référence de la demande :</strong> {data.clientReference}/{department}
                     </p>
                     <p className="date-location">
                         <strong>Antananarivo, le</strong>{' '}
                         {new Date().toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}
                     </p>
-                    </div>
-                    <div className="results-header-container">
-                        <h1>RÉSULTATS D'ANALYSES</h1>
-                    </div>
                 </header>
 
                 <section className="client-info">
-                    <h2>1. Informations du Client</h2>
-                    <table className="client-info-table">
-                        <tbody>
-                            <tr>
-                                <td><strong>Nom</strong></td>
-                                <td><b>: {data.client_name}</b></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Adresse</strong></td>
-                                <td><b>: </b>{data.client_address}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Téléphone</strong></td>
-                                <td><b>: </b>{data.client_phone}</td>
-                            </tr>
-                            {data.cle_client && (
-                                <tr>
-                                    <td><strong>Référence du client</strong></td>
-                                    <td><b>: </b>{data.cle_client}</td>
-                                </tr>
-                            )}
-                            <tr>
-                                <td><strong>Nombre d’échantillons</strong></td>
-                                <td><b>: </b>{uniqueSampleCount} échantillon{uniqueSampleCount > 1 ? 's' : ''}</td>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                <td>{sampleList}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Apporté par</strong></td>
-                                <td><b>: </b>{data.broughtBy}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Date d'arrivée</strong></td>
-                                <td><b>: </b>{new Date(data.requestingDate).toLocaleDateString()}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </section>
+    <h2>Informations du Client</h2>
+    <p>
+        <strong>Nom</strong> <span>:{data.client_name}</span>
+    </p>
+    <p>
+        <strong>Adresse</strong> <span>:{data.client_address}</span>
+    </p>
+    <p>
+        <strong>Téléphone</strong> <span>:{data.client_phone}</span>
+    </p>
+    {data.cle_client && (
+        <p>
+            <strong>Référence du client</strong> <span>:{data.cle_client}</span>
+        </p>
+    )}
+    <p>
+        <strong>Nombre d’échantillons</strong> <span>:{uniqueSampleCount} échantillon{uniqueSampleCount > 1 ? 's' : ''}.</span>
+    </p>
+    <p>
+        <strong>{' '}</strong>
+        <span>   
+            {sampleList}
+        </span>
+    </p>
+    <p>
+        <strong>Apporté par</strong> <span>:{data.broughtBy}</span>
+    </p>
+    <p>
+        <strong>Date d'arrivée</strong> <span>:{new Date(data.requestingDate).toLocaleDateString()}</span>
+    </p>
+</section>
+
+
                 <section className="reportconclusion-section">
-                    <h2>2. Conclusion</h2>
+                    <h2>1. Conclusion</h2>
                     <p>{data.conclusion}</p>
                 </section>
 
                 <section className="reportresults-section">
-                    <h2>3. Résultats</h2>
+                    <h2>2. Résultats</h2>
                     <p>Les résultats d’analyses sont reportés dans les tableaux ci-dessous.</p>
                 </section>
 
                 {groupedSamplesArray.map(([sampleReference, { sampleType, sampleDetails, analyses }], index) => (
                     <div className="reportsample-section" key={index}>
                         <h3>Échantillon {index + 1} : {sampleType} - Code {sampleReference}</h3>
-                        <table className="sample-info-table">
-                            <tbody>
-                                <tr>
-                                    <td><strong>Lieu de Prélèvement</strong></td>
-                                    <td><b>: </b>{sampleDetails.samplingLocation}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Référence Echantillon du Client</strong></td>
-                                    <td><b>: </b>{sampleDetails.clientSampleRefrence || '-'}</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Date de Prélèvement</strong></td>
-                                    <td>
-                                    <b>: </b>{new Date(sampleDetails.samplingDate).toLocaleDateString('fr-FR', {
-                                            year: 'numeric',
-                                            month: 'long',
-                                            day: 'numeric'
-                                        })}
-                                        {sampleDetails.samplingTime && (
-                                            <> {sampleDetails.samplingTime}</>
-                                        )}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Prélèvement effectué par</strong></td>
-                                    <td><b>: </b>{sampleDetails.sampledBy}</td>
-                                </tr>
-                                {sampleDetails.quantiteDenree && (
-                                    <tr>
-                                        <td><strong>Quantité Denrée</strong></td>
-                                        <td><b>: </b>{sampleDetails.quantiteDenree}</td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
-                       
+                        <p>
+                            <strong>Lieu de Prélèvement :</strong> {sampleDetails.samplingLocation}
+                        </p>
+                        <p>
+                        {sampleDetails.clientSampleRefrence &&(
+                            <>
+                            <strong> Référence Echantillon du Client :</strong> {sampleDetails.clientSampleRefrence}
+                            </> 
+                        )}
+                        </p>
+                        <p>
+                            <strong>Date de Prélèvement :</strong>{' '}
+                            {new Date(sampleDetails.samplingDate).toLocaleDateString('fr-FR', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            })} {' '}
+                            {sampleDetails.samplingTime &&(
+                                <>
+                                 {sampleDetails.samplingTime}
+                                </>
+                            )}
+                        </p>
+                        <p>
+                            <strong>Prélevé par :</strong> {sampleDetails.sampledBy}
+                        </p>
+                        <p>
+                        {sampleDetails.quantiteDenree &&(
+                            <>
+                            <strong>quantiteDenree :</strong> {sampleDetails.quantiteDenree}
+                            </> 
+                        )}
+                        </p>
                         {Object.entries(analyses).map(([analysisKey, { analysisType, parameter, technique, elementsdinteret, norme,analysis_time }], analysisIndex) => (
                             <div key={analysisKey} className="reportanalysis-section">
                                 <h4>Analyse {analysisIndex + 1}: {analysisType} pour {sampleType.toUpperCase()}</h4>
