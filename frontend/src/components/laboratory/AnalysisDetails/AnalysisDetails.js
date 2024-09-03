@@ -143,9 +143,11 @@
       }
     
       axios
-        .post(`${apiBaseUrl}/instnapp/backend/routes/laboratoire/analysisDetails.php`, formData, {
+        .post(`${apiBaseUrl}/instnapp/backend/routes/laboratoire/analysisDetails.php/analysisDetails.php?id=${analysisId}&department=${department}`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
+            Authorization: session_id,
+            
           },
         })
         .then((response) => {

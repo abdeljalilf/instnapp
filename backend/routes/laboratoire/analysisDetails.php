@@ -7,6 +7,7 @@ header('Access-Control-Allow-Headers: Content-Type, Authorization');
 // Include database connection
 include '../../database/db_connection.php';
 include '../../routes/login/session_util.php';
+
 function sendErrorResponse($message) {
     echo json_encode(['error' => $message]);
     exit;
@@ -16,23 +17,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
 }
+
 $department = isset($_GET['department']) ? $_GET['department'] : '';
-$id = intval($_GET['id']);
+$analysisId = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
 // Vérifiez la session
 $user = checkSession($conn);
 authorize(['laboratoire'], $user, $department);
 
-
-
-if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
-    $id = intval($_GET['id']); // Sanitize input
-
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && $analysisId > 0) {
     // Query to fetch details from analyses
     $query = $conn->prepare("SELECT * FROM analyses WHERE id = ?");
     if ($query === false) {
         sendErrorResponse('Failed to prepare query: ' . $conn->error);
     }
-    $query->bind_param("i", $id);
+    $query->bind_param("i", $analysisId);
     $query->execute();
     $result = $query->get_result();
     $analysis = $result->fetch_assoc();
@@ -43,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
         if ($query === false) {
             sendErrorResponse('Failed to prepare query: ' . $conn->error);
         }
-        $query->bind_param("i", $id);
+        $query->bind_param("i", $analysisId);
         $query->execute();
         $result = $query->get_result();
         $elements = [];
@@ -104,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['id'])) {
     }
 
     // Handle other POST data (results and qualite)
-    $data = json_decode($_POST['data'], true);
+    $data = isset($_POST['data']) ? json_decode($_POST['data'], true) : null;
 
     if ($data) {
         $analysisId = isset($_POST['analysisId']) ? intval($_POST['analysisId']) : null;
