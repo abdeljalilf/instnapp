@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AppBar, Toolbar, Button } from '@mui/material';
 import { useNavigate, useParams, Outlet, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import logoutIcon from '../../../images/logout.png';
+import changePasswordIcon from '../../../images/changePassword.png';  
+import menuIcon from '../../../images/menu.png';    
 import './LaboMainPage.css';
 
 const LaboMainPage = () => {
@@ -10,6 +13,7 @@ const LaboMainPage = () => {
     const location = useLocation();
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
     const session_id = localStorage.getItem('session_id');
+    const [menuOpen, setMenuOpen] = useState(false);
 
     const handleLogout = async () => {
         try {
@@ -25,6 +29,13 @@ const LaboMainPage = () => {
         }
     };
 
+    const handleChangePassword = () => {
+        // Navigate to change password page or handle change password logic here
+        navigate('/change-password');
+    };
+
+    const toggleMenu = () => setMenuOpen(!menuOpen);
+
     // Function to determine if a route is active
     const isActive = (path) => location.pathname === path;
 
@@ -39,20 +50,22 @@ const LaboMainPage = () => {
                     >
                         Laboratoire {departement}
                     </Button>
-                    <Button 
-                        className={`nav-button ${isActive(`/laboratoire/${departement}/new-analysis`) ? 'active' : 'inactive'}`} 
-                        onClick={() => navigate(`/laboratoire/${departement}/new-analysis`)}
-                    >
-                        Nouvelles analyses
-                    </Button>
-                    <Button 
-                        className="nav-button labo-logout-button"
-                        onClick={handleLogout}
-                    >
-                        Logout
-                    </Button>
+                    <button onClick={toggleMenu} className={`menu-button ${menuOpen ? 'show' : ''}`}>
+                        <img src={menuIcon} alt="Menu icon" /> {/* Your menu icon */}
+                    </button>
                 </Toolbar>
             </AppBar>
+            <div className={`overlay ${menuOpen ? 'show' : ''}`}></div>
+            <div className={`dropdown-menu-admin ${menuOpen ? 'show' : ''}`}>
+                <button onClick={handleLogout} className="logout-button"> 
+                    Logout 
+                    <img src={logoutIcon} alt="Logout icon" />
+                </button>
+                <button onClick={handleChangePassword} className="change-password-button"> 
+                    Changer mot de passe
+                    <img src={changePasswordIcon} alt="Change password icon" />
+                </button>
+            </div>
             <div>
                 <Outlet /> {/* Display child routes here */}
             </div>
