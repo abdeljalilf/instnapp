@@ -65,7 +65,7 @@
     width: 250px; /* Largeur fixe pour les labels */
     margin-right: 10px; 
     text-align: left; /* Aligner le texte à droite */
-    font-size: 14px;
+    font-size: 18px;
 }
 
 .form-group-ft p {
@@ -73,27 +73,27 @@
     margin-left:0px;
     text-align: left;
     /* width: 900px; */
-    font-size: 15px;
+    font-size: 20px;
     font-weight: bold;
 }
 
 
-.container-ft {
+/* .container-ft {
     width: 95%;
     margin: 50px auto;
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0.8); /* Couleur de fond translucide */
+    background-color: rgba(255, 255, 255, 0.8); /* Couleur de fond translucide 
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
+} */
 
 
-.signatures {
+/* .signatures {
     height: 200px;
     display: flex;
-    justify-content: space-between; /* Espace égal entre les éléments */
-}
+    justify-content: space-between; /* Espace égal entre les éléments 
+} */
 
 .signatures p {
     margin: 0; /* Supprimer la marge par défaut des paragraphes */
@@ -138,4 +138,31 @@
 
 .analysis-section{
     width: 99%;
+}
+
+.fiche-ref {
+    height: 3508px; /* Height of A4 page */
+    position: relative;
+    width:99%;
+}
+
+.signatures {
+    
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.container-ft {
+    position: relative;
+    height: 1729px;
+    /* overflow: hidden; */
+    width: 99%;
+}
+
+.footer{
+    position: absolute;
+    bottom: 0;
+    height: 15%;
+    width:100%;
 }
