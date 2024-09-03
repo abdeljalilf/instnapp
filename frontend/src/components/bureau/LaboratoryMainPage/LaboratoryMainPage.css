@@ -1,57 +1,182 @@
-.title {
-    margin-inline: 20px; /* Adjust margin as needed */
-}
 /* Ensure AppBar color is set correctly */
 .app-bar {
     background-color: #2e8b57 !important; /* Force color if overridden */
 }
+.main-page-container-bureau {
+    background-color: #2e8b57;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+    position: sticky !important;
+    top: 0;
+    z-index: 3; /* Ensure it's above the overlay and dropdown */
+}
+.main-button-bureau {
+    padding: 20px 40px !important;
+    font-size: 19px;
+    background-color: #2e8b57;
+    color: #dcdcdc;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: xx-large;
+}
 
-/* Styles for the navigation buttons */
-.nav-button {
-    flex-grow: 1;
-    padding: 10px;
-    font-size: 16px;
-    text-transform: uppercase;
-    color: #ffffff; /* Default text color */
-    background-color: transparent; /* Default background color */
+.main-button-bureau:hover {
+    background-color: #2e8b57;
+    color: #ffffff;
+}
+
+.main-button-bureau.active::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 4px; /* Adjust thickness */
+    background-color: white;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.menu-button {
+    background: none;
     border: none;
     cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Styling for active button */
-.nav-button.active {
-    color: #ffffff; /* Text color for active button */
-    background-color: #0f29ec; /* Background color for active button */
+.dropdown-menu-bureau {
+    display: none;
+    /* other styles */
 }
 
-/* Styling for inactive button */
-.nav-button.inactive {
-    color: #dcdcdc; /* Text color for inactive button */
-    background-color: transparent; /* Background color for inactive button */
+.dropdown-menu-bureau.show {
+    display: block;
+    /* other styles */
+}
+/* Styling for the logo and text */
+.instn-logo-bureau {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    cursor: pointer;
+}
+
+.instn-logo-bureau img {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+/* Styling for buttons in dropdown */
+.logout-button,
+.change-password-button {
+    background-color: #2e8b57; /* Green background */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Icon size and spacing in buttons */
+.logout-button img,
+.change-password-button img {
+    margin-left: 10px;
+}
+
+.logout-button img {
+    width: 20px;
+    height: 25px;
+}
+
+.change-password-button img {
+    width: 30px;
+    height: 30px;
 }
 
 /* Hover effect for buttons */
-.nav-button:hover {
-    background-color: #48ebda !important; /* Darker background on hover */
-    color: #ffffff; /* Text color on hover */
+.logout-button:hover,
+.change-password-button:hover {
+    background-color: #1d6f40; /* Darker green for hover effect */
+    transform: scale(1.05); /* Slightly scale up */
 }
 
-/* Specific styling for logout button */
-.bureau-logout-button {
-    margin-left: auto; /* Push logout button to the end */
-    flex-grow: 1;
+/* Dropdown menu styling */
+.dropdown-menu-bureau {
+    background-color: #2e8b57;
     padding: 10px;
-    font-size: 16px;
-    text-transform: uppercase;
-    color: #dcdcdc !important; /* Default text color */
-    background-color: transparent; /* Default background color */
+    border: 1px solid #1d6f40;
+    position: absolute;
+    top: 62px; /* Adjust based on your AppBar height */
+    right: 24px; /* Adjust based on your layout */
+    z-index: 4; /* Ensure dropdown is above the overlay */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    opacity: 0;
+    transform: scale(0.9); /* Start with a slight scale down effect */
+    visibility: hidden;
+    transition: opacity 0.5s ease, transform 0.3s ease, visibility 0.5s ease;
+}
+
+/* Show dropdown menu with appearance effect */
+.dropdown-menu-bureau.show {
+    opacity: 1;
+    transform: scale(1); /* Scale up to normal size */
+    visibility: visible;
+}
+
+/* Menu button styling */
+.menu-button {
+    background: none;
     border: none;
     cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    padding: 5px;
+    transition: background-color 0.3s ease;
+    z-index: 5; /* Ensure the menu button is on top */
 }
 
-.bureau-logout-button:hover {
-    background-color: #cc0000 !important; /* Darker background on hover */
-    color: #ffffff !important;
+.menu-button:hover {
+    background-color: #1d6f40; /* Light background on hover */
 }
+
+/* Menu button icon size */
+.menu-button img {
+    width: 30px;
+    height: 30px;
+    transition: transform 0.3s ease;
+}
+
+.menu-button.show img {
+    transform: rotate(90deg); /* Rotate icon on hover */
+    width: 30px;
+    height: 30px;
+}
+
+/* Overlay to cover the entire page */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(93, 255, 163, 0.4), rgba(17, 66, 38, 0.8)); /* Semi-transparent gradient */
+    z-index: 2;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
