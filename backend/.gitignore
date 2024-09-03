@@ -1,7 +1,13 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
+# Ignore tout le contenu du dossier fichiers_rapports
 fichiers_rapports/*
-!fichiers_rapports/.gitkeep.rdm
+
+# Ne pas ignorer ce fichier spécifique (pour conserver le dossier dans Git)
+!fichiers_rapports/.gitkeep
+# Ignore tout le contenu du dossier fichiers_rapports
 fichiers_resultats/*
-!fichiers_resultats/.gitkeep.rdm
+# Ne pas ignorer ce fichier spécifique (pour conserver le dossier dans Git)
+!fichiers_resultats/.gitkeep
+
