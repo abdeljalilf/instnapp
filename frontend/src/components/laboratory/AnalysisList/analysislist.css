@@ -52,7 +52,7 @@
 }
 
 /* Button styles */
-.analysislist button {
+.result-button {
     display: inline-flex; /* Use inline-flex to adjust width based on content */
     padding: 10px 20px; /* Space around text (adjust as needed) */
     font-size: 16px; /* Text size (adjust as needed) */

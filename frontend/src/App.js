@@ -70,10 +70,10 @@ const App = () => {
                     <Route path="rapportfinal/:id" element={<ProtectedRoute element={<RapportFinal />} roleRequired="bureau" />} />
                     <Route path="GenerateRapport/:id" element={<ProtectedRoute element={<GenerateRapport />} roleRequired="bureau" />} />
                 </Route>
-                <Route path="/laboratoire" element={<LaboMainPage />}>
-                    <Route index element={<Laboratoire />} />
-                    <Route path="analyses/:selectedLabo" element={<AnalysisList />} /> {/* New route for AnalysisList */}
-                    <Route path="analysis-details/:id" element={<AnalysisDetails />} />
+                <Route path="/laboratoire/:departement" element={<ProtectedRoute element={<LaboMainPage />} roleRequired="laboratoire" />}>
+                <Route index element={<ProtectedRoute element={<AnalysisList />} roleRequired="laboratoire" />} />
+                <Route path="new-analysis" element={<ProtectedRoute element={<AnalysisList />} roleRequired="laboratoire" />} />
+                <Route path="analysis-details/:id" element={<ProtectedRoute element={<AnalysisDetails />} roleRequired="laboratoire" />} />
                 </Route>
                 <Route path="/admin" element={<ProtectedRoute element={<AdminMainPage />} roleRequired="admin" />}>
                     <Route index element={<ProtectedRoute element={<AdminPanel />} roleRequired="admin" />} />

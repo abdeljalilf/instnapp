@@ -1,0 +1,7 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+fichiers_rapports/*
+!fichiers_rapports/.gitkeep.rdm
+fichiers_resultats/*
+!fichiers_resultats/.gitkeep.rdm
