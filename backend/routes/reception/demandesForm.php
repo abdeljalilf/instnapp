@@ -25,7 +25,7 @@ function generateClientReference($clientId, $year, $month) {
     $formattedClientCount = str_pad($clientId, 4, '0', STR_PAD_LEFT);
     
     // Générer la référence client au format : DS{YYMM}-A{clientCount}
-    return sprintf("DS%s%s-A%s", $shortYear, str_pad($month, 2, '0', STR_PAD_LEFT), $formattedClientCount);
+    return sprintf("DS%s%s/A%s", $shortYear, str_pad($month, 2, '0', STR_PAD_LEFT), $formattedClientCount);
 }
 
 // Fonction pour générer la référence échantillon
@@ -38,7 +38,7 @@ function generateSampleReference($year, $month, $clientCount, $sampleNumber) {
     $formattedSampleNumber = str_pad($sampleNumber, 2, '0', STR_PAD_LEFT);
     
     // Générer la référence échantillon au format : {YYMM}-A{clientCount}-E{sampleNumber}
-    return sprintf("%s%s-A%s-E%s", $shortYear, str_pad($month, 2, '0', STR_PAD_LEFT), $formattedClientCount, $formattedSampleNumber);
+    return sprintf("%s%s/A%s/E%s", $shortYear, str_pad($month, 2, '0', STR_PAD_LEFT), $formattedClientCount, $formattedSampleNumber);
 }
 
 $techniqueToDepartement = [
@@ -158,7 +158,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'message' => 'Demande d\'analyse enregistrée avec succès',
             'clientReference' => $clientReference,
             'samplesReferences' => $sampleReference,
-            'clientId' => $clientId
+            'clientId' => $clientId,
         );
         header('Content-Type: application/json');
         echo json_encode($response);

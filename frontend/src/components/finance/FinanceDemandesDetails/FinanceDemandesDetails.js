@@ -22,7 +22,7 @@ const FinanceDemandesDetails = () => {
         const shortYear = year.toString().slice(-2);
         const formattedMonth = month.toString().padStart(2, '0');
         const formattedClientCount = clientId.toString().padStart(4, '0');
-        return `DS${shortYear}${formattedMonth}-A${formattedClientCount}`;
+        return `DS${shortYear}${formattedMonth}/A${formattedClientCount}`;
     };
 
     useEffect(() => {
