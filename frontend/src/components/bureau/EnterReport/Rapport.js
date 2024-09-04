@@ -118,6 +118,16 @@ const { sampleType } = sample || {};
     }
     return field === 'conclusion';
 };
+const stripHtmlTags = (html) => {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.body.textContent || "";
+};
+
+const isMeaningfulText = (html) => {
+    const text = stripHtmlTags(html).trim();
+    return text.length > 0;
+};
+
 const handleValidateReport = () => {
     let errorMessage = '';
     if (atLeastOneSampleIsAir && files.length === 0) {
@@ -138,8 +148,10 @@ const handleValidateReport = () => {
             errorMessage = 'Veuillez remplir toutes les valeurs des normes utilisées.';
         }
     });
-    if (conclusion.trim() === '') {
-        errorMessage = 'Veuillez entrer une conclusion.';
+    // Vérifier que la conclusion est remplie si elle est visible
+    // Check if conclusion contains meaningful text
+    if (!isMeaningfulText(conclusion) && !allSamplesAreAir) {
+        errorMessage = 'Veuillez remplir la conclusion';
     }
     if (errorMessage) {
         setValidationError(errorMessage);

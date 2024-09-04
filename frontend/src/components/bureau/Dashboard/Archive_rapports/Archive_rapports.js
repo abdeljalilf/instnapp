@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import './Archive_rapports.css';
 
 const ArchiveResultats = () => {
@@ -37,7 +37,7 @@ const ArchiveResultats = () => {
         };
 
         fetchFiles();
-    }, [apiBaseUrl]);
+    }, [apiBaseUrl, department, session_id]);
 
     const handleSearch = (event) => {
         const term = event.target.value;
@@ -49,10 +49,21 @@ const ArchiveResultats = () => {
             const filtered = files.filter(file =>
                 file.file_name.toLowerCase().includes(term.toLowerCase()) ||
                 file.clientReference.toLowerCase().includes(term.toLowerCase()) ||
-                file.sampleReference.toLowerCase().includes(term.toLowerCase())
+                file.samples.some(sample =>
+                    sample.sampleReference.toLowerCase().includes(term.toLowerCase())
+                )
             );
             setFilteredFiles(filtered);
         }
+    };
+
+    const renderSampleList = (samples) => {
+        return samples.map(sample => (
+            <div key={sample.sample_id}>
+                <strong>Référence d'Échantillon:</strong> {sample.sampleReference}<br/>
+                <strong>Type d'Échantillon:</strong> {sample.sampleType}<br/>
+            </div>
+        ));
     };
 
     return (
@@ -77,8 +88,8 @@ const ArchiveResultats = () => {
                     <thead>
                         <tr>
                             <th>Référence de la Demande</th>
-                            <th>Type d'Échantillon</th>
                             <th>Référence d'Échantillon</th>
+                            <th>Type d'Échantillon</th>
                             <th>Date de Téléchargement</th>
                             <th>Nom du Fichier</th>
                             <th>Action</th>
@@ -88,8 +99,16 @@ const ArchiveResultats = () => {
                         {filteredFiles.map(file => (
                             <tr key={file.id}>
                                 <td>{file.clientReference}</td>
-                                <td>{file.sampleType}</td>
-                                <td>{file.sampleReference}</td>
+                                <td>
+                                    {file.samples.map(sample => (
+                                        <div key={sample.sample_id}>{sample.sampleReference}</div>
+                                    ))}
+                                </td>
+                                <td>
+                                    {file.samples.map(sample => (
+                                        <div key={sample.sample_id}>{sample.sampleType}</div>
+                                    ))}
+                                </td>
                                 <td>{new Date(file.uploaded_at).toLocaleString()}</td>
                                 <td>{file.file_name}</td>
                                 <td>

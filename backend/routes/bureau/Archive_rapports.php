@@ -1,5 +1,5 @@
 <?php
-// Archive_resultats.php
+// Archive_rapports.php
 require_once '../../routes/login/session_util.php';
 require_once '../../database/db_connection.php'; // Inclure la connexion à la base de données
 
@@ -56,12 +56,12 @@ if (isset($_GET['file_id'])) {
 }
 
 // Si aucun file_id n'est fourni, récupérer et afficher les données des fichiers
-$sql = "SELECT fr.id, fr.file_name, fr.file_path, fr.uploaded_at, 
-               c.id AS client_id, c.clientReference,
-               e.id AS sample_id, e.sampleReference, e.sampleType
+$sql = "SELECT 
+           fr.id, fr.file_name, fr.file_path, fr.uploaded_at, 
+           c.id AS client_id, c.clientReference
         FROM fichiers_rapports fr
         JOIN clients c ON fr.client_id = c.id
-        JOIN echantillons e ON e.client_id = c.id";
+        GROUP BY fr.id, fr.file_name, fr.file_path, fr.uploaded_at, c.id, c.clientReference";
 $result = $conn->query($sql);
 
 if ($result === false) {
@@ -71,8 +71,36 @@ if ($result === false) {
 
 $files = [];
 while ($row = $result->fetch_assoc()) {
-    $files[] = $row;
+    $fileId = $row['id'];
+    $files[$fileId] = $row;
+    $files[$fileId]['samples'] = [];
 }
+
+// Récupérer les échantillons
+$sql = "SELECT 
+           fr.id AS file_id, e.id AS sample_id, e.sampleReference, e.sampleType
+        FROM echantillons e
+        JOIN fichiers_rapports fr ON e.client_id = fr.client_id";
+$result = $conn->query($sql);
+
+if ($result === false) {
+    echo json_encode(['success' => false, 'message' => 'Database query failed.']);
+    exit;
+}
+
+while ($row = $result->fetch_assoc()) {
+    $fileId = $row['file_id'];
+    if (isset($files[$fileId])) {
+        $files[$fileId]['samples'][] = [
+            'sample_id' => $row['sample_id'],
+            'sampleReference' => $row['sampleReference'],
+            'sampleType' => $row['sampleType'],
+        ];
+    }
+}
+
+// Convertir les résultats en tableau
+$files = array_values($files);
 
 echo json_encode(['success' => true, 'data' => $files]);
 ?>
