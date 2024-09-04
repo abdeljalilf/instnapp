@@ -43,6 +43,9 @@
     .report-sample-section {
         page-break-inside: auto; /* Éviter les coupures dans les échantillons */
     }
+    .reportconclusion-section {
+        page-break-inside: auto;
+    }
     .report-analysis-section {
         page-break-inside: avoid; /* Éviter les coupures dans les analyses */
     }
@@ -175,6 +178,10 @@
 
 .reportconclusion-section, .final-reportresults-section {
     margin-bottom: 20px;
+}
+.conclusion-display {
+    /* Styles pour le texte enrichi */
+    padding: auto;
 }
 
 .reportsample-section {

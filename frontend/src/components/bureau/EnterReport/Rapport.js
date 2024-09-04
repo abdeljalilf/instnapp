@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FaTimes } from 'react-icons/fa';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import './Rapport.css';
 
 const Rapport = () => {
@@ -24,9 +26,7 @@ const Rapport = () => {
     const [files, setFiles] = useState([]);
     const [fileText, setFileText] = useState('Aucun fichier n\'a été sélectionné');
     const fileInputRef = useRef(null);
-    const [inputKey, setInputKey] = useState(Date.now()); // Clé pour réinitialiser l'élément d'entrée
-
-    
+    const [inputKey, setInputKey] = useState(Date.now()); 
 
     useEffect(() => {
       if (id && department) {
@@ -49,8 +49,7 @@ const Rapport = () => {
                   setData(data.reports[0]);
                   setN1(Number(data.N1) || 0);
                   setN2(Number(data.N2) || 0);
-                  
-                  // Initialize observationsState
+                 
                   setObservationsState(
                       Object.fromEntries(
                           Object.entries(data.reports[0].samples).flatMap(([sampleReference, sampleArray]) =>
@@ -61,7 +60,6 @@ const Rapport = () => {
                       )
                   );
   
-                  // Initialize normesState for usedNormes
                   setNormesState(
                     Object.fromEntries(
                         Object.entries(data.reports[0].samples).flatMap(([sampleReference, sampleArray]) =>
@@ -72,7 +70,6 @@ const Rapport = () => {
                     )
                 );                
   
-                  // Initialize normeValuesState for NormeValues
                   setNormeValuesState(
                       Object.fromEntries(
                           Object.entries(data.reports[0].samples).flatMap(([sampleReference, sampleArray]) =>
@@ -82,7 +79,6 @@ const Rapport = () => {
                           )
                       )
                   );
-                  // Réinitialisez la conclusion à partir des données reçues
                 setConclusion(data.reports[0].conclusion || '');
               } else {
                   setError('No valid data found');
@@ -99,83 +95,55 @@ const Rapport = () => {
   
     
   const isFieldVisible = (sampleReference, analysisKey, field) => {
-// Ensure you are using the correct key
 const sample = groupedSamples[sampleReference];
 
 if (!sample) {
     console.error(`Sample with reference ${sampleReference} not found.`);
-    // Handle the missing sample case appropriately
     return;
 }
 
-// Access analyses safely
 const analyses = sample.analyses || {};
 const analysis = analyses[analysisKey];
 
 if (!analysis) {
     console.error(`Analysis with key ${analysisKey} not found for sample ${sampleReference}.`);
-    // Handle the missing analysis case appropriately
     return;
 }
 
-// Safe destructuring of properties
-const { analysisType } = analysis || {}; // Default to empty object if analysis is undefined
-const { sampleType } = sample || {}; // Default to empty object if sample is undefined
-
-// Continue with your logic
-console.log("Analysis Type:", analysisType);
-console.log("Sample Type:", sampleType);
-
-    
-
+const { analysisType } = analysis || {}; 
+const { sampleType } = sample || {}; 
     if (analysisType === 'Quantitative' && sampleType != 'air') {
         return field === 'normeUtilisee' || field === 'observations' || field === 'valeursNormeUtilisee';
     }
-    
-    // If not Quantitative and sampleType is not 'air', only validate the conclusion
     return field === 'conclusion';
 };
 const handleValidateReport = () => {
     let errorMessage = '';
-
-    // Vérifiez si le téléchargement de fichiers est requis
     if (atLeastOneSampleIsAir && files.length === 0) {
         errorMessage = 'Veuillez uploader au moins un fichier avant de valider.';
     }
-
-    // Vérifiez les observations
     Object.entries(observationsState).forEach(([key, value]) => {
         if (value.trim() === '' && isFieldVisible(key.split('-')[0], key.split('-')[1], 'observations')) {
             errorMessage = 'Veuillez remplir toutes les observations.';
         }
     });
-
-    // Vérifiez les normes utilisées
     Object.entries(normesState).forEach(([key, value]) => {
         if (value.trim() === '' && isFieldVisible(key.split('-')[0], key.split('-')[1], 'normeUtilisee')) {
             errorMessage = 'Veuillez remplir toutes les normes utilisées.';
         }
     });
-
-    // Vérifiez les valeurs des normes utilisées
     Object.entries(normeValuesState).forEach(([key, value]) => {
         if (value.trim() === '' && isFieldVisible(key.split('-')[0], key.split('-')[1], 'valeursNormeUtilisee')) {
             errorMessage = 'Veuillez remplir toutes les valeurs des normes utilisées.';
         }
     });
-
-    // Vérifiez la conclusion
     if (conclusion.trim() === '') {
         errorMessage = 'Veuillez entrer une conclusion.';
     }
-
-    // Si un message d'erreur a été trouvé, affichez-le et arrêtez la validation
     if (errorMessage) {
         setValidationError(errorMessage);
         return;
     }
-
-    // Préparez les données pour l'API
     const usedNormes = Object.entries(normesState).map(([key, value]) => {
         const [sampleReference, analysisKey, element_id] = key.split('-');
         return {
@@ -213,12 +181,9 @@ const handleValidateReport = () => {
         departement: department,
         allAnalysisIds: allAnalysisIds,
     };
-
-    // Create FormData object for file upload
     const formData = new FormData();
     formData.append('reportData', JSON.stringify(reportData));
-    formData.append('client_id', id);  // Assurez-vous que `id` correspond au client_id correct
-    // Ajouter des fichiers à FormData
+    formData.append('client_id', id); 
     files.forEach((file, index) => {
         formData.append(`file${index}`, file);
     });
@@ -253,10 +218,6 @@ const handleValidateReport = () => {
         setValidationError('Erreur lors de l\'enregistrement des données.');
     });
 };
-
-
-  
-
     const handleValidateRequest = (analysis_id) => {
         const remark = remarksState[analysis_id];
 
@@ -269,7 +230,6 @@ const handleValidateReport = () => {
             analysis_id: analysis_id,
             office_remark: remark,
         };
-
         fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/request_revision.php?department=${department}`, {
             method: 'POST',
             headers: {
@@ -295,7 +255,6 @@ const handleValidateReport = () => {
                 setValidationError('Erreur lors de l\'enregistrement de la demande de révision.');
             });
     };
-
     const handleObservationChange = (sampleReference, analysisKey, resultIndex, value) => {
         setObservationsState((prevObservations) => ({
             ...prevObservations,
@@ -329,23 +288,18 @@ const handleValidateReport = () => {
             [analysisKey]: !prevShowRemarkForm[analysisKey],
         }));
     };
-
     const toggleStandardResults = () => {
         setShowStandardResults(prevShow => !prevShow);
     };
-
     if (error) {
         return <div className="error-message">Error: {error}</div>;
     }
-
     if (!data) {
         return <div className="loading-message">Loading...</div>;
     }
-
     if (!data.samples || typeof data.samples !== 'object') {
         return <div className="error-message">Invalid data format received.</div>;
     }
-
     const groupedSamples = Object.entries(data.samples).reduce((acc, [sampleType, samples]) => {
         samples.forEach((sample) => {
             if (!acc[sample.sampleReference]) {
@@ -401,7 +355,6 @@ const handleValidateReport = () => {
     };
     const allSamplesAreAir = groupedSamplesArray.every(([sampleReference, { sampleType }]) => sampleType === 'air');
     const atLeastOneSampleIsAir = groupedSamplesArray.some(([sampleReference, { sampleType }]) => sampleType === 'air');
-
     const handleFileUpload = (e) => {
         const uploadedFiles = Array.from(e.target.files);
         if (uploadedFiles.length > 0) {
@@ -410,10 +363,8 @@ const handleValidateReport = () => {
         }
         if (uploadedFiles.length === 0) {
             e.target.value = null; // Effacer la valeur de l'input pour permettre la ré-sélection des mêmes fichiers
-        }
-        
+        }        
     };
-
     const handleRemoveFile = (fileToRemove) => {
         setFiles(prevFiles => {
             const newFiles = prevFiles.filter(file => file !== fileToRemove);
@@ -422,8 +373,6 @@ const handleValidateReport = () => {
             }
             return newFiles;
         });
-
-        // Réinitialiser l'élément d'entrée de fichiers
         setInputKey(Date.now());
     };
     return (
@@ -532,8 +481,7 @@ const handleValidateReport = () => {
                                                             onChange={(e) => handleNormeValuesChange(sampleReference, analysisKey, element.element_id, e.target.value)}
                                                             className="valeur-norme-input"
                                                         />
-                                                    </td>
-                                                
+                                                    </td>                                               
                                                     <td>
                                                         <input
                                                             type="text"
@@ -632,19 +580,17 @@ const handleValidateReport = () => {
                     </div>
                 </div>
             ))}
-
             {!allSamplesAreAir && (
                 <div className="conclusion-form">
                     <h2>Conclusion</h2>
-                    <textarea
+                    <ReactQuill
                         value={conclusion}
-                        onChange={(e) => setConclusion(e.target.value)}
+                        onChange={(value) => setConclusion(value)}
                         placeholder="Entrez la conclusion ici"
-                        className="conclusion-textarea"
+                        className="conclusion-quill"
                     />
                 </div>
-            )}
-            
+            )}           
                 <div className="file-upload-form">
                     <h2>première Version du Rapport </h2>
                     <p className='text_file-obligation'> Obligatoire Seulement pour <strong>L'AIR</strong></p>
@@ -676,5 +622,4 @@ const handleValidateReport = () => {
         </div>
     );
 };
-
 export default Rapport;

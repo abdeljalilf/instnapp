@@ -32,6 +32,10 @@
   .sample-table {
     margin-bottom: 20px;
   }
+  .conclusion-display {
+    /* Styles pour le texte enrichi */
+    padding: auto;
+}
   
   .client-info h2,
   .conclusion-section h2,

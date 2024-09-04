@@ -116,7 +116,7 @@ const GenirateRapport = () => {
             image: { type: 'jpeg', quality: 1 },
             html2canvas: { scale: 2 },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-            pagebreak: { mode: ['avoid-all', 'css', 'legacy'] } // Add page breaks if necessary
+            pagebreak: { mode: 'css' }
         };
         html2pdf().from(element).set(opt).toPdf().get('pdf').then((pdf) => {
             const totalPages = pdf.internal.getNumberOfPages();
@@ -124,12 +124,13 @@ const GenirateRapport = () => {
     
             for (let i = 1; i <= totalPages; i++) {
                 pdf.setPage(i);
-                pdf.text(`Page ${i} sur ${totalPages}`, 17, 272, { align: 'left' });
+                pdf.text(`Page ${i} sur ${totalPages}`, 16, 265, { align: 'left' });
             }
     
             pdf.save(`rapport_final_${sanitizedClientReference}_${department}.pdf`);
         });
     };
+    
     
 
     if (error) {
@@ -282,7 +283,11 @@ const GenirateRapport = () => {
                 </section>
                 <section className="reportconclusion-section">
                     <h2>2. Conclusion</h2>
-                    <p>{data.conclusion}</p>
+                    <p>
+                    <div className="conclusion-display"
+                        dangerouslySetInnerHTML={{ __html: data.conclusion }}
+                    />
+                    </p>
                 </section>
 
                 <section className="reportresults-section">

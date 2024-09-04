@@ -130,10 +130,9 @@
         valeurMesuree: result.valeurMesuree,
       }));
     
-      // Préparation des données du formulaire pour le téléchargement du fichier
       const formData = new FormData();
       formData.append('analysisId', analysisId);
-      formData.append('analyseTime', analyseTime || ''); // Handle empty analyseTime
+      formData.append('analyseTime', analyseTime || '');
       formData.append('data', JSON.stringify({
         results: resultsPayload,
         qualite: qualitePayload,
@@ -147,15 +146,13 @@
           headers: {
             'Content-Type': 'multipart/form-data',
             Authorization: session_id,
-            
           },
         })
         .then((response) => {
           console.log('Server response:', response.data);
           if (response.data.message) {
             alert(response.data.message);
-            navigate('/laboratoire');
-            // Handle success
+            navigate(`/laboratoire/${department}`); // Redirect to the appropriate department page
           } else if (response.data.error) {
             alert('Error: ' + response.data.error);
           }
@@ -165,6 +162,7 @@
           alert('An error occurred while saving results.');
         });
     };
+    
     
 
     if (!analysisDetails) {

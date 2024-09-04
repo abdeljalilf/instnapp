@@ -85,7 +85,7 @@ const DemandesList = () => {
                                 <td>{demande.clientReference}</td>
                                 <td>{serviceDetails}</td>
                                 <td>
-                                    <Link to={`/reception/DemandesList/${demande.clientId}`}>
+                                    <Link to={`/reception/DemandesList/fiche-technique/${demande.clientId}`}>
                                         <button className="details-button">Voir les détails</button>
                                     </Link>
                                 </td>

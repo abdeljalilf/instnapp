@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './DemandesForm.css';
+import { Link } from 'react-router-dom';
 
 const DemandesForm = () => {
     const getCurrentDate = () => {
@@ -159,19 +160,22 @@ const DemandesForm = () => {
             personalInfo,
             samples
         });
-        console.log(hak)
         // Supposons que 'result' contient la réponse JSON de votre requête
         if (result.success) {
-            // Construire le message à afficher dans l'alerte
-            let message = 'Formulaire soumis avec succès!\n\n';
+            // // Construire le message à afficher dans l'alerte
+            // let message = 'Formulaire soumis avec succès!\n\n';
             
-            // Ajouter la référence du client au message si elle est définie
-            if (result.clientReference) {
-                message += 'Référence du client : ' + result.clientReference + '\n';
-            }
+            // // Ajouter la référence du client au message si elle est définie
+            // if (result.clientReference) {
+            //     message += 'Référence du client : ' + result.client_id + '\n';
+            // }
 
-            // Afficher l'alerte avec le message complet
-            alert(message);
+            // // Afficher l'alerte avec le message complet
+            // alert(message);
+            // Create the link here
+            const link = `/reception/DemandesList/fiche-technique/${result.clientId}`;
+            // Do something with the link, e.g., redirect to it
+            window.location.href = link;
         } else {
             alert('Erreur lors de la soumission du formulaire.'+ result.message);
         }
@@ -254,7 +258,7 @@ const DemandesForm = () => {
 
     const getTechniqueOptions = (sampleType, parameter) => {
         if (parameter === 'Metaux' && (sampleType === 'eau' || sampleType === 'denree')) {
-            return ["Spectrometrie d'Absportion Atomic (SAA)"];
+            return ["Spectrometrie d Absportion Atomic (SAA)"];
         } else if (parameter === 'Mercure') {
             return ['Analyseur Direct de Mercure (ADM)'];
         } else if (parameter === 'Anion' || parameter === 'Cation') {

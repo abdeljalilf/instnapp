@@ -7,32 +7,26 @@ const AnalysisList = () => {
   const [analyses, setAnalyses] = useState([]);
   const [loading, setLoading] = useState(true); // State for loading
   const [error, setError] = useState(null); // State for handling errors
+  const [search, setSearch] = useState(''); // State for search input
   const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
   const session_id = localStorage.getItem('session_id'); // Retrieve session ID
 
   useEffect(() => {
     if (departement && apiBaseUrl && session_id) {
-      console.log('Fetching data for department:', departement);
-      console.log('API Base URL:', apiBaseUrl);
-      console.log('Session ID:', session_id);
-
       fetch(`${apiBaseUrl}/instnapp/backend/routes/laboratoire/laboratoire.php?department=${departement}`, {
         method: 'POST',
         headers: {
-         
           Authorization: session_id // Ensure correct Authorization header
         },
         body: JSON.stringify({ department: departement }), // Use department from URL
       })
         .then(response => {
-          console.log('Response Status:', response.status); // Log response status
           if (!response.ok) {
             throw new Error('Network response was not ok');
           }
           return response.json();
         })
         .then(data => {
-          console.log('Fetched analyses data:', data);
           setAnalyses(data);
           setLoading(false); // Update loading state
         })
@@ -57,6 +51,11 @@ const AnalysisList = () => {
     }
   };
 
+  // Filter analyses based on search input
+  const filteredAnalyses = analyses.filter(analysis =>
+    analysis.sampleReference?.toLowerCase().includes(search.toLowerCase())
+  );
+
   if (loading) {
     return <div>Loading...</div>; // Show loading message if data isn't loaded yet
   }
@@ -67,8 +66,23 @@ const AnalysisList = () => {
 
   return (
     <div className="analyses-container">
-      {analyses.length > 0 && (
-        <div className="analyses-table">
+      <div className="analyses-table">
+        <div className="form-header">
+          <h2>Liste des analyses</h2>
+        </div>
+        <div className="toolbar">
+          <label htmlFor="search" className="search-label">Rechercher :</label>
+          <br />
+          <input
+            type="text"
+            id="search"
+            placeholder="Entrez votre recherche..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="search-input"
+          />
+        </div>
+        {filteredAnalyses.length > 0 ? (
           <table>
             <thead>
               <tr>
@@ -80,7 +94,7 @@ const AnalysisList = () => {
               </tr>
             </thead>
             <tbody>
-              {analyses.map(analysis => (
+              {filteredAnalyses.map(analysis => (
                 <tr key={analysis.analysisId}>
                   <td>{analysis.analysisId}</td>
                   <td>{analysis.sampleReference}</td>
@@ -98,8 +112,10 @@ const AnalysisList = () => {
               ))}
             </tbody>
           </table>
-        </div>
-      )}
+        ) : (
+          <div className="no-results-message">Aucun résultat trouvé pour votre recherche.</div>
+        )}
+      </div>
     </div>
   );
 };

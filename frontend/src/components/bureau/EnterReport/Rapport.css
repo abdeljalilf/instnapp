@@ -267,6 +267,10 @@
   resize: vertical;
   margin-bottom: 20px;
 }
+.conclusion-quill {
+  height: 200px; /* Ajustez la hauteur selon vos besoins */
+}
+
 
 .button-group {
   display: flex;

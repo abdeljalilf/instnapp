@@ -34,37 +34,21 @@ const FinanceDemandesList = () => {
         fetchDemandes();
     }, []);
 
-    // const handleValidatePayment = async (clientId, clientReference) => {
-    //     try {
-    //         const response = await axios.post('http://localhost/instnapp/backend/routes/finance/financeDemandesList.php', {
-    //             clientId: clientId,
-    //             newValidatedValue: 'finance'
-    //         });
-
-    //         if (response.data.success) {
-    //             alert(`Le paiement de la demande de référence a été effectué.`);
-    //             // Rafraîchir les données après la mise à jour
-    //             fetchDemandes();
-    //         } else {
-    //             alert('Échec de la mise à jour de validated.');
-    //         }
-    //     } catch (error) {
-    //         console.error('Erreur lors de la mise à jour de validated:', error);
-    //         alert('Erreur lors de la mise à jour de validated.');
-    //     }
-    // };
-
     const filteredDemandes = demandes.filter(demande =>
-        demande.clientReference?.toLowerCase().includes(search.toLowerCase())
+        demande.echantillons.some(echantillon =>
+            echantillon.analyses.some(analyse =>
+                analyse.validated === 'reception_step_1'
+            )
+        ) && demande.clientReference?.toLowerCase().includes(search.toLowerCase())
     );
 
     if (loading) return <div className="loader">Chargement...</div>;
     if (error) return <div className="error">{error}</div>;
 
     return (
-        <div className="demandes-container">
-            <div className="form-header">
-                <h2>Liste des Demandes d'Analyses</h2>
+        <div className="reception-form">
+            <div className="demandes-form-header">
+                <p>Liste des Demandes d'Analyses</p>
             </div>
             <div className="toolbar">
                 <label htmlFor="search" className="search-label">Rechercher :</label>
@@ -82,43 +66,34 @@ const FinanceDemandesList = () => {
                 <thead className='tablehead'>
                     <tr>
                         <th>Reference Client</th>
-                        <th>Service demande</th>
-                        <th>Details</th>
-                        {/* <th>Payement</th> */}
+                        <th>Service</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredDemandes.map((demande) => (
-                        <tr key={demande.clientId}>
-                            <td>{demande.clientReference}</td>
-                            <td>
-                                {demande.echantillons.map((echantillon) => (
-                                    <div key={echantillon.echantillonId} className='sample'>
-                                        {/* Reference de l'echantillon: {echantillon.sampleReference} <br /> */}
-                                        {echantillon.analyses.map((analyse) => (
-                                            <div key={analyse.analysisId} className='analysis'>
-                                                Analyse  {analyse.analysisType} de {analyse.parameter} par {analyse.technique} pour
-                                                les eléments: {analyse.elementsDinteret.map(e => e.elementDinteret).join(', ')}
-                                            </div>
-                                        ))}
-                                    </div>
-                                ))}
-                            </td>
-                            <td>
-                                <Link to={`/finance/DetailesDemandes/${demande.clientId}`}>
-                                    <button className="details-button">Voir les détails</button>
-                                </Link>
-                            </td>
-                            {/* <td>
-                                <button
-                                    className="validate-button"
-                                    onClick={() => handleValidatePayment(demande.clientId, demande.clientReference)}
-                                >
-                                    Valider le paiement
-                                </button>
-                            </td> */}
-                        </tr>
-                    ))}
+                    {filteredDemandes.map((demande) => {
+                        // Combiner tous les échantillons et analyses en une seule chaîne de texte
+                        const serviceDetails = demande.echantillons.map((echantillon) =>
+                            echantillon.analyses.map((analyse) =>
+                                <>
+                                    Analyse {analyse.analysisType} de {analyse.parameter} par {analyse.technique} (Éléments d'intérêt: {analyse.elementsDinteret.map(e => e.elementDinteret).join(', ')})
+                                    <br />
+                                </>
+                            )
+                        );
+                        
+                        return (
+                            <tr key={demande.clientId}>
+                                <td>{demande.clientReference}</td>
+                                <td>{serviceDetails}</td>
+                                <td>
+                                    <Link to={`/finance/DetailesDemandes/${demande.clientId}`}>
+                                        <button className="details-button">Voir les détails</button>
+                                    </Link>
+                                </td>
+                            </tr>
+                        );
+                    })}
                 </tbody>
             </table>
         </div>

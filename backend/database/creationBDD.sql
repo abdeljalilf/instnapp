@@ -32,11 +32,6 @@ CREATE TABLE echantillons (
     quantiteDenree VARCHAR(255),
     FOREIGN KEY (client_id) REFERENCES clients(id)
 );
-ALTER TABLE echantillons ADD quantiteDenree VARCHAR(255);
-ALTER TABLE echantillons ADD midacNumber VARCHAR(255);
-ALTER TABLE echantillons ADD samplingTime TIME;
-ALTER TABLE echantillons ADD clientSampleRefrence VARCHAR(255);
-
 
 
 CREATE TABLE analyses (
@@ -46,7 +41,7 @@ CREATE TABLE analyses (
     parameter VARCHAR(50) NOT NULL,
     technique VARCHAR(50) NOT NULL,
     validated VARCHAR(50) DEFAULT 'reception_step_1',
-    departement VARCHAR(50) DEFAULT 'TFXE',
+    departement VARCHAR(50) DEFAULT,
     Used_norme VARCHAR(100),
     office_remark VARCHAR(300),
     analyse_time VARCHAR(300),
@@ -76,9 +71,10 @@ CREATE TABLE conclusions (
     id INT AUTO_INCREMENT PRIMARY KEY,
     client_id INT NOT NULL,
     departement VARCHAR(50) NOT NULL,
-    conclusion VARCHAR(500) NOT NULL,
+    conclusion TEXT NOT NULL,
     FOREIGN KEY (client_id) REFERENCES clients(id)
 );
+
 CREATE TABLE analyse_qualite (
     id INT AUTO_INCREMENT PRIMARY KEY,
     elementsdinteret_id INT NOT NULL,
@@ -121,59 +117,3 @@ CREATE TABLE fichiers_rapports (
     FOREIGN KEY (client_id) REFERENCES clients(id) ON DELETE CASCADE
 );
 
-
-
---suprimer les valeurs dans les tables
-DELETE FROM resultats;
-DELETE FROM results;
-DELETE FROM elementsdinteret;
-DELETE FROM analyses;
-DELETE FROM echantillons;
-DELETE FROM clients;
-
--- Assurez-vous d'adapter les valeurs des colonnes en fonction de vos besoins
-
-INSERT INTO analyse_qualite (elementsdinteret_id, Reference_Materiel, Valeur_Recommandee, Valeur_Mesuree) VALUES
-(1, 'Ref001', 'Valeur1', 'Mesuree1'),
-(2, 'Ref002', 'Valeur2', 'Mesuree2'),
-(3, 'Ref003', 'Valeur3', 'Mesuree3'),
-(4, 'Ref004', 'Valeur4', 'Mesuree4'),
-(5, 'Ref005', 'Valeur5', 'Mesuree5'),
-(6, 'Ref006', 'Valeur6', 'Mesuree6'),
-(7, 'Ref007', 'Valeur7', 'Mesuree7'),
-(8, 'Ref008', 'Valeur8', 'Mesuree8'),
-(9, 'Ref009', 'Valeur9', 'Mesuree9'),
-(10, 'Ref010', 'Valeur10', 'Mesuree10'),
-(11, 'Ref011', 'Valeur11', 'Mesuree11'),
-(12, 'Ref012', 'Valeur12', 'Mesuree12'),
-(13, 'Ref013', 'Valeur13', 'Mesuree13'),
-(14, 'Ref014', 'Valeur14', 'Mesuree14'),
-(15, 'Ref015', 'Valeur15', 'Mesuree15'),
-(16, 'Ref016', 'Valeur16', 'Mesuree16'),
-(17, 'Ref017', 'Valeur17', 'Mesuree17'),
-(18, 'Ref018', 'Valeur18', 'Mesuree18'),
-(19, 'Ref019', 'Valeur19', 'Mesuree19'),
-(20, 'Ref020', 'Valeur20', 'Mesuree20');
--- Insérer 20 valeurs supplémentaires dans la table analyse_qualite
-
-INSERT INTO analyse_qualite (elementsdinteret_id, Reference_Materiel, Valeur_Recommandee, Valeur_Mesuree) VALUES
-(21, 'Ref021', 'Valeur21', 'Mesuree21'),
-(22, 'Ref022', 'Valeur22', 'Mesuree22'),
-(23, 'Ref023', 'Valeur23', 'Mesuree23'),
-(24, 'Ref024', 'Valeur24', 'Mesuree24'),
-(25, 'Ref025', 'Valeur25', 'Mesuree25'),
-(26, 'Ref026', 'Valeur26', 'Mesuree26'),
-(27, 'Ref027', 'Valeur27', 'Mesuree27'),
-(28, 'Ref028', 'Valeur28', 'Mesuree28'),
-(29, 'Ref029', 'Valeur29', 'Mesuree29'),
-(30, 'Ref030', 'Valeur30', 'Mesuree30'),
-(31, 'Ref031', 'Valeur31', 'Mesuree31'),
-(32, 'Ref032', 'Valeur32', 'Mesuree32'),
-(33, 'Ref033', 'Valeur33', 'Mesuree33'),
-(34, 'Ref034', 'Valeur34', 'Mesuree34'),
-(35, 'Ref035', 'Valeur35', 'Mesuree35'),
-(36, 'Ref036', 'Valeur36', 'Mesuree36'),
-(37, 'Ref037', 'Valeur37', 'Mesuree37'),
-(38, 'Ref038', 'Valeur38', 'Mesuree38'),
-(39, 'Ref039', 'Valeur39', 'Mesuree39'),
-(40, 'Ref040', 'Valeur40', 'Mesuree40');

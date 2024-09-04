@@ -157,7 +157,11 @@ const handleGenerateReport = () => {
 
             <section className="conclusion-section">
                 <h2>1. Conclusion</h2>
-                <p>{data.conclusion}</p>
+                <p><div
+    className="conclusion-display"
+    dangerouslySetInnerHTML={{ __html: data.conclusion }}
+/>
+</p>
             </section>
 
             <section className="reportresults-section">
@@ -183,22 +187,18 @@ const handleGenerateReport = () => {
                              {sampleDetails.samplingTime}
                             </>
                         )}
-                    </p>
-                    <p>
-                        {sampleDetails.quantiteDenree &&(
-                            <>
-                            <strong>quantiteDenree :</strong> {sampleDetails.quantiteDenree}
-                            </> 
-                        )}
-                        </p>
+                    </p>                    
+                    {sampleDetails.quantiteDenree &&(
                         <p>
-                        {sampleDetails.midacNumber &&(
-                            <>
-                            <strong>Numéro Midac :</strong> {sampleDetails.midacNumber}
-                            </> 
-                        )}
-                        </p>
-
+                        <strong>quantiteDenree :</strong> {sampleDetails.quantiteDenree}
+                        </p> 
+                    )}                   
+                    {sampleDetails.midacNumber &&(
+                        <p>
+                        
+                        <strong>Numéro Midac :</strong> {sampleDetails.midacNumber}
+                        </p> 
+                    )}                   
                     {Object.entries(analyses).map(([analysisKey, { analysisType, parameter, technique, elementsdinteret, norme,analysis_time }], analysisIndex) => (
                         <div key={analysisKey} className="analysis-section">
                             <h4>Analyse {analysisIndex + 1}: {analysisType} pour {sampleType.toUpperCase()}</h4>
