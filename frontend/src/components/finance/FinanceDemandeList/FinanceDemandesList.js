@@ -34,28 +34,12 @@ const FinanceDemandesList = () => {
         fetchDemandes();
     }, []);
 
-    // const handleValidatePayment = async (clientId, clientReference) => {
-    //     try {
-    //         const response = await axios.post('http://localhost/instnapp/backend/routes/finance/financeDemandesList.php', {
-    //             clientId: clientId,
-    //             newValidatedValue: 'finance'
-    //         });
-
-    //         if (response.data.success) {
-    //             alert(`Le paiement de la demande de référence a été effectué.`);
-    //             // Rafraîchir les données après la mise à jour
-    //             fetchDemandes();
-    //         } else {
-    //             alert('Échec de la mise à jour de validated.');
-    //         }
-    //     } catch (error) {
-    //         console.error('Erreur lors de la mise à jour de validated:', error);
-    //         alert('Erreur lors de la mise à jour de validated.');
-    //     }
-    // };
-
     const filteredDemandes = demandes.filter(demande =>
-        demande.clientReference?.toLowerCase().includes(search.toLowerCase())
+        demande.echantillons.some(echantillon =>
+            echantillon.analyses.some(analyse =>
+                analyse.validated === 'reception_step_1'
+            )
+        ) && demande.clientReference?.toLowerCase().includes(search.toLowerCase())
     );
 
     if (loading) return <div className="loader">Chargement...</div>;
@@ -98,7 +82,6 @@ const FinanceDemandesList = () => {
                             )
                         );
                         
-
                         return (
                             <tr key={demande.clientId}>
                                 <td>{demande.clientReference}</td>
