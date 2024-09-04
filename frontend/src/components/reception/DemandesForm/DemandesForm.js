@@ -285,7 +285,7 @@ const DemandesForm = () => {
                 <p>Informations personnelles du client</p>
             </div>
             <div className="form-group">
-                <label>Référence du client:</label>
+                <label>Référence apporté par le client:</label>
                 <input
                     type="text"
                     name="cleClient"
@@ -362,7 +362,7 @@ const DemandesForm = () => {
                     </div>
 
                     <div className="form-group">
-                        <label>Numéro MIDAC:</label>
+                        <label> Numéro PV et MIDAC:</label>
                         <input
                             type="text"
                             name="midacNumber"
@@ -407,17 +407,7 @@ const DemandesForm = () => {
                             required
                         />
                     </div>
-                    {sample.sampleType === 'denree' && (
-                        <div className="form-group">
-                            <label>Quantité du denrée alimentaire:</label>
-                            <input
-                                type="text"
-                                name="quantiteDenree"
-                                value={sample.quantiteDenree}
-                                onChange={(e) => handleSamplesChange(index, e)}
-                            />
-                        </div>
-                    )}
+                    
 
                     {sample.sampleType === 'eau' && (
                         <div className="form-group">
@@ -461,6 +451,17 @@ const DemandesForm = () => {
                             required
                         />
                     </div>
+                    {sample.sampleType === 'denree' && (
+                        <div className="form-group">
+                            <label>Poids total de la Marchandise</label>
+                            <input
+                                type="text"
+                                name="quantiteDenree"
+                                value={sample.quantiteDenree}
+                                onChange={(e) => handleSamplesChange(index, e)}
+                            />
+                        </div>
+                    )}
                     {sample.analysisDetails.map((analysis, analysisIndex) => (
                         <div key={analysisIndex} className="sample-group">
                             <h3 className='sample-info'>Détails des analyses {analysisIndex + 1} sur l'échantillon {index + 1}</h3>

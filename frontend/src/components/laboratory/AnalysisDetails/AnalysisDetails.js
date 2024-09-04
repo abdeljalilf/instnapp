@@ -172,7 +172,17 @@
     if (analysisDetails.error) {
       return <div>{analysisDetails.error}</div>;
     }
-
+    const getHeaderText = () => {
+      switch (department) {
+          case 'TFXE':
+          case 'HI':
+              return 'Valeur Moyenne Mesurée';
+          case 'ATN':
+              return 'Activité Moyenne';
+          default:
+              return 'Valeur Moyenne Mesurée';
+      }
+  };
     return (
       <div className="labo-analysis">
         <div className="details-container">
@@ -245,7 +255,7 @@
                   <th>{analysisDetails.parameter}</th>
                   <th>Status</th>
                   <th>Unité</th>
-                  <th>Valeur moyenne</th>
+                  <th>{getHeaderText()}</th>
                   {analysisDetails.analysisType === 'Quantitative' && <th>Incertitude</th>}
                   <th>Limite Détection</th>
                 </tr>

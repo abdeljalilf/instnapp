@@ -190,13 +190,13 @@ const handleGenerateReport = () => {
                     </p>                    
                     {sampleDetails.quantiteDenree &&(
                         <p>
-                        <strong>quantiteDenree :</strong> {sampleDetails.quantiteDenree}
+                        <strong>Poids total de la Marchandise :</strong> {sampleDetails.quantiteDenree}
                         </p> 
                     )}                   
                     {sampleDetails.midacNumber &&(
                         <p>
                         
-                        <strong>Numéro Midac :</strong> {sampleDetails.midacNumber}
+                        <strong> Numéro PV et MIDAC :</strong> {sampleDetails.midacNumber}
                         </p> 
                     )}                   
                     {Object.entries(analyses).map(([analysisKey, { analysisType, parameter, technique, elementsdinteret, norme,analysis_time }], analysisIndex) => (

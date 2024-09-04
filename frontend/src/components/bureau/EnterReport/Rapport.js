@@ -27,6 +27,7 @@ const Rapport = () => {
     const [fileText, setFileText] = useState('Aucun fichier n\'a été sélectionné');
     const fileInputRef = useRef(null);
     const [inputKey, setInputKey] = useState(Date.now()); 
+    const [successMessage, setSuccessMessage] = useState(''); // Add state for success message
 
     useEffect(() => {
       if (id && department) {
@@ -218,6 +219,80 @@ const handleValidateReport = () => {
         setValidationError('Erreur lors de l\'enregistrement des données.');
     });
 };
+const handlesaveentries = () => {
+    let successMessage = 'Les données ont été bien enregistré';
+    let errorMessage = '';
+    const usedNormes = Object.entries(normesState).map(([key, value]) => {
+        const [sampleReference, analysisKey, element_id] = key.split('-');
+        return {
+            analysis_id: analysisKey,
+            Used_norme: value,
+        };
+    });
+
+    const normeValues = Object.entries(normeValuesState).map(([key, value]) => {
+        const [sampleReference, analysisKey, element_id] = key.split('-');
+        return {
+            element_id: element_id,
+            Valeur_Norme_Utlise: value,
+        };
+    });
+
+    const allAnalysisIds = Object.keys(groupedSamples).reduce((acc, sampleReference) => {
+        const analyses = groupedSamples[sampleReference].analyses;
+        const analysisIds = Object.keys(analyses).map(key => analyses[key].analysis_id);
+        return [...acc, ...analysisIds];
+    }, []);
+
+    const reportData = {
+        usedNormes: usedNormes,
+        normeValues: normeValues,
+        observations: Object.entries(observationsState).map(([key, value]) => {
+            const [sampleReference, analysisKey, resultIndex] = key.split('-');
+            return {
+                element_id: resultIndex,
+                Observation: isFieldVisible(sampleReference, analysisKey, 'observations') ? value : '',
+            };
+        }),
+        conclusion: conclusion,
+        client_id: id,
+        departement: department,
+        allAnalysisIds: allAnalysisIds,
+    };
+    // Envoyer les données à l'API
+    console.log('Sending report data:', reportData);
+
+    fetch(`${apiBaseUrl}/instnapp/backend/routes/bureau/save_entries.php?department=${department}`, {
+        method: 'POST',
+        headers: {
+            'Authorization': session_id,
+            'Content-Type': 'application/json' // Important pour spécifier que le contenu est du JSON
+        },
+        body: JSON.stringify(reportData), // Convertir reportData en JSON
+    })
+    .then((response) => response.text())  // Récupérer la réponse sous forme de texte brut
+    .then((text) => {
+        console.log('Response from server:', text);
+    
+        try {
+            const data = JSON.parse(text); // Tenter de parser la réponse en JSON
+            if (data.success) {
+                sessionStorage.setItem('conclusion', conclusion);
+                setSuccessMessage(successMessage); // Set success message
+                setValidationError('');
+            } else {
+                setValidationError(data.message || 'Erreur lors de l\'enregistrement des données.');
+            }
+        } catch (error) {
+            console.error('Error parsing JSON:', error);
+            setValidationError('Erreur lors de l\'enregistrement des données.');
+        }
+    })
+    .catch((error) => {
+        setValidationError('Erreur lors de l\'enregistrement des données.');
+    });
+    
+};
     const handleValidateRequest = (analysis_id) => {
         const remark = remarksState[analysis_id];
 
@@ -348,7 +423,7 @@ const handleValidateReport = () => {
             case 'HI':
                 return 'Valeur Moyenne Mesurée';
             case 'ATN':
-                return 'Activité';
+                return 'Activité Moyenne';
             default:
                 return 'Valeur Moyenne Mesurée';
         }
@@ -403,20 +478,17 @@ const handleValidateReport = () => {
                                 </>
                             )}
                         </p>
-                        <p>
                         {sampleDetails.quantiteDenree &&(
-                            <>
-                            <strong>quantiteDenree :</strong> {sampleDetails.quantiteDenree}
-                            </> 
-                        )}
-                        </p>
                         <p>
+                        <strong>Poids total de la Marchandise :</strong> {sampleDetails.quantiteDenree}
+                        </p> 
+                        )}                   
                         {sampleDetails.midacNumber &&(
-                            <>
-                            <strong>Numéro Midac :</strong> {sampleDetails.midacNumber}
-                            </> 
-                        )}
-                        </p>
+                            <p>
+                            
+                            <strong> Numéro PV et MIDAC :</strong> {sampleDetails.midacNumber}
+                            </p> 
+                        )} 
                         {Object.entries(analyses).map(([analysisKey, { element_id, analysisType, parameter, technique, elementsdinteret, norme, analysis_id, analysis_time, Reference_Materiel, Valeur_Recommandee, Valeur_Mesuree,file_name,file_path }], analysisIndex) => (
                             <div key={analysisKey} className="analysis-section">
                                 <h4>Analyse {analysisIndex + 1}: {analysisType} pour {sampleType.toUpperCase()}</h4>
@@ -616,8 +688,10 @@ const handleValidateReport = () => {
                     </div>
                 </div>
             {validationError && <div className="validation-error">{validationError}</div>}
+            {successMessage && <div className="success-Message">{successMessage}</div>}
             <div className="button-group">
                 <button className="btn-primary" onClick={handleValidateReport}>Valider</button>
+                <button className="btn-primary" onClick={handlesaveentries}>Sauvegarder les données entrées</button>
             </div>
         </div>
     );
