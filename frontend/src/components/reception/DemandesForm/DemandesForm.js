@@ -258,7 +258,7 @@ const DemandesForm = () => {
 
     const getTechniqueOptions = (sampleType, parameter) => {
         if (parameter === 'Metaux' && (sampleType === 'eau' || sampleType === 'denree')) {
-            return ["Spectrometrie d'Absportion Atomic (SAA)"];
+            return ["Spectrometrie d Absportion Atomic (SAA)"];
         } else if (parameter === 'Mercure') {
             return ['Analyseur Direct de Mercure (ADM)'];
         } else if (parameter === 'Anion' || parameter === 'Cation') {
