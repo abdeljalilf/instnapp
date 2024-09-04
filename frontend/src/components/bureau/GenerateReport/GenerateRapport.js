@@ -228,7 +228,7 @@ const GenirateRapport = () => {
                 <header className="report-header">
                     <div className="date-location-ref-demande">
                     <p className="ref-demande">
-                        <strong>Référence de la demande :</strong> {data.clientReference}/{department}
+                        <strong>Référence :</strong> {data.clientReference.replace(/^DS/, "RA")}/INSTN/DG/{department}
                     </p>
                     <p className="date-location">
                         <strong>Antananarivo, le</strong>{' '}
