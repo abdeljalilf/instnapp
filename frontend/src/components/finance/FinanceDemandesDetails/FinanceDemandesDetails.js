@@ -13,20 +13,36 @@ const FinanceDemandesDetails = () => {
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
     const session_id = localStorage.getItem('session_id');
 
+    // Define year and month here
+    const year = new Date().getFullYear();
+    const month = new Date().getMonth() + 1;
+
+    // Define the generateClientReference function before it is used
+    const generateClientReference = (clientId, year, month) => {
+        const shortYear = year.toString().slice(-2);
+        const formattedMonth = month.toString().padStart(2, '0');
+        const formattedClientCount = clientId.toString().padStart(4, '0');
+        return `DS${shortYear}${formattedMonth}-A${formattedClientCount}`;
+    };
+
     useEffect(() => {
         if (!clientId) {
-            setError('Client ID manquant dans l\'URL');
+            setError("Client ID manquant dans l'URL");
             setLoading(false);
             return;
         }
 
         const fetchDetails = async () => {
             try {
-                const response = await axios.get(`${apiBaseUrl}/instnapp/backend/routes/finance/financeDemandesDetails.php?referenceClient=${generateClientReference(clientId)}`, {
-                    headers: {
-                        Authorization: session_id
+                const referenceClient = generateClientReference(clientId, year, month);
+                const response = await axios.get(
+                    `${apiBaseUrl}/instnapp/backend/routes/finance/financeDemandesDetails.php?referenceClient=${referenceClient}`, 
+                    {
+                        headers: {
+                            Authorization: session_id
+                        }
                     }
-                });
+                );
                 if (response.data.success) {
                     setDemandes(response.data.demandes);
                 } else {
@@ -40,28 +56,26 @@ const FinanceDemandesDetails = () => {
         };
 
         fetchDetails();
-    }, [clientId]);
+    }, [clientId, apiBaseUrl, session_id, year, month]);
 
-    const generateClientReference = (clientId) => {
-        const year = new Date().getFullYear().toString().slice(-2);
-        return `INSTN/DG/XRF/${year}/${clientId.toString().padStart(4, '0')}`;
-    };
-
-    const handleValidatePayment = async () => {
+    const handleValidateDemande = async () => {
         try {
-            const response = await axios.post(`${apiBaseUrl}/instnapp/backend/routes/finance/financeDemandesList.php`, {
-                clientId: clientId,
-                newValidatedValue: 'finance'
-            }, {
-                headers: {
-                    Authorization: session_id
+            const response = await axios.post(
+                `${apiBaseUrl}/instnapp/backend/routes/finance/financeDemandesList.php`,
+                {
+                    clientId: clientId,
+                    newValidatedValue: 'finance'
+                },
+                {
+                    headers: {
+                        Authorization: session_id
+                    }
                 }
-            });
+            );
 
             if (response.data.success) {
-                alert(`Le paiement de la demande de référence ${generateClientReference(clientId)} a été effectué.`);
-                // Redirection vers les nouvelles demandes après validation
-                navigate('/finance/NouvellesDemandes');
+                alert(`Le la demande de référence ${generateClientReference(clientId, year, month)} a été validée.`);
+                navigate('/finance/NouvellesDemandes'); // Redirect after successful validation
             } else {
                 alert('Échec de la mise à jour de validated.');
             }
@@ -77,7 +91,7 @@ const FinanceDemandesDetails = () => {
     return (
         <div className="container">
             <div className='form-header-details'>
-                <h2>Détails de la Demande : {generateClientReference(clientId)}</h2>
+                <h2>Détails de la Demande : {generateClientReference(clientId, year, month)}</h2>
             </div>
             {demandes && demandes.length > 0 ? (
                 demandes.map((demande, demandeIndex) => (
@@ -107,6 +121,13 @@ const FinanceDemandesDetails = () => {
                                                     <label>Technique:</label>
                                                     <p>{analyse.technique}</p>
                                                 </div>
+                                                {echantillon.quantiteDenree &&
+                                                            <div>
+                                                                <label>Quantite du denerée alimentaire:</label>
+                                                            <p>{echantillon.quantiteDenree}</p>
+                                                            </div>
+
+                                                        }
                                             </div>
                                         </div>
                                     ))}
@@ -114,13 +135,14 @@ const FinanceDemandesDetails = () => {
                             ))}
                         </div>
                         <div className="validate-button-container">
-                        <Button
-                            onClick={handleValidatePayment}
-                            className="validate-finance"
-                        >
-                            Valider le paiement
-                        </Button>
+                            <Button
+                                onClick={handleValidateDemande}
+                                className="validate-finance"
+                            >
+                                Valider la demande
+                            </Button>
                         </div>
+                        
                     </div>
                 ))
             ) : (

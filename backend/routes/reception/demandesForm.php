@@ -157,7 +157,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'success' => true,
             'message' => 'Demande d\'analyse enregistrée avec succès',
             'clientReference' => $clientReference,
-            'samplesReferences' => $sampleReference
+            'samplesReferences' => $sampleReference,
+            'clientId' => $clientId
         );
         header('Content-Type: application/json');
         echo json_encode($response);

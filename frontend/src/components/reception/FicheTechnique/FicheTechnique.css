@@ -25,7 +25,7 @@
 }
 
 .form-header-ft {
-    background-color: #2e8b57; /* Vert */
+    background-color: #153a25; /* Vert */
     padding: 0px;
     border-radius: 5px 5px 0 0;
     color: white;
@@ -34,19 +34,30 @@
     font-weight: bolder;
 }
 
-.info-perso {
+.info-perso-section-1 {
     display: flex;
     flex-wrap: wrap; /* Permet aux éléments de s'organiser sur plusieurs lignes si nécessaire */
     justify-content: space-around; /* Ajoute de l'espace entre les éléments */
     max-width: 100%; /* Assure que la largeur de info-perso ne dépasse pas celle de container-ft */
     box-sizing: border-box; /* Inclut le padding et les bordures dans la largeur totale */
+    flex-direction: column;
+    
+}
+
+.info-perso {
+    display: flex;
+    flex-wrap: wrap; /* Permet aux éléments de s'organiser sur plusieurs lignes si nécessaire */
+    justify-content: space-evenly; /* Ajoute de l'espace entre les éléments */
+    max-width: 100%; /* Assure que la largeur de info-perso ne dépasse pas celle de container-ft */
+    box-sizing: border-box; /* Inclut le padding et les bordures dans la largeur totale */
+    margin-bottom: 40px;
 }
 
 .form-group-ft {
     flex: 1 1 5%; /* Chaque élément occupera jusqu'à 45% de la largeur disponible */
     min-width: 100px; /* Assure une largeur minimale */
-    margin-bottom: 10px;
-    padding: 5px; /* Ajoute un peu de padding autour des éléments pour un meilleur espacement */
+    /* margin-bottom: 10px; */
+    /* padding: 5px; Ajoute un peu de padding autour des éléments pour un meilleur espacement */
     box-sizing: border-box; /* S'assure que le padding et les marges sont inclus dans la largeur totale */
 }
 
@@ -78,23 +89,6 @@
 }
 
 
-/* .container-ft {
-    width: 95%;
-    margin: 50px auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0.8); /* Couleur de fond translucide 
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-} */
-
-
-/* .signatures {
-    height: 200px;
-    display: flex;
-    justify-content: space-between; /* Espace égal entre les éléments 
-} */
-
 .signatures p {
     margin: 0; /* Supprimer la marge par défaut des paragraphes */
     text-align: center; /* Centrer le texte */
@@ -112,11 +106,6 @@
     margin-left: 0;
 }
 
-/* .test{
-    display: flex;
-    justify-content: space-between;
-    flex-direction: row;
-} */
 
 .sample-section-ft {
     display: flex;
@@ -150,7 +139,7 @@
     
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
 }
 
 .container-ft {
@@ -158,6 +147,7 @@
     height: 1729px;
     /* overflow: hidden; */
     width: 99%;
+    margin-left: 3px;
 }
 
 .footer{
@@ -165,4 +155,39 @@
     bottom: 0;
     height: 15%;
     width:100%;
+}
+
+.container-ft label{
+    color: #276c45;
+}
+
+.page-number{
+    font-size: 22px;
+    font-weight: bold ;
+    position: absolute;
+    bottom: 0 ;
+    right: 0 ;
+
+}
+
+.submit-button-ft{
+    display: inline-flex;
+    padding: 10px 30px;
+    margin-left: 30px;
+    font-size: 16px;
+    border: none;
+    border-radius: 90px !important;
+    background-color: #1a5f32;
+    color: white;
+    cursor: pointer;
+    text-align: center;
+    white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+.submit-button-container-ft{
+    display:flex;
+    /* align-items: center; */
+    justify-content: center;
+    margin: 20px;
 }
