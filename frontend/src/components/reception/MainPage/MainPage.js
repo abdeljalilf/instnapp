@@ -94,6 +94,12 @@ const MainPage = () => {
                         className={`main-button-reception ${activeSection === '/reception/DemandesList' ? 'active' : ''}`}>
                         Les détails sur les demandes
                     </Button>
+                    <Button 
+                        color="inherit" 
+                        onClick={() => navigate('/reception/DemandesStatus')} 
+                        className={`main-button-reception ${activeSection === '/reception/DemandesStatus' ? 'active' : ''}`}>
+                        Les détails sur les demandes
+                    </Button>
                     <button onClick={toggleMenu} className={`menu-button ${menuOpen ? 'show' : ''}`}>
                         <img src={menuIcon} alt="Menu icon" />
                     </button>

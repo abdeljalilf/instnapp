@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import DemandesForm from './components/reception/DemandesForm/DemandesForm';
 import DemandeList from './components/reception/DemandesList/DemandesList';
+import Status_demandes from './components/reception/Status_demandes/Status_demandes';
 import MainPage from './components/reception/MainPage/MainPage';
 import DemandesDetails from './components/reception/DemandesDetails/DemandesDetails';
 import FicheTechnique from './components/reception/FicheTechnique/FicheTechnique';
@@ -50,6 +51,7 @@ const App = () => {
                     <Route path="Statistiques/:department" element={<ProtectedRoute element={<Statistiques />} roleRequired="reception" />} /> {/* Ajout de la sous-route */}
                     <Route path="DemandesForm" element={<ProtectedRoute element={<DemandesForm />} roleRequired="reception" />} />
                     <Route path="DemandesList" element={<ProtectedRoute element={<DemandeList />} roleRequired="reception" />} />
+                    <Route path="DemandesStatus" element={<ProtectedRoute element={<Status_demandes />} roleRequired="reception" />} />
                     <Route path="DemandesList/:clientId" element={<ProtectedRoute element={<DemandesDetails />} roleRequired="reception" />} />
                     <Route path="DemandesList/fiche-technique/:clientId" element={<ProtectedRoute element={<FicheTechnique />} roleRequired="reception" />} />
                 </Route>
