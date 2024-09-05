@@ -495,7 +495,7 @@ const handlesaveentries = () => {
                         <strong>Poids total de la Marchandise :</strong> {sampleDetails.quantiteDenree}
                         </p> 
                         )}                   
-                        {sampleDetails.midacNumber &&(
+                        {sampleDetails.midacNumber && department === 'ATN' &&(
                             <p>
                             
                             <strong> Numéro PV et MIDAC :</strong> {sampleDetails.midacNumber}

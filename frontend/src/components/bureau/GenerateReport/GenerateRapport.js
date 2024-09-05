@@ -111,7 +111,7 @@ const GenirateRapport = () => {
         const element = document.getElementById('report-container');
         const sanitizedClientReference = data.clientReference.replace(/\//g, '_');
         const opt = {
-            margin: [35, 15], // 35mm for top and bottom, 10mm for sides
+            margin: [35, 15,35, 10], // 35mm for top and bottom, 10mm for sides
             filename: `rapport_final_${sanitizedClientReference}_${department}.pdf`,
             image: { type: 'jpeg', quality: 1 },
             html2canvas: { scale: 2 },
@@ -124,7 +124,7 @@ const GenirateRapport = () => {
     
             for (let i = 1; i <= totalPages; i++) {
                 pdf.setPage(i);
-                pdf.text(`Page ${i} sur ${totalPages}`, 16, 265, { align: 'left' });
+                pdf.text(`Page ${i}/${totalPages}`, 200, 268, { align: 'right' });
             }
     
             pdf.save(`rapport_final_${sanitizedClientReference}_${department}.pdf`);
@@ -327,8 +327,14 @@ const GenirateRapport = () => {
                                 </tr>
                                 {sampleDetails.quantiteDenree && (
                                     <tr>
-                                        <td><strong>Quantité Denrée</strong></td>
+                                        <td><strong>Poids total de la Marchandise</strong></td>
                                         <td><b>: </b>{sampleDetails.quantiteDenree}</td>
+                                    </tr>
+                                )}
+                                {sampleDetails.midacNumber && department === 'ATN' && (
+                                    <tr>
+                                        <td><strong>Numéro PV et MIDAC</strong></td>
+                                        <td><b>: </b>{sampleDetails.midacNumber}</td>
                                     </tr>
                                 )}
                             </tbody>
