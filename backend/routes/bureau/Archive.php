@@ -58,9 +58,10 @@ if ($result->num_rows > 0) {
         $requests[$demande_id]['samples'][$sampleType][] = $row['analysisType'];
         
         // Check the validation status for the specific department
-        if ($row['departement'] == $department && $row['validated'] !== 'office_step_3') {
+        if ($row['departement'] == $department && !in_array($row['validated'], ['reception_step_2', 'office_step_3'])) {
             $requests[$demande_id]['all_validated'] = false;
         }
+        
     }
 }
 // Add the status field
