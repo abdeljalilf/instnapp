@@ -24,7 +24,7 @@ $sql = "SELECT clients.id AS demande_id, clients.clientReference, clients.dileve
         FROM clients 
         JOIN echantillons ON clients.id = echantillons.client_id 
         JOIN analyses ON echantillons.id = analyses.echantillon_id 
-        WHERE analyses.validated IN ('office_step_2', 'office_step_3')";
+        WHERE analyses.validated IN ('office_step_2', 'office_step_3', 'reception_step_2')";
 
 if ($department) {
     $sql .= " AND analyses.departement = ?";
@@ -63,7 +63,14 @@ if ($result->num_rows > 0) {
         }
     }
 }
-
+// Add the status field
+foreach ($requests as &$request) {
+    if (isset($request['departments_status'][$department]) && $request['departments_status'][$department] === 'Rapport livré') {
+        $request['status'] = 'Rapport livré';
+    } else {
+        $request['status'] = $request['all_validated'] ? 'Déjà Validée' : 'Pas encore validée';
+    }
+}
 // Fetch status for other departments
 $sql_other_departments = "SELECT clients.id AS demande_id, analyses.departement, analyses.validated 
                           FROM clients 
@@ -75,7 +82,7 @@ $sql_other_departments = "SELECT clients.id AS demande_id, analyses.departement,
                               JOIN echantillons ON clients.id = echantillons.client_id 
                               JOIN analyses ON echantillons.id = analyses.echantillon_id 
                               WHERE analyses.departement = ? 
-                              AND analyses.validated IN ('office_step_2', 'office_step_3')
+                              AND analyses.validated IN ('office_step_2', 'office_step_3', 'reception_step_2')
                           ) AND analyses.departement != ?";
 
 $stmt_other_departments = $conn->prepare($sql_other_departments);
@@ -106,10 +113,7 @@ if ($result_other_departments->num_rows > 0) {
 // Convert the associative array to an indexed array
 $requests = array_values($requests);
 
-// Add the status field
-foreach ($requests as &$request) {
-    $request['status'] = $request['all_validated'] ? 'Déjà Validée' : 'Pas encore validée';
-}
+
 
 echo json_encode($requests);
 

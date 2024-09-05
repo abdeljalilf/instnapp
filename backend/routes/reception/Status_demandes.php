@@ -18,7 +18,7 @@ authorize(['reception'], $user);
 
 // Récupérer toutes les demandes d'analyses
 $query = $conn->prepare("
-    SELECT c.id as clientId, c.clientReference, a.departement, a.validated, a.analysisType
+    SELECT c.id as clientId, c.clientReference, c.name, c.phone, c.email, c.dilevery_delay, a.departement, a.validated, a.analysisType
     FROM clients c
     LEFT JOIN echantillons e ON c.id = e.client_id
     LEFT JOIN analyses a ON e.id = a.echantillon_id
@@ -38,6 +38,10 @@ while ($row = $results->fetch_assoc()) {
         $demandes[$clientId] = [
             'clientId' => $clientId,
             'clientReference' => $row['clientReference'],
+            'name' => $row['name'],
+            'phone' => $row['phone'],
+            'email' => $row['email'],
+            'dilevery_delay' => $row['dilevery_delay'],
             'departments' => []
         ];
     }
@@ -66,6 +70,8 @@ while ($row = $results->fetch_assoc()) {
         $demandes[$clientId]['departments'][$departement]['validated_status'] = 'En cours de génération du rapport';
     } elseif ($row['validated'] === 'office_step_3') {
         $demandes[$clientId]['departments'][$departement]['validated_status'] = 'Rapport généré';
+    } elseif ($row['validated'] === 'reception_step_2') {
+        $demandes[$clientId]['departments'][$departement]['validated_status'] = 'Rapport livré';
     }
 }
 
@@ -79,6 +85,9 @@ foreach ($demandes as $clientId => &$clientData) {
             if ($analysis['validated'] !== 'office_step_3') {
                 $allAnalysesValidated = false;
             }
+            if ($analysis['validated'] !== 'reception_step_2') {
+                $allAnalysesValidated = false;
+            }
             if ($analysis['validated'] === 'office_reject') {
                 $anyRejected = true;
             }
@@ -86,7 +95,7 @@ foreach ($demandes as $clientId => &$clientData) {
 
         // Déterminer le statut final du département
         if ($anyRejected) {
-            $deptData['final_status'] = 'Rejeté dans le département';
+            $deptData['final_status'] = "Resultats rejté, En cours d'analyse";
         } elseif ($allAnalysesValidated) {
             $deptData['final_status'] = 'Demande terminée dans le département';
         } else {

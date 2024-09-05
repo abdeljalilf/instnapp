@@ -14,7 +14,6 @@ CREATE TABLE clients (
     requestingDate DATE NOT NULL,
     broughtBy VARCHAR(255) NOT NULL
 );
-ALTER TABLE clients ADD broughtBy VARCHAR(255) NOT NULL;
 
 CREATE TABLE echantillons (
     id INT AUTO_INCREMENT PRIMARY KEY,

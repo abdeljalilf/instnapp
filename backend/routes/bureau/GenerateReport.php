@@ -88,7 +88,7 @@ if (isset($_GET['demande_id']) && is_numeric($_GET['demande_id']) && isset($_GET
         )
     ) last_conclusion ON clients.id = last_conclusion.client_id AND analyses.departement = last_conclusion.departement
     WHERE clients.id = ? AND analyses.departement = ? AND 
-    analyses.validated = 'office_step_3' AND echantillons.sampleType !='air'
+    analyses.validated IN ('office_step_3', 'reception_step_2') AND echantillons.sampleType !='air'
 ";
 
 

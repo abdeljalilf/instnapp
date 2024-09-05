@@ -124,10 +124,10 @@ body {
     }
 }
 
-.details-button {
+.livre-button {
     display: inline-flex; /* Utilisez inline-flex pour ajuster la largeur en fonction du contenu */
-    padding: 10px 20px; /* Espace autour du texte (ajustez selon vos besoins) */
-    font-size: 16px; /* Taille du texte (ajustez selon vos besoins) */
+    padding: 5px 5px; /* Espace autour du texte (ajustez selon vos besoins) */
+    font-size: 14px; /* Taille du texte (ajustez selon vos besoins) */
     border: none;
     border-radius: 5px;
     background-color: #2e8b57; /* Couleur de fond (ajustez selon vos besoins) */
@@ -140,7 +140,31 @@ body {
     margin-left: -10%;
 }
 
-.details-button:hover {
+.livre-button:hover {
     background-color: #183020; /* Couleur de fond au survol (ajustez selon vos besoins) */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Ombre portée au survol (ajustez selon vos besoins) */
+}
+/* Styles des statuts */
+.status-awaiting-validation {
+    color: #ff0000; /* Jaune pour en attente de validation du paiement */
+}
+
+.status-payment-validated {
+    color: #ff7b00; /* Vert pour paiement validé */
+}
+
+.status-in-progress {
+    color: #f4af0d; /* Orange pour en cours d'analyse */
+}
+
+.status-report-generation {
+    color: #adf321; /* Bleu pour en cours de génération du rapport */
+}
+
+.status-report-generated {
+    color: #73eb0a; /* Violet pour rapport généré */
+}
+
+.status-report-delivered {
+    color: #4caf50; /* Gris pour rapport livré */
 }
