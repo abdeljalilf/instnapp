@@ -122,7 +122,7 @@ const Status_demandes = () => {
                 <input
                     type="text"
                     id="search"
-                    placeholder="Entrez votre recherche..."
+                    placeholder="Rechercher par Référence de la demande, Date de livraison ou Nom du Client"
                     value={searchTerm}
                     onChange={handleSearch}
                     className="search-input"
